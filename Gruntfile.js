@@ -39,6 +39,9 @@ module.exports = function(grunt) {
         }]
       }
     },
+    jshint: {
+      all: ['Gruntfile.js', 'js/**/*.js']
+    },
     sass: {
       development: {
         options: {
@@ -94,6 +97,7 @@ module.exports = function(grunt) {
   // Load grunt tasks.
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-sass');
   
@@ -109,6 +113,7 @@ module.exports = function(grunt) {
   grunt.registerTask('dist', [
     'set-active-build-path:production',
     'sass:production',
+    'jshint',
     'copy'
   ]);
   
@@ -116,6 +121,7 @@ module.exports = function(grunt) {
   grunt.registerTask('serve', [
     'set-active-build-path:development',
     'sass:development',
+    'jshint',
     'copy',
     'connect',
     'watch'
@@ -125,6 +131,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [
     'set-active-build-path:development',
     'sass:development',
+    'jshint',
     'copy'
   ]);
 };
