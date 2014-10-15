@@ -13,10 +13,12 @@ module.exports = function(grunt) {
       development: 'build/development',
       production: 'build/production'
     },
+    clean: ['build/'],
     connect: {
       development: {
         options: {
           base: '<%= build_path.active %>',
+          debug: true,
           hostname: 'localhost',
           livereload: true,
           open: true
@@ -24,17 +26,24 @@ module.exports = function(grunt) {
       }
     },
     copy: {
-      development: {
+      html: {
         files: [{
           expand: true,
-          src: ['*.html', 'js/**'],
+          src: ['*.html'],
           dest: '<%= build_path.active %>'
         }]
       },
-      production: {
+      js: {
         files: [{
           expand: true,
-          src: ['*.html', 'js/**'],
+          src: ['js/**'],
+          dest: '<%= build_path.active %>'
+        }]
+      },
+      bower: {
+        files: [{
+          expand: true,
+          src: ['bower_components/**'],
           dest: '<%= build_path.active %>'
         }]
       }
@@ -81,7 +90,15 @@ module.exports = function(grunt) {
         files: ['*.html'],
         tasks: [
           'set-active-build-path:<%= build_config %>',
-          'copy:<%= build_config %>'
+          'copy:html'
+        ]
+      },
+      js: {
+        files: ['js/**'],
+        tasks: [
+          'set-active-build-path:<%= build_config %>',
+          'jshint',
+          'copy:js'
         ]
       },
       css: {
@@ -91,15 +108,22 @@ module.exports = function(grunt) {
           'sass:<%= build_config %>'
         ]
       }
+    },
+    wiredep: {
+      all: {
+        src: ['*.html', 'css/*.scss']
+      }
     }
   });
   
   // Load grunt tasks.
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-wiredep');
   
   // Task to determine which build path to use.
   grunt.registerTask('set-active-build-path', 'Sets the active build path.',
@@ -112,6 +136,7 @@ module.exports = function(grunt) {
   // Generates files for production.
   grunt.registerTask('dist', [
     'set-active-build-path:production',
+    'wiredep',
     'sass:production',
     'jshint',
     'copy'
@@ -120,6 +145,7 @@ module.exports = function(grunt) {
   // Serves the build directory.
   grunt.registerTask('serve', [
     'set-active-build-path:development',
+    'wiredep',
     'sass:development',
     'jshint',
     'copy',
@@ -130,6 +156,7 @@ module.exports = function(grunt) {
   // The default task.
   grunt.registerTask('default', [
     'set-active-build-path:development',
+    'wiredep',
     'sass:development',
     'jshint',
     'copy'

@@ -3,3 +3,6 @@
 
 # Build directory used by Grunt
 /build/
+
+# Bower components
+bower_components/

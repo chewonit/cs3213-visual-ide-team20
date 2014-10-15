@@ -21,3 +21,16 @@ That's it, you're done!
 
 Run `grunt serve` to open the project in your browser. While `grunt serve` 
 is running, any code changes made will automatically be reflected in the browser.
+
+### Installing Additional JavaScript Libraries
+
+Many JavaScript libraries have a Bower package available. In those cases,
+you can check if the project's source tree has a `bower.json`, or use
+`bower search <library name>`. 
+
+If the library can be found in Bower's repositories, simply install with
+`bower install --save <library name>`. The next time Grunt is run, the script
+will be automagically included in HTML.
+
+However, if the library is not available via Bower, you can drop it into the
+`js/` subdirectory and manually include it in HTML.
