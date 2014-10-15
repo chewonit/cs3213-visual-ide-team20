@@ -13,9 +13,10 @@ VisualIDE. However, some pre-requisites are required for development.
 ### Setting Up for Development
 
  1. Install Node.js on a platform of your choice.
- 2. Install Grunt: `npm install -g grunt`.
+ 2. Install Grunt: `npm install -g grunt-cli`.
  3. Install Bower: `npm install -g bower`.
  4. Change into the project directory, then run `npm install`.
+ 5. Install Bower dependencies by running `bower install`.
 
 That's it, you're done!
 
