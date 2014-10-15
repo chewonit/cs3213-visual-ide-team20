@@ -18,8 +18,8 @@ function getGoogleProfileName() {
 }
 
 $('#login-btn').on('click', function (e) {
-	hello( 'google' ).login()
-})
+	hello( 'google' ).login();
+});
 
 var HomeView = Backbone.View.extend({
   el: '.page',
@@ -36,11 +36,11 @@ var Router = Backbone.Router.extend({
 	}
 });
 
-var router = new Router;
+var router = new Router();
 router.on('route:home', function() {
   // render home view
   homeView.render();
-})
+});
 
 Backbone.history.start();
 

@@ -1,0 +1,25 @@
+{
+  "name": "VisualIDE",
+  "version": "0.0.0",
+  "homepage": "https://github.com/yjwong/cs3213-visual-ide-team20",
+  "authors": [
+    "Team 20"
+  ],
+  "description": "A Visual Integrated Development Environment (IDE), part of CS3213 Software Systems Design, National University of Singapore.",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "bootstrap-sass-official": "~3.2.0",
+    "backbone": "~1.1.2",
+    "yui": "~3.18.0",
+    "hello": "~1.2.2"
+  }
+}
