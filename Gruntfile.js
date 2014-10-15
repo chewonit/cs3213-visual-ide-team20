@@ -17,8 +17,7 @@ module.exports = function(grunt) {
     connect: {
       development: {
         options: {
-          base: '<%= build_path.active %>',
-          debug: true,
+          base: ['<%= build_path.active %>', '.'],
           hostname: 'localhost',
           livereload: true,
           open: true
@@ -148,7 +147,6 @@ module.exports = function(grunt) {
     'wiredep',
     'sass:development',
     'jshint',
-    'copy',
     'connect',
     'watch'
   ]);
