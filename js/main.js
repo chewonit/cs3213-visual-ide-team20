@@ -123,6 +123,10 @@ YUI().use('dd-delegate', 'dd-drop-plugin', 'dd-proxy', 'dd-constrain', 'dd-drop'
 	commandNodes.on('drag:drophit', function(e) {
 		var drop = e.drop.get('node'),
 			drag = e.drag.get('node');
+			
+		if (drop.hasClass("command-raw")) {
+	            return false;   
+	        }
 		
 		if (drop.hasClass("list-trash")){
 			if (drag.hasClass("command-raw")){
