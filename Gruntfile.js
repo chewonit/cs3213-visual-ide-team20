@@ -89,7 +89,7 @@ module.exports = function(grunt) {
         files: ['*.html'],
         tasks: [
           'set-active-build-path:<%= build_config %>',
-          'copy:html'
+          'wiredep'
         ]
       },
       js: {

@@ -46,6 +46,11 @@ router.on('route:home', function() {
   homeView.render();
 });
 
+// Create a new rendering area.
+jQuery(document).ready(function() {
+  var canvas = new VisualIDE.Canvas(document.getElementById('canvas'));
+});
+
 Backbone.history.start();
 
 YUI().use('dd-delegate', 'dd-drop-plugin', 'dd-proxy', 'dd-constrain', 'dd-drop', function (Y) {
