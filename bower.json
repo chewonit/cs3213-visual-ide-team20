@@ -20,6 +20,7 @@
     "bootstrap-sass-official": "~3.2.0",
     "backbone": "~1.1.2",
     "yui": "~3.18.0",
-    "hello": "~1.2.2"
+    "hello": "~1.2.2",
+    "pixi.js": "~1.6.1"
   }
 }
