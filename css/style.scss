@@ -3,27 +3,9 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 @import "../bower_components/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 // endbower
 
-.command {
-	list-style-type: none;
-	padding: 10px;
-	margin: 5px;
-	background-color: cyan;
-	z-index: 1;
-}
-
-.list-commands {
-	padding: 10px;
-}
-
-.list-procedures {
-	padding: 10px;
-	background-color: #eee;
-}
-
-.list-trash {
-	padding: 10px;
-	background-color: #eee;
-}
+@import "mixin/mixin";
+@import "variables/variables";
+@import "partials/dragdrop";
 
 .no-margin {
 	margin:0;
