@@ -21,6 +21,10 @@ $('#login-btn').on('click', function (e) {
 	hello( 'google' ).login();
 });
 
+$('#run-btn').on('click', function (e) {
+    Interpreter.run();
+});
+
 var HomeView = Backbone.View.extend({
   el: '.page',
   render: function () {
