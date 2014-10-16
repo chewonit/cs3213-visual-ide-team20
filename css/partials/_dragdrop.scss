@@ -1,0 +1,44 @@
+.command {
+	@include transition(opacity, 0.2s, ease-in-out);
+	@include transition(border-top, 0.2s, ease-in-out);
+	list-style-type: none;
+	padding: 10px;
+	margin: 5px;
+	background-color: cyan;
+	z-index: 1;
+	
+	&.command-drag {
+		opacity: .5 !important;
+	}
+	
+	&.command-in-transit {
+		opacity: .2 !important;
+	}
+	
+	&.command-raw, &.command-drag, &.command-in-transit {
+		border-top: none !important;
+	}
+	
+	&.command-new {
+		opacity: 0 !important;
+	}
+	
+	&.yui3-dd-drop-over {
+		box-sizing: border-box;
+		border-top: solid 5px $drag-drop-reorder-highlight-border-color;
+	}
+}
+
+.list-commands {
+	padding: 10px;
+}
+
+.drop-target{
+	@include transition(background-color, 0.2s, ease-in-out);
+	background-color: $drop-target-background-color;
+	padding: 10px;
+	
+	&.yui3-dd-drop-over {
+		background-color: darken($drop-target-background-color, 3%);
+	}
+}
