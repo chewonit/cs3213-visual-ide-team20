@@ -43,21 +43,14 @@
 		<div id="dashboard" class="row">
 			<div class="col-md-3">
 				<h3>Commands</h3>
-				<ul id="list-commands" class="list-commands">
-					<li class="command command-raw" data-command-id="1">Command 1</li>
-					<li class="command command-raw" data-command-id="2">Command 2</li>
-					<li class="command command-raw" data-command-id="3">Command 3</li>
-					<li class="command command-raw" data-command-id="4">Command 4</li>
-					<li class="command command-raw" data-command-id="5">Command 5</li>
-				</ul>
-				<ul id="list-trash" class="list-trash drop-target">
+				<ul id="list-commands-raw" class="list-commands list-commands-raw"></ul>
+				<ul id="list-trash" class="list-commands list-trash drop-target">
 					<h3><span class="glyphicon glyphicon-trash"></span> Trash</h3>
 				</ul>
 			</div>
 			<div class="col-md-4">
-				<ul id="list-procedures" class="list-procedures drop-target">
-					<h3>Procedures</h3>
-				</ul>
+				<h3>Procedures</h3>
+				<ul id="list-procedures" class="list-commands list-procedures drop-target"></ul>
 			</div>
 			<div class="col-md-5">
 				<h3>Graphics</h3>
@@ -88,10 +81,11 @@
   <script src="bower_components/hello/dist/hello.all.min.js"></script>
   <script src="bower_components/pixi.js/bin/pixi.js"></script>
   <!-- endbower -->
-
+	
+	<script src="http://johnny.github.io/jquery-sortable/js/jquery-sortable.js" type="text/javascript"></script>
 	<script src="js/main.js" type="text/javascript"></script>
 	<script src="js/dragdrop.js"></script>
-  <script src="js/canvas.js"></script>
+	<script src="js/canvas.js"></script>
   
 </body>
 </html> 
