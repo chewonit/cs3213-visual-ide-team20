@@ -49,6 +49,11 @@ router.on('route:home', function() {
 // Create a new rendering area.
 jQuery(document).ready(function() {
   var canvas = new VisualIDE.Canvas(document.getElementById('canvas'));
+  // Draw default sprite
+  var sprite = new VisualIDE.CanvasSprite("../img/pikachu.gif");
+  var spriteName = "pikachu";
+  canvas.addSprite(spriteName, sprite);
+  Interpreter.init(canvas, spriteName);
 });
 
 Backbone.history.start();
