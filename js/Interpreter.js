@@ -5,11 +5,6 @@ var Interpreter = (function(my) {
     var _spriteName;
     var _delay = 1000;
 
-    var Procedure = function(procedureId, args) {
-        this.procedureId = procedureId;
-        this.args = args;
-    };
-
     my.init = function(canvas, spriteName) {
     	_canvas = canvas;
         _spriteName = spriteName;
@@ -19,14 +14,20 @@ var Interpreter = (function(my) {
         parse($('#list-procedures > li')); 
     };
 
+    /**
+     * Sets the position of the sprite.
+     */
     var setX = function(x) {
-        _canvas.getSprite(_spriteName).setX(x);
+        _canvas.getSprite(_spriteName).setX(parseInt(x));
     };
 
     var setY = function(y) {
-        _canvas.getSprite(_spriteName).setY(y);
+        _canvas.getSprite(_spriteName).setY(parseInt(y));
     };
 
+    /**
+     * Sets the visibility of the sprite.
+     */
     var show = function() {
         _canvas.getSprite(_spriteName).show();
     };
@@ -35,19 +36,33 @@ var Interpreter = (function(my) {
         _canvas.getSprite(_spriteName).hide();
     };
 
-    var move = function(newX, newY) {
-        console.log("あれ～～");
+    /**
+     * Moves the sprite by the amount specified by steps. Each step is one pixel.
+     */
+    var move = function(steps) {
+        var currX = _canvas.getSprite(_spriteName).sprite.position.x;
+        _canvas.getSprite(_spriteName).setX(currX + parseInt(steps));
     };
 
+    /**
+     * Sets the image of the sprite to that specified by the url.
+     */
     var changeCostume = function(url) {
         _canvas.getSprite(_spriteName).setImage(url);
     };
 
-    var changeBg = function() {
+    /**
+     * Sets the image of the background to that specified by the url.
+     */
+    var changeBg = function(url) {
 
     };
 
-    // Add a slight delay after each iteration otherwise all will appear as one
+    /**
+     * The loop command. Loops the child commands numIterations times. The child commands 
+     * are handled in the same way as the main commands in my.run. A delay is added after
+     * each iteration otherwise all iterations will appear as one.
+     */
     var loop = function(numIterations, container) {
         var i = 0;
         var looply = function() {
@@ -59,41 +74,49 @@ var Interpreter = (function(my) {
         looply();
     };
 
-    // Loop through each procedure call in the procedure list
-    // Add a slight delay after each procedure otherwise all will appear as one
-    var parse = function(procedureList) {
+    /**
+     * Parses the list of commands. A delay is added after each command otherwise all 
+     * commands will appear as one.
+     */
+    var parse = function(commandList) {
         var i = 0;
         var looply = function() {
-            execute($(procedureList[i]));
-            if (++i < procedureList.length) {
+            execute($(commandList[i]));
+            if (++i < commandList.length) {
                 setTimeout(looply, _delay);
             }
         };
         looply();
     };
 
-    var executeWrapper = function() {
-        execute($(this));
-    };
-
-    var execute = function(procedureObj) {
-        var procedureId = procedureObj.attr('data-command-id');
-        var args = getParams(procedureObj, procedureId);
+    /**
+     * Executes the command.
+     */
+    var execute = function(commandObj) {
+        var procedureId = commandObj.attr('data-command-id');
+        var args = getParams(commandObj, procedureId);
 
         _procedureMap[procedureId].apply(this, args);
     };
 
-    var getParams = function(procedureObj, procedureId) {
+    /**
+     * Gets the parameters entered by the user. Any special processing of the 
+     * paramters can be done here. Returns an array of parameters.
+     */
+    var getParams = function(commandObj, procedureId) {
         var params = [];
 
-        params.push(procedureObj.children("input").val());
+        params.push(commandObj.children("input").val());
 
         if (procedureId === "7")
-            params.push(procedureObj);
+            params.push(commandObj);
         
         return params;
     };
 
+    /**
+     * The mapping from procedureId to the actual function.
+     */
     var _procedureMap = {
         "0": setX,
         "1": setY,
