@@ -36,6 +36,12 @@ var VisualIDE = (function(my) {
     this.renderer = PIXI.autoDetectRenderer(elemWidth, elemHeight);
     elem.appendChild(this.renderer.view);
     
+    // Add a default background.
+    this.backgroundUrl = '/img/canvas-default-background-texture.png';
+    this.backgroundTexture = PIXI.Texture.fromImage(this.backgroundUrl);
+    this.backgroundSprite = new PIXI.Sprite(this.backgroundTexture);
+    this.stage.addChild(this.backgroundSprite);
+    
     // Define the animation function and begin rendering.
     var animate = function(that) {
       return function() {
@@ -51,6 +57,9 @@ var VisualIDE = (function(my) {
         that.scale = elemWidth / that.width;
         elemHeight = that.height * that.scale;
         that.renderer.resize(elemWidth, elemHeight);
+        
+        // Resize the background texture.
+        that.setBackgroundImage(that.backgroundUrl);
       };
     }(this);
     
@@ -96,6 +105,35 @@ var VisualIDE = (function(my) {
     }
     
     this.stage.setBackgroundColor(backgroundColor);
+  };
+  
+  /**
+   * Sets a background image for the canvas.
+   */
+  my.Canvas.prototype.setBackgroundImage = function(url) {
+    if (url === undefined) {
+      throw 'VisualIDE.Canvas: setBackgroundImage requires url argument';
+    }
+    
+    this.backgroundUrl = url;
+    var loader = new PIXI.ImageLoader(url);
+    loader.onLoaded = function(that) {
+      return function() {
+        that.backgroundTexture = PIXI.Texture.fromImage(url);
+        that.backgroundSprite.setTexture(that.backgroundTexture);
+        that.backgroundSprite.width = that.width * that.scale;
+        that.backgroundSprite.height = that.height * that.scale;
+      };
+    }(this);
+    
+    loader.load();
+  };
+  
+  /**
+   * Clears the background image for the canvas.
+   */
+  my.Canvas.prototype.clearBackgroundImage = function() {
+    this.setBackgroundImage('/img/canvas-default-background-texture.png');
   };
   
   /**
