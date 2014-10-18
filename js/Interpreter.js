@@ -3,7 +3,7 @@ var Interpreter = (function(my) {
 
     var _canvas;
     var _spriteName;
-    var _delay = 1000;
+    var _delay = 750;
 
     my.init = function(canvas, spriteName) {
     	_canvas = canvas;
@@ -48,6 +48,7 @@ var Interpreter = (function(my) {
      * Sets the image of the sprite to that specified by the url.
      */
     var changeCostume = function(url) {
+        if (!url) url = "../img/pikachu.gif";
         _canvas.getSprite(_spriteName).setImage(url);
     };
 
@@ -55,7 +56,12 @@ var Interpreter = (function(my) {
      * Sets the image of the background to that specified by the url.
      */
     var changeBg = function(url) {
-
+        if (!url) {
+            _canvas.clearBackgroundImage();
+        }
+        else {
+            _canvas.setBackgroundImage(url);
+        }
     };
 
     /**
