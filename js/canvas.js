@@ -39,7 +39,7 @@ var VisualIDE = (function(my) {
     // Add a default background.
     this.backgroundUrl = '/img/canvas-default-background-texture.png';
     this.backgroundTexture = PIXI.Texture.fromImage(this.backgroundUrl);
-    this.backgroundSprite = new PIXI.Sprite(this.backgroundTexture);
+    this.backgroundSprite = new PIXI.TilingSprite(this.backgroundTexture, elemWidth, elemHeight);
     this.stage.addChild(this.backgroundSprite);
     
     // Define the animation function and begin rendering.
@@ -109,11 +109,37 @@ var VisualIDE = (function(my) {
   
   /**
    * Sets a background image for the canvas.
+   * There are three options: mode, tileScale and tilePosition.
+   *
+   * Mode has two possible values:
+   * When mode is scale, then the background image is stretched (without
+   * preserving aspect ratio of the input image). When mode is tile, then
+   * the input image is tiled to fill the entire area. The default value is
+   * 'scale'.
+   *
+   * tileScale and tilePosition are only relevant when the mode is tile.
+   *
+   * tileScale specifies the scaling factor of tiles. The scaling factor has
+   * both x and y components. By default, both x and y components are 1.0.
+   *
+   * tilePosition specifies the offset of the tiles from the top left corner.
+   * The position has both x and y components. By default, these are 0.0.
    */
-  my.Canvas.prototype.setBackgroundImage = function(url) {
+  my.Canvas.prototype.setBackgroundImage = function(url, options) {
     if (url === undefined) {
       throw 'VisualIDE.Canvas: setBackgroundImage requires url argument';
     }
+    
+    options = options || {};
+    options.mode = options.mode || 'scale';
+    options.tileScale = options.tileScale || {
+      x: 1.0,
+      y: 1.0
+    };
+    options.tilePosition = options.tilePosition || {
+      x: 0.0,
+      y: 0.0
+    };
     
     this.backgroundUrl = url;
     var loader = new PIXI.ImageLoader(url);
@@ -121,8 +147,23 @@ var VisualIDE = (function(my) {
       return function() {
         that.backgroundTexture = PIXI.Texture.fromImage(url);
         that.backgroundSprite.setTexture(that.backgroundTexture);
-        that.backgroundSprite.width = that.width * that.scale;
-        that.backgroundSprite.height = that.height * that.scale;
+        
+        var elemWidth = that.width * that.scale;
+        var elemHeight = that.height * that.scale;
+        
+        // Scale a single tile to fill the entire element.
+        if (options.mode === 'scale') {
+          that.backgroundSprite.tileScale = {
+            x: elemWidth / that.backgroundTexture.width,
+            y: elemHeight / that.backgroundTexture.height
+          };
+        } else {
+          that.backgroundSprite.tileScale = options.tileScale;
+          that.backgroundSprite.tilePosition = options.tilePosition;
+        }
+        
+        that.backgroundSprite.width = elemWidth;
+        that.backgroundSprite.height = elemHeight;
       };
     }(this);
     
