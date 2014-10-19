@@ -22,21 +22,21 @@ $('#login-btn').on('click', function (e) {
 });
 
 $('#run-btn').on('click', function (e) {
-    Interpreter.run();
+	Interpreter.run();
 });
 
 var HomeView = Backbone.View.extend({
-  el: '.page',
-  render: function () {
-	this.$el.html("<h4>HelloWorld</h4>");
-  }
+	el: '.page',
+	render: function () {
+		this.$el.html("<h4>HelloWorld</h4>");
+	}
 });
 
 var homeView = new HomeView();
 
 var Router = Backbone.Router.extend({
 	routes: {
-	  "": "home"
+		"": "home"
 	}
 });
 
@@ -48,7 +48,7 @@ router.on('route:home', function() {
 
 // Create a new rendering area.
 jQuery(document).ready(function() {
-  var canvas = new VisualIDE.Canvas(document.getElementById('canvas'));
+	var canvas = new VisualIDE.Canvas(document.getElementById('canvas'));
   // Draw default sprite
   var sprite = new VisualIDE.CanvasSprite("../img/pikachu.gif");
   var spriteName = "pikachu";
