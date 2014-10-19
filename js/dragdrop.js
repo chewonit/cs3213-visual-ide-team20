@@ -100,7 +100,7 @@ var VisualIDE = (function(ide) {
 	
 	cmd.prototype.getCommandHtml = function(id) {
 		var html = "";
-		var command = cmdList[id]; console.log(command);
+		var command = cmdList[id];
 		html += '<li class="command command-raw ';
 		
 		for( j=0; j<command.classes.length; j++ ) {

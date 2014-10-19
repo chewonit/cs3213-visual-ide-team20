@@ -11,9 +11,14 @@ function getGoogleProfileName() {
 	hello( "google" ).api("me").then(function(json){
 		var saveBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-upload"></span> Save Program</button>';
 		var loadBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-download"></span> Load Program</button>';
-		$("#login-area").html("Welcome <a href='" + json.url + "'>" + json.name + "</a> " + saveBtn + " " + loadBtn );
-		//$("#login-area").removeClass("no-margin");
-		console.log("Your name is "+ json.name + ", " + json.url);
+		
+		if( json.url ) {
+			$("#login-area").html("Welcome <a href='" + json.url + "'>" + json.name + "</a> " + saveBtn + " " + loadBtn );
+		} else {
+			$("#login-area").html("Welcome " + json.name + " " + saveBtn + " " + loadBtn );
+		}
+		
+		console.log("Hello "+ json.name);
 	}, function(e){
 		console.log("Whoops! " + e.error.message );
 	});
