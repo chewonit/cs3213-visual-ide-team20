@@ -24,7 +24,7 @@ $('#login-btn').on('click', function (e) {
 });
 
 $('#run-btn').on('click', function (e) {
-    Interpreter.run();
+	Interpreter.run();
 });
 
 $('#btn-clear-procedure').on('click', function (e) {
@@ -42,7 +42,7 @@ var homeView = new HomeView();
 
 var Router = Backbone.Router.extend({
 	routes: {
-	  "": "home"
+		"": "home"
 	}
 });
 
@@ -73,7 +73,6 @@ jQuery(document).ready(function() {
 
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
-
 });
 
 Backbone.history.start();
