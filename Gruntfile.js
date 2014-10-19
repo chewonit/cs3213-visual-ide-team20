@@ -39,6 +39,13 @@ module.exports = function(grunt) {
           dest: '<%= build_path.active %>'
         }]
       },
+      img: {
+        files: [{
+          expand: true,
+          src: ['img/**'],
+          dest: '<%= build_path.active %>'
+        }]
+      },
       bower: {
         files: [{
           expand: true,
@@ -89,7 +96,8 @@ module.exports = function(grunt) {
         files: ['*.html'],
         tasks: [
           'set-active-build-path:<%= build_config %>',
-          'wiredep'
+          'wiredep',
+          'copy:html'
         ]
       },
       js: {
@@ -105,6 +113,13 @@ module.exports = function(grunt) {
         tasks: [
           'set-active-build-path:<%= build_config %>',
           'sass:<%= build_config %>'
+        ]
+      },
+      img: {
+        files: ['img/**'],
+        tasks: [
+          'set-active-build-path:<%= build_config %>',
+          'copy:img'
         ]
       }
     },
