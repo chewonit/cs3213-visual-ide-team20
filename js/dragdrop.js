@@ -91,75 +91,16 @@ var VisualIDE = (function(ide) {
 
 var VisualIDE = (function(ide) {
 
-	ide.CommandList = [
-		{
-			id: 0,
-			name: "Set Horizontal Position",
-			parms: ['Horizontal position'],
-			classes: [],
-			extraHtml: []
-		},
-		{
-			id: 1,
-			name: "Set Vertical Position",
-			parms: ['Vertical position'],
-			classes: [],
-			extraHtml: []
-		},
-		{
-			id: 2,
-			name: "Show Character",
-			parms: [],
-			classes: [],
-			extraHtml: []
-		},
-		{
-			id: 3,
-			name: "Hide Character",
-			parms: [],
-			classes: [],
-			extraHtml: []
-		},
-		{
-			id: 4,
-			name: "Move",
-			parms: ['Steps'],
-			classes: [],
-			extraHtml: []
-		},
-		{
-			id: 5,
-			name: "Change Costume",
-			parms: ['Image URL'],
-			classes: [],
-			extraHtml: []
-		},
-		{
-			id: 6,
-			name: "Change Background",
-			parms: ['Image URL'],
-			classes: [],
-			extraHtml: []
-		},
-		{
-			id: 7,
-			name: "Repeat",
-			parms: ['Number of reptitions'],
-			classes: ["command-loop"],
-			extraHtml: ["<ul></ul>"]
-		},
-	];
-
 	ide.CommandsHtml = function() {
 		console.log("VisualIDE.CommandHtml: Initialized!");
 	};
 	
 	var cmd = ide.CommandsHtml;
-	var cmdList = ide.CommandList;
+	var cmdList = cmdDef.cmds;
 	
 	cmd.prototype.getCommandHtml = function(id) {
 		var html = "";
-		var command = cmdList[id];
+		var command = cmdList[id]; console.log(command);
 		html += '<li class="command command-raw ';
 		
 		for( j=0; j<command.classes.length; j++ ) {

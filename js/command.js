@@ -4,15 +4,14 @@
 var cmdDef = (function(cmd) {
   'use strict';
 
-  cmd.cmds = cmds;
   var cmds = {};
 
   // Default values. 
   cmds = [
     {
       id          : 0,
-      name        : "Set X Position",
-      parms       : ['x pos'],
+      name        : "Set Horizontal Position",
+      parms       : ['Horizontal Position'],
       def_value   : '0',
       classes     : [],
       isContainer : false,
@@ -20,8 +19,8 @@ var cmdDef = (function(cmd) {
     },
     {
       id          : 1,
-      name        : "Set y Position",
-      parms       : ['y pos'],
+      name        : "Set Vertical Position",
+      parms       : ['Vertical Position'],
       def_value   : '0',
       classes     : [],
       isContainer : false,
@@ -48,7 +47,7 @@ var cmdDef = (function(cmd) {
     {
       id          : 4,
       name        : "Move",
-      parms       : ['steps'],
+      parms       : ['Steps'],
       def_value   : '0',
       classes     : [],
       isContainer : false,
@@ -57,7 +56,7 @@ var cmdDef = (function(cmd) {
     {
       id          : 5,
       name        : "Change Costume",
-      parms       : ['image url'],
+      parms       : ['Image URL'],
       def_value   : '0',
       classes     : [],
       isContainer : false,
@@ -66,7 +65,7 @@ var cmdDef = (function(cmd) {
     {
       id          : 6,
       name        : "Change Background",
-      parms       : ['image url'],
+      parms       : ['Image URL'],
       def_value   : '0',
       classes     : [],
       isContainer : false,
@@ -75,7 +74,7 @@ var cmdDef = (function(cmd) {
     {
       id: 7,
       name        : "Repeat",
-      parms       : ['number of reptitions'],
+      parms       : ['Number of reptitions'],
       def_value   : '0',
       classes     : ["command-loop"],
       isContainer : true,
@@ -83,6 +82,8 @@ var cmdDef = (function(cmd) {
     },
   ];
 
+  cmd.cmds = cmds;
+  
   return cmd;
 
 }(cmdDef || {}));
