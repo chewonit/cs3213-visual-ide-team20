@@ -1,11 +1,6 @@
 var client = new Dropbox.Client({ key: 'ac37pkslbk3prcc' });
 
 function saveProcedure() {
-    var d = new Date();
-    d.getHours();
-    d.getMinutes();
-    d.getSeconds();
-
     var procedures = $('ul.list-procedures').html();
 
     client.writeFile('saved_data.txt', procedures, function (error) {
@@ -19,11 +14,6 @@ function saveProcedure() {
 }
 
 function loadProcedure() {
-    var d = new Date();
-    d.getHours();
-    d.getMinutes();
-    d.getSeconds();
-
     var procedures = $('ul.list-procedures').html();
 
     var result = client.readFile('saved_data.txt', function (error, data) {
