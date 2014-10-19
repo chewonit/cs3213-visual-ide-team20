@@ -9,8 +9,10 @@ hello.on('auth.login', function(auth){
 
 function getGoogleProfileName() {
 	hello( "google" ).api("me").then(function(json){
-		$("#login-area").html("Signed in as <a href='" + json.url + "'>" + json.name + "</a>");
-		$("#login-area").removeClass("no-margin");
+		var saveBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-upload"></span> Save Program</button>';
+		var loadBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-download"></span> Load Program</button>';
+		$("#login-area").html("Welcome <a href='" + json.url + "'>" + json.name + "</a> " + saveBtn + " " + loadBtn );
+		//$("#login-area").removeClass("no-margin");
 		console.log("Your name is "+ json.name + ", " + json.url);
 	}, function(e){
 		console.log("Whoops! " + e.error.message );
@@ -32,7 +34,7 @@ $('#btn-clear-procedure').on('click', function (e) {
 var HomeView = Backbone.View.extend({
   el: '.page',
   render: function () {
-	this.$el.html("<h4>HelloWorld</h4>");
+	//this.$el.html("<h4>HelloWorld</h4>");
   }
 });
 

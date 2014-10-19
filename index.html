@@ -21,12 +21,7 @@
 		
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<button id="run-btn" type="button" class="btn btn-success navbar-btn">
-					<span class="glyphicon glyphicon-play"></span> Run
-				</button>
-				<button type="button" class="btn btn-default navbar-btn">
-					<span class="glyphicon glyphicon-floppy-disk"></span> Save
-				</button>
+			
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
@@ -49,7 +44,12 @@
 				</ul>
 			</div>
 			<div class="col-md-4">
-				<h3>Procedure</h3>
+				<h3>
+					Procedure
+					<button id="run-btn" type="button" class="btn btn-success navbar-btn pull-right no-margin">
+						<span class="glyphicon glyphicon-play"></span> Run
+					</button>
+				</h3>
 				<ul id="list-procedures" class="list-commands list-procedures drop-target"></ul>
 				<button id="btn-clear-procedure" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
 			</div>
@@ -78,7 +78,6 @@
   <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
   <script src="bower_components/underscore/underscore.js"></script>
   <script src="bower_components/backbone/backbone.js"></script>
-  <script src="bower_components/yui/build/yui/yui.js"></script>
   <script src="bower_components/hello/dist/hello.all.min.js"></script>
   <script src="bower_components/pixi.js/bin/pixi.js"></script>
   <!-- endbower -->
