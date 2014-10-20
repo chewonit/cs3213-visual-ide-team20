@@ -4,6 +4,7 @@ var Interpreter = (function(my) {
     var _canvas;
     var _spriteName;
     var _delay = 750;
+    var _USER_INPUT = 0;
 
     my.init = function(canvas, spriteName) {
     	_canvas = canvas;
@@ -11,7 +12,8 @@ var Interpreter = (function(my) {
     };
     
     my.run = function() {
-        parse($('#list-procedures > li')); 
+        var commandList = $('#list-procedures > li');
+        parse(commandList, commandList.length); 
     };
 
     /**
@@ -84,11 +86,12 @@ var Interpreter = (function(my) {
      * Parses the list of commands. A delay is added after each command otherwise all 
      * commands will appear as one.
      */
-    var parse = function(commandList) {
-        var i = 0;
-        var looply = function() {
-            execute($(commandList[i]));
-            if (++i < commandList.length) {
+    var parse = function(commandList, total) {
+        var commandIndex = 0;
+        var looply = function() {            
+            execute($(commandList[commandIndex]));
+            commandIndex++; 
+            if (commandIndex < total) {
                 setTimeout(looply, _delay);
             }
         };
@@ -133,6 +136,8 @@ var Interpreter = (function(my) {
         "6": changeBg,
         "7": loop
     };
+
+    // var commandList = cmdDef.cmds;
     
     return my;
 }(Interpreter || {}));
