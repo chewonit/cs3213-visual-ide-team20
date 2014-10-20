@@ -9,6 +9,7 @@ hello.on('auth.login', function(auth){
 
 function getGoogleProfileName() {
 	hello( "google" ).api("me").then(function(json){
+		/*
 		var saveBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-upload"></span> Save Program</button>';
 		var loadBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-download"></span> Load Program</button>';
 		
@@ -16,6 +17,14 @@ function getGoogleProfileName() {
 			$("#login-area").html("Welcome <a href='" + json.url + "'>" + json.name + "</a> " + saveBtn + " " + loadBtn );
 		} else {
 			$("#login-area").html("Welcome " + json.name + " " + saveBtn + " " + loadBtn );
+		}
+		*/
+		
+		$("#login-area").removeClass("no-margin");
+		if( json.url ) {
+			$("#login-area").html("Welcome <a href='" + json.url + "'>" + json.name + "</a> ");
+		} else {
+			$("#login-area").html("Welcome " + json.name);
 		}
 		
 		console.log("Hello "+ json.name);
