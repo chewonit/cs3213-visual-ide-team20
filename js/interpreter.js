@@ -4,6 +4,9 @@ var Interpreter = (function(my) {
     var _canvas;
     var _spriteName;
     var _delay = 750;
+    var _USER_INPUT = 0;
+    var _commandQueue;
+    var _commandTimer;
 
     my.init = function(canvas, spriteName) {
     	_canvas = canvas;
@@ -11,8 +14,16 @@ var Interpreter = (function(my) {
     };
     
     my.run = function() {
-        parse($('#list-procedures > li')); 
-    };
+        clearInterval(_commandTimer);
+        _commandQueue = [];
+        parse($('#list-procedures > li'));
+        executeCommands();
+    };        
+    
+    my.stop = function() {
+        clearInterval(_commandTimer);
+        _commandQueue = [];
+    };        
 
     /**
      * Sets the position of the sprite.
@@ -45,7 +56,8 @@ var Interpreter = (function(my) {
     };
 
     /**
-     * Sets the image of the sprite to that specified by the url.
+     * Sets the image of the sprite to that specified by the url. If no 
+     * url is provided, sets the sprite to the default sprite.
      */
     var changeCostume = function(url) {
         if (!url) url = "../img/pikachu.gif";
@@ -53,7 +65,8 @@ var Interpreter = (function(my) {
     };
 
     /**
-     * Sets the image of the background to that specified by the url.
+     * Sets the image of the background to that specified by the url. If no 
+     * url is provided, sets the background to the default background (clear).
      */
     var changeBg = function(url) {
         if (!url) {
@@ -65,44 +78,29 @@ var Interpreter = (function(my) {
     };
 
     /**
-     * The loop command. Loops the child commands numIterations times. The child commands 
-     * are handled in the same way as the main commands in my.run. A delay is added after
-     * each iteration otherwise all iterations will appear as one.
-     */
-    var loop = function(numIterations, container) {
-        var i = 0;
-        var looply = function() {
-            parse(container.children("ul").children("li"));
-            if (++i < numIterations) {
-                setTimeout(looply, _delay);
-            }
-        };
-        looply();
-    };
-
-    /**
-     * Parses the list of commands. A delay is added after each command otherwise all 
-     * commands will appear as one.
+     * Parses the list of commands.
      */
     var parse = function(commandList) {
-        var i = 0;
-        var looply = function() {
-            execute($(commandList[i]));
-            if (++i < commandList.length) {
-                setTimeout(looply, _delay);
-            }
-        };
-        looply();
+        commandList.each(encapsulateCommand);
     };
 
     /**
-     * Executes the command.
+     * Encapsulates each command into a compact data structure and enqueues
+     * them into the command queue.
      */
-    var execute = function(commandObj) {
+    var encapsulateCommand = function() {
+        var commandObj = $(this);
         var procedureId = commandObj.attr('data-command-id');
         var args = getParams(commandObj, procedureId);
 
-        _procedureMap[procedureId].apply(this, args);
+        if (procedureId === "7") {
+            for (var i = 0; i < args[_USER_INPUT]; i++) {
+                parse(commandObj.children('ul').children('li'));
+            }
+        }
+        else {
+            _commandQueue.push(new Procedure(procedureId, args));
+        }
     };
 
     /**
@@ -113,11 +111,35 @@ var Interpreter = (function(my) {
         var params = [];
 
         params.push(commandObj.children("input").val());
-
-        if (procedureId === "7")
-            params.push(commandObj);
         
         return params;
+    };
+
+    /**
+     * Dequeues commands one at a time and executes them. Speed of dequeuing 
+     * is specified by _delay.
+     */
+    var executeCommands = function() {
+        var looply = function() {
+            execute(_commandQueue.shift());
+            if (_commandQueue.length <= 0) {
+                clearInterval(_commandTimer);
+            }
+        };
+        _commandTimer = setInterval(looply, _delay);
+    };
+
+    /**
+     * Executes the command.
+     */
+    var execute = function(commandObj) {
+        var procedureId = commandObj.procedureId;
+        var args = commandObj.args;
+
+        if (_procedureMap[procedureId] === undefined)
+            throw 'Interpreter: Undefined procedure!';
+
+        _procedureMap[procedureId].apply(this, args);
     };
 
     /**
@@ -130,9 +152,18 @@ var Interpreter = (function(my) {
         "3": hide,
         "4": move,
         "5": changeCostume,
-        "6": changeBg,
-        "7": loop
+        "6": changeBg
     };
+
+    /**
+     * The encapsulated procedure object.
+     */
+    var Procedure = function(procedureId, args) {
+        this.procedureId = procedureId;
+        this.args = args;
+    };
+
+    // var commandList = cmdDef.cmds;
     
     return my;
 }(Interpreter || {}));
