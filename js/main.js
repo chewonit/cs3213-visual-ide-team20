@@ -38,6 +38,7 @@ $('#login-btn').on('click', function (e) {
 });
 
 $('#run-btn').on('click', function (e) {
+	Interpreter.stop();
 	Interpreter.run();
 });
 
