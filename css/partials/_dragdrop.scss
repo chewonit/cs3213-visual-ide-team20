@@ -9,7 +9,20 @@ ul.list-commands {
     padding: 0;
 	
 	h4 {
-		font-size: 1.3em;
+		font-size: 1.2em;
+		display: inline-block;
+		padding-right: 10px; 
+	}
+	
+	input {
+		display: inline-block;
+		width: auto;
+	}
+	
+	&.list-commands-raw {
+		input {
+			display: none;
+		}
 	}
 	
 	.command {
@@ -51,6 +64,7 @@ ul.list-commands {
 		font-size: 16px;
 		color: $drag-drop-reorder-highlight-color;
 		left: 90%;
+		top: -10px;
 		height: 0;
 	}
 }
@@ -78,7 +92,19 @@ ul.drop-target{
 	}
 	
 	&.list-trash {
-		padding: 20px 0;
+		@include transition(border-color, 0.2s, ease-in-out);
+		margin-top: 20px;
+		border-bottom: 10px dashed white;
+		border-top: 10px dashed white;
+		padding: 5px 0 10px;
+		
+		&.active {
+			border-color: darken($drag-drop-command-loop-color, 40%) !important;
+		}
+		
+		li.placeholder {
+			display: none;
+		}
 	}
 	
 	&.list-procedures {
