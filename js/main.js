@@ -1,3 +1,7 @@
+$(document).ready(function(){
+	$("ul.save-load-file").hide();
+});
+
 $('#run-btn').on('click', function (e) {
 	Interpreter.stop();
 	Interpreter.run();
@@ -30,6 +34,7 @@ router.on('route:home', function() {
 
 // Create a new rendering area.
 jQuery(document).ready(function() {
+	$("save-load-file").hide();
 	var canvas = new VisualIDE.Canvas(document.getElementById('canvas'));
 	// Draw default sprite
 	var sprite = new VisualIDE.CanvasSprite("../img/pikachu.gif");
