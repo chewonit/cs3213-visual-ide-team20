@@ -21,8 +21,9 @@ function checkAuth() {
 }
 
 function setGoogleProfile(obj) {
-	$("#login-area").removeClass("no-margin");
-	$("#login-area").html("Welcome  <a href='" + obj.link + "'>"+ obj.given_name+"</a>");
+	var saveBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-upload"></span> Save Program</button>';
+	var loadBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-download"></span> Load Program</button>';
+	$("#login-area").html("Welcome  <a href='" + obj.link + "'>"+ obj.given_name+"</a> "+saveBtn+" "+loadBtn);
 }
 
 function handleAuthResult(authResult) {
