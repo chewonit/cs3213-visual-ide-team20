@@ -119,8 +119,9 @@ var VisualIDE = (function(ide) {
 	
 	var scrollPage = function(yPos, distance, threshold) {
 		if ( !pageScrollOptions.isDragging ) return;
-		if ( $( document.body ).height() < $(window).height() ) return;
-
+		if ( $('body,html').height() < $(window).height() ) return;
+		
+		console.log("window:"+$(window).height());
 		// Scroll down page
 		if ( yPos > $(window).height() - threshold && !pageScrollOptions.isScrolling ) {
 			animateScrollPage(distance);
@@ -132,9 +133,9 @@ var VisualIDE = (function(ide) {
 	};
 	
 	var animateScrollPage = function(distance) {
-		pageScrollOptions.isScrolling = true;
-		$( document.body ).animate({ 
-			scrollTop: $( document.body ).scrollTop() + distance + "px"
+		pageScrollOptions.isScrolling = true;console.log("animate");
+		$('body,html').animate({ 
+			scrollTop: $('body,html').scrollTop() + distance + "px"
 		}, 100, function(){
 			pageScrollOptions.isScrolling = false;
 		});
