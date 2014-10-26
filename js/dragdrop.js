@@ -64,6 +64,7 @@ var VisualIDE = (function(ide) {
 				// Duplicate items of the no drop area
 				if (!container.options.drop) item.clone().insertAfter(item);
 				pageScrollOptions.isDragging = true;
+				$( containers.normal ).height( $( containers.normal ).height() + item.height()/2 );
 				_super(item);
 			},
 			afterMove: function (placeholder, container) {
@@ -80,6 +81,7 @@ var VisualIDE = (function(ide) {
 					return;
 				}
 				pageScrollOptions.isDragging = false;
+				$( containers.normal ).css({'height' : 'auto'});
 				if (item) _super(item);
 			}
 		});

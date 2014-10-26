@@ -42,7 +42,7 @@ function handleAuthResult(authResult) {
 				request.execute(function(obj){
 					setGoogleProfile(obj);
 				});
-				$("ul.save-load-file").show();
+				$(".save-load-file").show();
 				console.log("You are signed in to Google");
 			});
 		});		

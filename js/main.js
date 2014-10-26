@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$("ul.save-load-file").hide();
+	$(".save-load-file").hide();
 });
 
 $('#run-btn').on('click', function (e) {
@@ -34,34 +34,50 @@ router.on('route:home', function() {
 
 // Create a new rendering area.
 jQuery(document).ready(function() {
-	$("save-load-file").hide();
+	var spriteName = "pikachu";
+	var path = "../img/pikachu.gif";
+	var canvas = initCanvas(spriteName, path);
+	
+	initIntepreter(canvas, spriteName);
+
+	initLayout();
+});
+
+function initCanvas(spriteName, path) {
 	var canvas = new VisualIDE.Canvas(document.getElementById('canvas'));
 	// Draw default sprite
-	var sprite = new VisualIDE.CanvasSprite("../img/pikachu.gif");
-	var spriteName = "pikachu";
+	var sprite = new VisualIDE.CanvasSprite(path);
 	canvas.addSprite(spriteName, sprite);
-	Interpreter.init(canvas, spriteName);
+	
+	return canvas;
+}
 
+function initIntepreter(canvas, spriteName) {
+	Interpreter.init(canvas, spriteName);
+}
+
+function initLayout() {
+	
 	var dragDrop = new VisualIDE.DragDrop({
 		commands: "ul.list-commands-raw",
 		trash: "ul.list-trash",
 		normal: "ul.list-procedures"
 	});
-	
+
 	// Populate the raw static commands
 	var commandsHtml = new VisualIDE.CommandsHtml();
-	$('#list-commands-raw').append( commandsHtml.getAllCommandsHtml() );
+	$('.list-commands-raw').append( commandsHtml.getAllCommandsHtml() );
 
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
-	
-	/*
-	$('.affix-container').affix({
-		offset: {
-			top: 0
-		}
-	});
-	*/
-});
+
+	if ( $(window).width() > 991 ) {
+		$('.affix-container').affix({
+			offset: {
+				top: 0
+			}
+		});
+	}
+}
 
 Backbone.history.start();
