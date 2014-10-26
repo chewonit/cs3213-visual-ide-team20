@@ -7,15 +7,15 @@ $('#run-btn').on('click', function (e) {
 	Interpreter.run();
 });
 
-$('#btn-clear-procedure').on('click', function (e) {
+$('.btn-clear-procedure').on('click', function (e) {
     $('#list-procedures').html("");
 });
 
 var HomeView = Backbone.View.extend({
-  el: '.page',
-  render: function () {
-	//this.$el.html("<h4>HelloWorld</h4>");
-  }
+	el: '.page',
+	render: function () {
+		//this.$el.html("<h4>HelloWorld</h4>");
+	}
 });
 
 var homeView = new HomeView();
@@ -28,8 +28,8 @@ var Router = Backbone.Router.extend({
 
 var router = new Router();
 router.on('route:home', function() {
-  // render home view
-  homeView.render();
+	// render home view
+	homeView.render();
 });
 
 // Create a new rendering area.
@@ -54,6 +54,14 @@ jQuery(document).ready(function() {
 
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
+	
+	/*
+	$('.affix-container').affix({
+		offset: {
+			top: 0
+		}
+	});
+	*/
 });
 
 Backbone.history.start();
