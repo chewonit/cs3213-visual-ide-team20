@@ -76,12 +76,12 @@ var VisualIDE = (function(ide) {
 			},
 			onDrop: function (item, container, _super) {
 				container.el.removeClass("active");
+				$( containers.normal ).css({'height' : 'auto'});
 				if (!container.options.drag) {
 					item.remove();
 					return;
 				}
 				pageScrollOptions.isDragging = false;
-				$( containers.normal ).css({'height' : 'auto'});
 				if (item) _super(item);
 			}
 		});

@@ -106,7 +106,8 @@ function initLayout() {
 
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
-
+	
+	// Set up affix components
 	if ( $(window).width() > 991 ) {
 		$('.affix-container').affix({
 			offset: {
@@ -114,6 +115,36 @@ function initLayout() {
 			}
 		});
 	}
+	
+	// Initialize off canvas command list panel
+	$('.command-panel-btn').on('click', function(event){
+		event.preventDefault();
+		$('.cd-panel').addClass('is-visible');
+		$("#navbar-collapse").collapse('hide');
+	});
+	$('.cd-panel').on('click', function(event){
+		if( $(event.target).is('.cd-panel') || $(event.target).is('.cd-panel-close-btn') ) { 
+			$('.cd-panel').removeClass('is-visible');
+			event.preventDefault();
+		}
+	});
+	
+	// Re initialize affix components on browser resize
+	$(window).resize(function(){
+		if ( $(window).width() > 991 ) {
+			$('.affix-container').affix({
+				offset: {
+					top: 0
+				}
+			});
+			$('.cd-panel').removeClass('is-visible');
+		} else {
+			$(window).off('.affix');
+			$('.affix-container')
+				.removeClass("affix affix-top affix-bottom")
+				.removeData("bs.affix");
+		}
+	});
 }
 
 Backbone.history.start();

@@ -27,7 +27,8 @@ ul.list-commands {
 	}
 	
 	.command {
-		@include transition(border-color, 0.2s, ease-in-out);
+		@include transition2(border-color, 0.2s, ease-in-out);
+		text-align: left;
 		list-style-type: none;
 		padding: 5px;
 		margin: 10px;
@@ -105,7 +106,7 @@ ul.drop-target{
 	}
 	
 	&.list-trash {
-		@include transition(border-color, 0.2s, ease-in-out);
+		@include transition2(border-color, 0.2s, ease-in-out);
 		margin-top: 20px;
 		border-bottom: 10px dashed white;
 		border-top: 10px dashed white;
