@@ -1,12 +1,12 @@
 var Interpreter = (function(my) {
     'use strict';
 
-    var _canvas;
-    var _spriteName;
-    var _delay = 750;
-    var _USER_INPUT = 0;
-    var _commandQueue;
-    var _commandTimer;
+    var _canvas,
+        _spriteName,
+        _delay = 750,
+        _USER_INPUT = 0,
+        _commandQueue,
+        _commandTimer;
 
     my.init = function(canvas, spriteName) {
     	_canvas = canvas;
@@ -15,14 +15,16 @@ var Interpreter = (function(my) {
     
     my.run = function() {
         clearInterval(_commandTimer);
-        _commandQueue = [];
+        _commandQueue = new CommandQueue();
+
         parse($('#list-procedures > li'));
+
         executeCommands();
     };        
     
     my.stop = function() {
         clearInterval(_commandTimer);
-        _commandQueue = [];
+        _commandQueue = new CommandQueue();
     };        
 
     /**
@@ -94,12 +96,19 @@ var Interpreter = (function(my) {
         var args = getParams(commandObj, procedureId);
 
         if (procedureId === "7") {
-            for (var i = 0; i < args[_USER_INPUT]; i++) {
-                parse(commandObj.children('ul').children('li'));
-            }
+            var loopStart = _commandQueue.getLength() === 0 ? 0 : _commandQueue.getLength();
+
+            parse(commandObj.children('ul').children('li'));
+
+            var jumpArgs = [args[_USER_INPUT]];
+            _commandQueue.addCommand(new Command('-1', jumpArgs, {
+                loopStart: loopStart,
+                numLooped: 1,
+                infiniteLoop: 0
+            }));
         }
         else {
-            _commandQueue.push(new Procedure(procedureId, args));
+            _commandQueue.addCommand(new Command(procedureId, args));
         }
     };
 
@@ -116,14 +125,41 @@ var Interpreter = (function(my) {
     };
 
     /**
-     * Dequeues commands one at a time and executes them. Speed of dequeuing 
+     * Executes commands in order in _commandQueue. Speed of execution 
      * is specified by _delay.
      */
     var executeCommands = function() {
         var looply = function() {
-            execute(_commandQueue.shift());
-            if (_commandQueue.length <= 0) {
+            var commandObj = _commandQueue.getCommand();
+
+            while (commandObj.procedureId === '-1') {
+                if (commandObj.options.infiniteLoop) {
+                    _commandQueue.movePointer(options.loopStart);
+                }
+                else {
+                    if (commandObj.options.numLooped < commandObj.args[_USER_INPUT]) {
+                        commandObj.options.numLooped++;
+                        _commandQueue.movePointer(commandObj.options.loopStart);
+                    }
+                    else {
+                        commandObj.options.numLooped = 1;
+                        if (_commandQueue.getPointerIndex() === _commandQueue.getLength() - 1) {
+                            clearInterval(_commandTimer);
+                            return;
+                        }
+                        _commandQueue.incrementPointer();
+                    }
+                }
+                commandObj = _commandQueue.getCommand();
+            }
+
+            execute(commandObj);
+
+            if (_commandQueue.getPointerIndex() === _commandQueue.getLength() - 1) {
                 clearInterval(_commandTimer);
+            }
+            else {
+                _commandQueue.incrementPointer();
             }
         };
         _commandTimer = setInterval(looply, _delay);
@@ -135,11 +171,12 @@ var Interpreter = (function(my) {
     var execute = function(commandObj) {
         var procedureId = commandObj.procedureId;
         var args = commandObj.args;
+        var options = commandObj.options;
 
         if (_procedureMap[procedureId] === undefined)
             throw 'Interpreter: Undefined procedure!';
 
-        _procedureMap[procedureId].apply(this, args);
+        _procedureMap[procedureId].apply(this, [args, options]);
     };
 
     /**
@@ -158,12 +195,46 @@ var Interpreter = (function(my) {
     /**
      * The encapsulated procedure object.
      */
-    var Procedure = function(procedureId, args) {
+    var Command = function(procedureId, args, options) {
         this.procedureId = procedureId;
         this.args = args;
+        this.options = options || {};
     };
 
-    // var commandList = cmdDef.cmds;
+    var CommandQueue = function() {
+        this._queue = [];
+        this._curr = 0;
+
+        this.addCommand = function(commandObj) {
+            this._queue.push(commandObj);
+        };
+
+        this.getCommand = function() {
+            return this._queue[this._curr];
+        };
+
+        this.getLength = function() {
+            return this._queue.length;
+        };
+
+        this.getPointerIndex = function() {
+            return this._curr;
+        };
+
+        this.incrementPointer = function() {
+            if (this._curr === this.getLength() - 1)
+                throw 'CommandQueue: Reached the end of queue!';
+
+            this._curr++;
+        };
+
+        this.movePointer = function(moveTo) {
+            if (moveTo > this.getLength())
+                throw 'CommandQueue: moveTo index out of bounds!';
+
+            this._curr = moveTo;
+        };
+    };
     
     return my;
 }(Interpreter || {}));
