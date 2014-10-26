@@ -10,7 +10,7 @@
 </head>
 <body>
 
-	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 	  <div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -45,8 +45,10 @@
 	<div class="container-fluid">
 		<div id="dashboard" class="row">
 			<div class="col-sm-6 col-md-3">
-				<h3>Commands</h3>
-				<ul id="list-commands-raw" class="list-commands list-commands-raw"></ul>
+				<div class="affix-container">
+					<h3>Commands</h3>
+					<ul id="list-commands-raw" class="list-commands list-commands-raw"></ul>
+				</div>
 			</div>
 			<div class="col-sm-6 col-md-4">
 				<div class="list-header clearfix">
@@ -60,28 +62,28 @@
 						</button>
 					</div>
 				</div>
-				
 				<ul id="list-procedures" class="list-commands list-procedures drop-target"></ul>
 			</div>
 			<div class="col-sm-12 visible-xs-block visible-sm-block">
 				<ul class="list-commands list-trash drop-target">
 					<h3>
 						<span class="glyphicon glyphicon-trash"></span> Trash
-						<button id="btn-clear-procedure" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
+						<button class="btn btn-danger btn-clear-procedure pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
 					</h3>
 				</ul>
 			</div>
 			<div class="col-sm-12 col-md-5">
-				<h3>Graphics</h3>
-				<div id="canvas"></div>
-				<hr />
-				<ul id="list-trash" class="list-commands list-trash drop-target visible-md-block visible-lg-block">
-					<h3>
-						<span class="glyphicon glyphicon-trash"></span> Trash
-						<button id="btn-clear-procedure" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
-					</h3>
-					
-				</ul>
+				<div class="affix-container">
+					<h3>Graphics</h3>
+					<div id="canvas"></div>
+					<hr />
+					<ul id="list-trash" class="list-commands list-trash drop-target visible-md-block visible-lg-block">
+						<h3>
+							<span class="glyphicon glyphicon-trash"></span> Trash
+							<button class="btn btn-danger btn-clear-procedure pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
+						</h3>
+					</ul>
+				</div>
 			</div>
 		</div>
 		<div class="page"></div>

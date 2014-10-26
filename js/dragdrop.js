@@ -45,6 +45,15 @@ var VisualIDE = (function(ide) {
 		
 		console.log("VisualIDE.DragDrop: Initialized!");
 	};
+		
+	var pageScrollOptions = {
+		scrollDistance: 100,
+		scrollDistanceMobile: 50,
+		scrollThreshold: 50,
+		scrollThresholdMobile: 100,
+		isScrolling: false,
+		isDragging: false
+	};
 	
 	var initDragDrop = function() {
 	
@@ -54,6 +63,7 @@ var VisualIDE = (function(ide) {
 			onDragStart: function (item, container, _super) {
 				// Duplicate items of the no drop area
 				if (!container.options.drop) item.clone().insertAfter(item);
+				pageScrollOptions.isDragging = true;
 				_super(item);
 			},
 			afterMove: function (placeholder, container) {
@@ -69,6 +79,7 @@ var VisualIDE = (function(ide) {
 					item.remove();
 					return;
 				}
+				pageScrollOptions.isDragging = false;
 				if (item) _super(item);
 			}
 		});
@@ -81,6 +92,49 @@ var VisualIDE = (function(ide) {
 		$( containers.trash ).sortable({
 			group: dragGroup,
 			drag: false
+		});
+		
+		initPageScrollOnDrag();
+	};
+	
+	/*
+	 * Add listeners to the mouse move and touch move events to scroll
+	 * the page when the user drags the drag item beyond the window boundary.
+	 */
+	var initPageScrollOnDrag = function() {
+		$( document ).on('mousemove', function(e) {
+			var yPos = e.pageY;
+			yPos = yPos - $(window).scrollTop();
+			scrollPage(yPos, pageScrollOptions.scrollDistance, pageScrollOptions.scrollThreshold);
+		});
+
+		document.addEventListener('touchmove', function(e) {
+			var yPos = e.touches[0].pageY;
+			yPos = yPos - $(window).scrollTop();
+			scrollPage(yPos, pageScrollOptions.scrollDistanceMobile, pageScrollOptions.scrollThresholdMobile);
+		}, false);
+	};
+	
+	var scrollPage = function(yPos, distance, threshold) {
+		if ( !pageScrollOptions.isDragging ) return;
+		if ( $( document.body ).height() < $(window).height() ) return;
+
+		// Scroll down page
+		if ( yPos > $(window).height() - threshold && !pageScrollOptions.isScrolling ) {
+			animateScrollPage(distance);
+		}
+		// Scroll up page
+		if ( yPos < threshold && !pageScrollOptions.isScrolling ) {
+			animateScrollPage(-distance);
+		}
+	};
+	
+	var animateScrollPage = function(distance) {
+		pageScrollOptions.isScrolling = true;
+		$( document.body ).animate({ 
+			scrollTop: $( document.body ).scrollTop() + distance + "px"
+		}, 100, function(){
+			pageScrollOptions.isScrolling = false;
 		});
 	};
 	
