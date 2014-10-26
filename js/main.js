@@ -7,6 +7,10 @@ $('#run-btn').on('click', function (e) {
 	Interpreter.run();
 });
 
+$('#stop-btn').on('click', function (e) {
+	Interpreter.stop();
+});
+
 $('#btn-clear-procedure').on('click', function (e) {
     $('#list-procedures').html("");
 });
