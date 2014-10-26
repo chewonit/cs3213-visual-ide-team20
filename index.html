@@ -4,53 +4,52 @@
 	<meta charset="utf-8">
 	<title>CS3213 Visual IDE - Team 20</title>
 	
-	<meta name="viewport" content="maximum-scale=1">
-	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="css/style.css">
+	
 </head>
 <body>
-
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	  <div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#">CS3213 Visual IDE - Team 20</a>
-		</div>
-		
-		<div class="collapse navbar-collapse" id="navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				<button id="save-btn" type="button" class="btn btn-default navbar-btn">
-					<span class="glyphicon glyphicon-floppy-disk"></span> Save
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
 				</button>
-				<button id="load-btn" type="button" class="btn btn-default navbar-btn">
-					<span class="glyphicon glyphicon-upload"></span> Load
-				</button>
-			</ul>
+				<a class="navbar-brand" href="#">CS3213 Visual IDE - Team 20</a>
+			</div>
 
-			<ul class="nav navbar-nav navbar-right">
-				<p id="login-area" class="navbar-text navbar-right no-margin">
-					<button id="login-btn" type="button" class="btn btn-default navbar-btn">Sign in with Google</button>
-				</p>
-			</ul>
-		</div>
-		
-	  </div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<form class="navbar-form navbar-left no-margin" role="login">
+					<button id="save-btn" type="button" class="btn btn-default navbar-btn">
+						<span class="glyphicon glyphicon-floppy-disk"></span> Save
+					</button>
+					<button id="load-btn" type="button" class="btn btn-default navbar-btn">
+						<span class="glyphicon glyphicon-upload"></span> Load
+					</button>
+				</form>
+
+				<form class="navbar-form navbar-right no-margin" role="login">
+					<p id="login-area" class="navbar-text navbar-right no-margin">
+						<button id="login-btn" type="button" class="btn btn-default navbar-btn">Sign in with Google</button>
+					</p>
+				</form>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
 	</nav>
 
-	<div class="container-fluid">
+	<div id="wrap" class="container-fluid">
 		<div id="dashboard" class="row">
-			<div class="col-sm-6 col-md-3">
+			<div class="col-md-3 visible-md-block visible-lg-block">
 				<div class="affix-container">
 					<h3>Commands</h3>
-					<ul id="list-commands-raw" class="list-commands list-commands-raw"></ul>
+					<ul class="list-commands list-commands-raw"></ul>
 				</div>
 			</div>
-			<div class="col-sm-6 col-md-4">
+			<div class="col-md-4">
 				<div class="list-header clearfix">
 					<h3 class="pull-left">Procedure</h3>
 					<div id="player-controls" class="pull-right">
@@ -64,7 +63,7 @@
 				</div>
 				<ul id="list-procedures" class="list-commands list-procedures drop-target"></ul>
 			</div>
-			<div class="col-sm-12 visible-xs-block visible-sm-block">
+			<div class="col-xs-12 visible-xs-block visible-sm-block">
 				<ul class="list-commands list-trash drop-target">
 					<h3>
 						<span class="glyphicon glyphicon-trash"></span> Trash
