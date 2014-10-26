@@ -30,7 +30,7 @@ function checkAuth() {
 
 function setGoogleProfile(obj) {
 	$("#login-area").removeClass("no-margin");
-	$("#login-area").html("Welcome  <a href='" + obj.link + "'>"+ obj.given_name+"</a> ");
+	$("#login-area").html("Welcome  <a href='" + obj.link + "'>"+ obj.given_name+" <img src='"+obj.picture+"' class='img-circle' width='20'></a>");
 }
 
 function handleAuthResult(authResult) {
@@ -77,8 +77,6 @@ function saveFile(){
 		} else {
 			uploadString(null, procedures, mdata, null);
 		}
-
-		console.log(results);
 	});	
 }
 
@@ -143,7 +141,6 @@ function uploadMultipart(body, boundary, callback) {
 		'body': body});
 	if (!callback) {
 		callback = function(file) {
-			console.log(file);
 		};
 	}
 	request.execute(callback);
@@ -160,7 +157,6 @@ function updateMultipart(fileId, body, boundary, callback) {
 		'body': body});
 	if (!callback) {
 		callback = function(file) {
-			console.log(file);
 		};
 	}
 	request.execute(callback);
