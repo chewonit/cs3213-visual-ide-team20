@@ -77,7 +77,7 @@ var cmdDef = (function(cmd) {
     {
       id: 7,
       name        : "Repeat",
-      parms       : ['Number of reptitions'],
+      parms       : ['Number of times'],
       def_value   : '0',
       classes     : ["command-loop"],
       isContainer : true,

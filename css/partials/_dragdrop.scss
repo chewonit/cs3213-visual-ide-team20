@@ -9,7 +9,7 @@ ul.list-commands {
     padding: 0;
 	
 	h4 {
-		font-size: 1.2em;
+		font-size: 1.1em;
 		display: inline-block;
 		padding-right: 10px; 
 	}
@@ -17,6 +17,7 @@ ul.list-commands {
 	input {
 		display: inline-block;
 		width: auto;
+		max-width: 150px;
 	}
 	
 	&.list-commands-raw {
@@ -26,7 +27,8 @@ ul.list-commands {
 	}
 	
 	.command {
-		@include transition(border-color, 0.2s, ease-in-out);
+		@include transition2(border-color, 0.2s, ease-in-out);
+		text-align: left;
 		list-style-type: none;
 		padding: 5px;
 		margin: 10px;
@@ -47,26 +49,6 @@ ul.list-commands {
 			border-color: darken($drag-drop-command-color, 40%) !important;
 		}		
 	}
-	
-	li.placeholder {
-		position: relative;
-		margin: 0;
-		padding: 0;
-		width: 100%;
-		height: 0;
-		border: none;
-		background-color: transparent;
-	}
-	li.placeholder:after {
-		position: absolute;
-		content:"\e079 \e079";
-		font-family: 'Glyphicons Halflings';
-		font-size: 16px;
-		color: $drag-drop-reorder-highlight-color;
-		left: 90%;
-		top: -10px;
-		height: 0;
-	}
 }
 
 ul.drop-target{
@@ -79,6 +61,34 @@ ul.drop-target{
 		min-height: 30px;		
 	}
 	
+	li.placeholder {
+		position: relative;
+		margin: 0;
+		padding: 0 10px;
+		width: 100%;
+		height: auto;
+		border: none;
+		background-color: transparent;
+		
+		div {
+			background-color: lighten(#000, 95.5%);
+			color: $drag-drop-reorder-highlight-color;
+			height: auto;
+			width: 100%;
+			padding: 10px;
+		}
+	}
+	/*li.placeholder:after {
+		position: absolute;
+		content:"\e079 \e079";
+		font-family: 'Glyphicons Halflings';
+		font-size: 16px;
+		color: $drag-drop-reorder-highlight-color;
+		left: 90%;
+		top: 26%;
+		height: 0;
+	}*/
+	
 	.command-loop {
 		border-left: 10px solid darken($drag-drop-command-loop-color, 10%);
 		
@@ -89,10 +99,14 @@ ul.drop-target{
 		&:hover {
 			border-color: darken($drag-drop-command-loop-color, 40%) !important;
 		}
+		
+		li.placeholder {
+			padding: 10px;
+		}
 	}
 	
 	&.list-trash {
-		@include transition(border-color, 0.2s, ease-in-out);
+		@include transition2(border-color, 0.2s, ease-in-out);
 		margin-top: 20px;
 		border-bottom: 10px dashed white;
 		border-top: 10px dashed white;
@@ -110,5 +124,11 @@ ul.drop-target{
 	&.list-procedures {
 		min-height: 100px;
 		margin-bottom: 50px;
+	}
+}
+
+div.list-header {
+	h3 {
+		display: inline-block;
 	}
 }
