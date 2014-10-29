@@ -1,6 +1,11 @@
 /* 
  * The following script jquery-sortable.js v0.9.12 was forked and
  * modified to meet the project requirements.
+ *
+ * - Added logic to prevent the dragged item from being dragged beyond the document boundaries.
+ * - Changed the placeholder html.
+ * - Fixed syntax errors: missing semicolons and redeclaration of variables.
+ *
  */
  
 /* ===================================================
@@ -186,19 +191,21 @@
   }
 
   function getRelativePosition(pointer, element) {
-    var offset = element.offset();
-	var coordinates;
+    var offset = element.offset(),
+		coordinates,
+		dragged = $( document ).find(".dragged");
 
 	coordinates = {
       left: pointer.left - offset.left,
       top: pointer.top - offset.top
     };
 	
-	if ( (pointer.left + element.find(".command").width() + 20) > window.innerWidth ) 
-		coordinates.left = window.innerWidth - element.find(".command").width() - offset.left - 20;
-	if ( (pointer.top + element.find(".command").height() + 50) > window.innerHeight )
-		coordinates.top = window.innerHeight - element.find(".command").height() - offset.top - 20;
-	
+	// Bound the dragged item to the document
+	if ( (pointer.left + dragged.width() + 50) > $(window).width() ) 
+		coordinates.left = $(window).width() - dragged.width() - offset.left - 50;
+	if ( (pointer.top + dragged.height() + 50) > $(document).height() )
+		coordinates.top = $(document).height() - dragged.height() - offset.top - 50;
+
     return coordinates;
   }
 
@@ -285,7 +292,7 @@
                           e);
 	
       var x = e.pageX || e.originalEvent.pageX || e.originalEvent.touches[0].pageX,
-      y = e.pageY || e.originalEvent.pageY || e.originalEvent.touches[0].pageX,
+      y = e.pageY || e.originalEvent.pageY || e.originalEvent.touches[0].pageY,
       box = this.sameResultBox,
       t = this.options.tolerance;
 
@@ -394,21 +401,6 @@
         this.relativePointer = relativePointer;
       }
 	  
-	  if (this.pointer) {
-		
-		this.pointer = {
-			left: this.pointer.left,
-			top: this.pointer.top,
-			outOfWindow: false
-		};
-		if ( (this.pointer.left + this.item.width() + 50) > window.innerWidth ) {
-			this.pointer.left = window.innerWidth - this.item.width() - 50;
-			this.pointer.outOfWindow = true;
-		}
-		if ( (this.pointer.top + this.item.height() + 50) > window.innerHeight )
-			this.pointer.top = window.innerHeight - this.item.height() - 50;
-	  }
-	  
       this.lastPointer = this.pointer;
       this.pointer = pointer;
     },
@@ -513,7 +505,7 @@
       rootGroup = this.rootGroup,
       validTarget = !rootGroup.options.isValidTarget ||
         rootGroup.options.isValidTarget(rootGroup.item, this);
-
+	
       if(!i && validTarget){
         rootGroup.movePlaceholder(this, this.target, "append");
         return true;
