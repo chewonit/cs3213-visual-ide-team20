@@ -6,6 +6,9 @@ var cmdDef = (function(cmd) {
 
   var cmds = {};
 
+  // Categories of  commands, 
+  // To allow them to have other views as well?
+
   // Default values. 
   cmds = [
     {
