@@ -1,3 +1,5 @@
+$(document).ready(function(){
+	$(".save-load-file").hide();
 hello.init({
 	google   : "422020427556-4bvqu0mhb4p1j56sikgcgnf5a96eg81q.apps.googleusercontent.com"
 });
