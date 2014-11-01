@@ -335,6 +335,40 @@ var VisualIDE = (function(my) {
     this.setX(x, options);
     this.setY(y, options);
   };
+
+  /**
+   * Gets the rotation of the sprite in radians.
+   */
+  my.CanvasSprite.prototype.getRotation = function() {
+    return this.sprite.rotation;
+  };
+
+  /**
+   * Sets the rotation of the sprite in radians.
+   */
+  my.CanvasSprite.prototype.setRotation = function(rotation, options) {
+    if (rotation === undefined) {
+      throw 'VisualIDE.CanvasSprite: setRotation requires rotation argument';
+    }
+
+    if (!isFinite(rotation)) {
+      throw 'VisualIDE.CanvasSprite: setRotation argument rotation should be ' +
+        'a number';
+    }
+
+    options = options || {};
+    options.interpolator = options.interpolator || undefined;
+    options.duration = options.duration || 1000;
+    options.callback = options.callback || function() { };
+
+    if (options.interpolator !== undefined &&
+        options.interpolator.getInterpolation) {
+      this.animateProperty(this.setRotation, this.getRotation, rotation,
+          options.interpolator, options.duration, options.callback);
+    } else {
+      this.sprite.rotation = rotation;
+    }
+  };
   
   /**
    * Sets the visibility of the sprite.
