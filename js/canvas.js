@@ -331,9 +331,9 @@ var VisualIDE = (function(my) {
     }
   };
   
-  my.CanvasSprite.prototype.setPosition = function(x, y) {
-    this.setX(x);
-    this.setY(y);
+  my.CanvasSprite.prototype.setPosition = function(x, y, options) {
+    this.setX(x, options);
+    this.setY(y, options);
   };
   
   /**
