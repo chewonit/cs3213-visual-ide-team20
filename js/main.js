@@ -1,40 +1,5 @@
-hello.init({
-	google   : "422020427556-4bvqu0mhb4p1j56sikgcgnf5a96eg81q.apps.googleusercontent.com"
-});
-
-hello.on('auth.login', function(auth){
-	console.log("You are signed in to Google");
-	getGoogleProfileName();
-});
-
-function getGoogleProfileName() {
-	hello( "google" ).api("me").then(function(json){
-		/*
-		var saveBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-upload"></span> Save Program</button>';
-		var loadBtn = '<button type="button" class="btn btn-default navbar-btn navbar-btn"><span class="glyphicon glyphicon-cloud-download"></span> Load Program</button>';
-		
-		if( json.url ) {
-			$("#login-area").html("Welcome <a href='" + json.url + "'>" + json.name + "</a> " + saveBtn + " " + loadBtn );
-		} else {
-			$("#login-area").html("Welcome " + json.name + " " + saveBtn + " " + loadBtn );
-		}
-		*/
-		
-		$("#login-area").removeClass("no-margin");
-		if( json.url ) {
-			$("#login-area").html("Welcome <a href='" + json.url + "'>" + json.name + "</a> ");
-		} else {
-			$("#login-area").html("Welcome " + json.name);
-		}
-		
-		console.log("Hello "+ json.name);
-	}, function(e){
-		console.log("Whoops! " + e.error.message );
-	});
-}
-
-$('#login-btn').on('click', function (e) {
-	hello( 'google' ).login();
+$(document).ready(function(){
+	$(".save-load-file").hide();
 });
 
 $('#run-btn').on('click', function (e) {
@@ -69,7 +34,6 @@ router.on('route:home', function() {
 
 // Create a new rendering area.
 jQuery(document).ready(function() {
-	
 	var spriteName = "pikachu";
 	var path = "../img/pikachu.gif";
 	var canvas = initCanvas(spriteName, path);
@@ -107,15 +71,6 @@ function initLayout() {
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
 	
-	// Set up affix components
-	if ( $(window).width() > 991 ) {
-		$('.affix-container').affix({
-			offset: {
-				top: 0
-			}
-		});
-	}
-	
 	// Initialize off canvas command list panel
 	$('.command-panel-btn').on('click', function(event){
 		event.preventDefault();
@@ -129,22 +84,30 @@ function initLayout() {
 		}
 	});
 	
+	resizeAffix();
 	// Re initialize affix components on browser resize
 	$(window).resize(function(){
-		if ( $(window).width() > 991 ) {
-			$('.affix-container').affix({
-				offset: {
-					top: 0
-				}
-			});
-			$('.cd-panel').removeClass('is-visible');
-		} else {
-			$(window).off('.affix');
-			$('.affix-container')
-				.removeClass("affix affix-top affix-bottom")
-				.removeData("bs.affix");
-		}
+		resizeAffix();
 	});
+}
+
+function resizeAffix() {
+	$('.list-commands-raw').height( $(window).height() - 
+		$('.list-commands-raw').offset().top - $('#list-trash').height() - 100 );
+	
+	if ( $(window).width() > 991 ) {
+		$('.affix-container').affix({
+			offset: {
+				top: 0
+			}
+		});
+		$('.cd-panel').removeClass('is-visible');
+	} else {
+		$(window).off('.affix');
+		$('.affix-container')
+			.removeClass("affix affix-top affix-bottom")
+			.removeData("bs.affix");
+	}
 }
 
 Backbone.history.start();
