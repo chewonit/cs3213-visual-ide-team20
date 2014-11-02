@@ -1,0 +1,151 @@
+@media screen and (min-width: 992px){
+    .cd-panel {
+		position: relative;
+		height: 0;
+		overflow: hidden;
+	}
+	.cd-panel-header {
+		position: relative;
+	}
+	.cd-panel-container {
+		position: relative; 
+	}
+}
+
+.cd-panel {
+	position: fixed;
+	height: 0;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	visibility: hidden;
+	@include transition(visibility 0s .6s);
+
+	&::after {
+		/* overlay layer */
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(#000, 0);
+		cursor: pointer;
+		@include transition(background .3s .3s);
+	}
+
+	&.is-visible {
+		visibility: visible;
+		@include transition(visibility 0s 0s);
+
+		&::after {
+			background: rgba(#000, .6);
+			@include transition(background .3s 0s);
+		}
+
+		.cd-panel-close::before {
+			@include animation(cd-close-1 .6s .3s);
+		}
+
+		.cd-panel-close::after {
+			@include animation(cd-close-2 .6s .3s);
+		}
+	}
+}
+
+.cd-panel-header {
+	position: fixed;
+	z-index: 999999999 !important;
+	width: $panel-width;
+	height: 50px;
+	line-height: 50px;
+	background: rgba(white, .96);
+	box-shadow: 0 1px 1px rgba(#000, .08);
+	@include transition(top .3s 0s);
+
+	h3 {
+		font-size: 1.4em;
+		padding-left: 5%;
+	}
+
+	.from-right &, .from-left & {
+		top: -50px;
+	}
+
+	.from-right & {
+		right: 0;
+	}
+
+	.from-left & {
+		left: 0;
+	}
+
+	.is-visible & {
+		top: 0;
+		@include transition(top .3s 0);
+	}
+}
+
+.cd-panel-close {
+	@include transition2(color, 0.2s, ease-in-out);
+	@include transition2(font-size, 0.1s, ease-in-out);
+	position: absolute;
+	z-index: 99999;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 40px;
+	font-size: 1.3em;
+	color: #333;
+	
+	/* image replacement */
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-decoration: none;
+	
+	&:hover {
+		color: #c92e2c;
+		font-size: 1.5em;	
+	}
+}
+
+.cd-panel-container {
+	position: fixed; 
+	width: $panel-width;
+	height: 100%;
+	top: 0;
+	background: lighten(#000, 95%);
+	z-index: 99999; 
+	@include transition-property(transform);
+	@include transition-duration(.3s);
+	@include transition-delay(.3s);
+
+	.from-right & {
+		right: 0;
+		@include transform(translate3d(100%, 0, 0));
+	}
+
+	.from-left & {
+		left: 0;
+		@include transform(translate3d(-100%, 0, 0));
+	}
+
+	.is-visible & {
+		@include transform(translate3d(0, 0, 0));
+		@include transition-delay(0s);
+	}
+}
+
+.cd-panel-content {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 70px 5%;
+	overflow: auto;
+
+	/* smooth scrolling on touch devices */
+	-webkit-overflow-scrolling: touch;
+}

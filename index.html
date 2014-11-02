@@ -12,7 +12,7 @@
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -22,7 +22,13 @@
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<div class="collapse navbar-collapse" id="navbar-collapse">
+				<form class="navbar-form navbar-left no-margin visible-xs-block visible-sm-block" role="login">
+					<button type="button" class="btn btn-default command-panel-btn" style="margin-top: 8px; margin-bottom: 8px;">
+						<span class="glyphicon glyphicon-th-large"></span>  Command Panel
+					</button>
+				</form>
+				
 				<div class="save-load-file">
 					<form class="navbar-form navbar-left no-margin" role="login">
 						<button id="save-btn" type="button" class="btn btn-default navbar-btn">
@@ -42,7 +48,7 @@
 			</div><!-- /.navbar-collapse -->
 		</div><!-- /.container-fluid -->
 	</nav>
-
+	
 	<div id="wrap" class="container-fluid">
 		<div id="dashboard" class="row">
 			<div class="col-md-3 visible-md-block visible-lg-block">
@@ -65,14 +71,15 @@
 				</div>
 				<ul id="list-procedures" class="list-commands list-procedures drop-target"></ul>
 			</div>
+			
 			<div class="col-xs-12 visible-xs-block visible-sm-block">
 				<ul class="list-commands list-trash drop-target">
 					<h3>
 						<span class="glyphicon glyphicon-trash"></span> Trash
-						<button class="btn btn-danger btn-clear-procedure pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
 					</h3>
 				</ul>
 			</div>
+			
 			<div class="col-sm-12 col-md-5">
 				<div class="affix-container">
 					<h3>Graphics</h3>
@@ -89,6 +96,21 @@
 		</div>
 		<div class="page"></div>
 	</div>
+	
+	<div class="cd-panel from-right">
+		<header class="cd-panel-header">
+			<h3>Commands</h3>
+			<a href="#0" class="cd-panel-close"><span class="cd-panel-close-btn glyphicon glyphicon-remove"></span></a>
+		</header>
+
+		<div class="cd-panel-container">
+			<div class="cd-panel-content">
+				<ul class="list-commands list-commands-raw"></ul>
+				<hr /><br />
+				<button class="btn btn-danger btn-clear-procedure"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
+			</div> <!-- cd-panel-content -->
+		</div> <!-- cd-panel-container -->
+	</div> <!-- cd-panel -->
 	
 	<!-- DO NOT MODIFY: Automated dependency injection using grunt-wiredep -->
 	<!-- bower:js -->
@@ -111,7 +133,6 @@
 	<script src="bower_components/pixi.js/bin/pixi.js"></script>
 	<!-- endbower -->
 	
-	<!--<script src="http://johnny.github.io/jquery-sortable/js/jquery-sortable.js" type="text/javascript"></script>-->
 	<script src="js/jquery-sortable.js" type="text/javascript"></script>
 	<script src="js/main.js" type="text/javascript"></script>
 	<script src="js/command.js"></script>

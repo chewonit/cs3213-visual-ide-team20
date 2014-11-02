@@ -76,12 +76,12 @@ var VisualIDE = (function(ide) {
 			},
 			onDrop: function (item, container, _super) {
 				container.el.removeClass("active");
+				$( containers.normal ).css({'height' : 'auto'});
 				if (!container.options.drag) {
 					item.remove();
 					return;
 				}
 				pageScrollOptions.isDragging = false;
-				$( containers.normal ).css({'height' : 'auto'});
 				if (item) _super(item);
 			}
 		});
@@ -119,8 +119,8 @@ var VisualIDE = (function(ide) {
 	
 	var scrollPage = function(yPos, distance, threshold) {
 		if ( !pageScrollOptions.isDragging ) return;
-		if ( $( document.body ).height() < $(window).height() ) return;
-
+		if ( $('body,html').height() < $(window).height() ) return;
+		
 		// Scroll down page
 		if ( yPos > $(window).height() - threshold && !pageScrollOptions.isScrolling ) {
 			animateScrollPage(distance);
@@ -133,8 +133,8 @@ var VisualIDE = (function(ide) {
 	
 	var animateScrollPage = function(distance) {
 		pageScrollOptions.isScrolling = true;
-		$( document.body ).animate({ 
-			scrollTop: $( document.body ).scrollTop() + distance + "px"
+		$('body,html').animate({ 
+			scrollTop: $('body,html').scrollTop() + distance + "px"
 		}, 100, function(){
 			pageScrollOptions.isScrolling = false;
 		});
