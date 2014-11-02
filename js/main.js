@@ -1,7 +1,8 @@
 $(document).ready(function(){
 	$(".save-load-file").hide();
-hello.init({
-	google   : "422020427556-4bvqu0mhb4p1j56sikgcgnf5a96eg81q.apps.googleusercontent.com"
+	hello.init({
+		google   : "422020427556-4bvqu0mhb4p1j56sikgcgnf5a96eg81q.apps.googleusercontent.com"
+	});
 });
 
 hello.on('auth.login', function(auth){
@@ -40,12 +41,12 @@ $('#login-btn').on('click', function (e) {
 });
 
 $('#run-btn').on('click', function (e) {
-	Interpreter.stop();
-	Interpreter.run();
+	VisualIDE.Interpreter.stop();
+	VisualIDE.Interpreter.run();
 });
 
 $('#stop-btn').on('click', function (e) {
-	Interpreter.stop();
+	VisualIDE.Interpreter.stop();
 });
 
 $('.btn-clear-procedure').on('click', function (e) {
@@ -95,7 +96,7 @@ function initCanvas(spriteName, path) {
 }
 
 function initIntepreter(canvas, spriteName) {
-	Interpreter.init(canvas, spriteName);
+	VisualIDE.Interpreter(canvas, spriteName);
 }
 
 function initLayout() {

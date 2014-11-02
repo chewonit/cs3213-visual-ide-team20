@@ -1,30 +1,34 @@
-var Interpreter = (function(my) {
+var VisualIDE = (function(my) {
     'use strict';
 
     var _canvas,
         _spriteName,
         _delay = 750,
-        _USER_INPUT = 0,
         _commandQueue,
-        _commandTimer;
+        _CONSTANTS = {
+            USER_INPUT: 0,
+            CMD_JUMP: '-1'
+        },
+        cmdList = cmdDef.cmds;
 
-    my.init = function(canvas, spriteName) {
+    my.Interpreter = function(canvas, spriteName) {
     	_canvas = canvas;
         _spriteName = spriteName;
     };
     
-    my.run = function() {
-        clearInterval(_commandTimer);
+    my.Interpreter.stop = function() {
+        if (_commandQueue) 
+            _commandQueue.stop();
+        
         _commandQueue = new CommandQueue();
+    };        
+    
+    my.Interpreter.run = function() {
+        my.Interpreter.stop();
 
         parse($('#list-procedures > li'));
 
         executeCommands();
-    };        
-    
-    my.stop = function() {
-        clearInterval(_commandTimer);
-        _commandQueue = new CommandQueue();
     };        
 
     /**
@@ -79,6 +83,21 @@ var Interpreter = (function(my) {
         }
     };
 
+    var encapsulatingLogic = {};
+
+    encapsulatingLogic["7"] = function(commandObj, args) {
+        var loopStart = _commandQueue.getLength();
+
+        parse(commandObj.children('ul').children('li'));
+
+        var jumpArgs = [args[_CONSTANTS.USER_INPUT]];
+        _commandQueue.addCommand(new Command(_CONSTANTS.CMD_JUMP, jumpArgs, {
+            jumpTo: loopStart,
+            numLooped: 1,
+            infiniteLoop: 0
+        }));
+    };
+
     /**
      * Parses the list of commands.
      */
@@ -95,17 +114,8 @@ var Interpreter = (function(my) {
         var procedureId = commandObj.attr('data-command-id');
         var args = getParams(commandObj, procedureId);
 
-        if (procedureId === "7") {
-            var loopStart = _commandQueue.getLength() === 0 ? 0 : _commandQueue.getLength();
-
-            parse(commandObj.children('ul').children('li'));
-
-            var jumpArgs = [args[_USER_INPUT]];
-            _commandQueue.addCommand(new Command('-1', jumpArgs, {
-                loopStart: loopStart,
-                numLooped: 1,
-                infiniteLoop: 0
-            }));
+        if (procedureId in encapsulatingLogic) {
+            encapsulatingLogic[procedureId].apply(this, [commandObj, args]);
         }
         else {
             _commandQueue.addCommand(new Command(procedureId, args));
@@ -113,8 +123,7 @@ var Interpreter = (function(my) {
     };
 
     /**
-     * Gets the parameters entered by the user. Any special processing of the 
-     * paramters can be done here. Returns an array of parameters.
+     * Gets the parameters entered by the user. Returns an array of parameters.
      */
     var getParams = function(commandObj, procedureId) {
         var params = [];
@@ -132,37 +141,15 @@ var Interpreter = (function(my) {
         var looply = function() {
             var commandObj = _commandQueue.getCommand();
 
-            while (commandObj.procedureId === '-1') {
-                if (commandObj.options.infiniteLoop) {
-                    _commandQueue.movePointer(options.loopStart);
-                }
-                else {
-                    if (commandObj.options.numLooped < commandObj.args[_USER_INPUT]) {
-                        commandObj.options.numLooped++;
-                        _commandQueue.movePointer(commandObj.options.loopStart);
-                    }
-                    else {
-                        commandObj.options.numLooped = 1;
-                        if (_commandQueue.getPointerIndex() === _commandQueue.getLength() - 1) {
-                            clearInterval(_commandTimer);
-                            return;
-                        }
-                        _commandQueue.incrementPointer();
-                    }
-                }
-                commandObj = _commandQueue.getCommand();
-            }
-
-            execute(commandObj);
-
-            if (_commandQueue.getPointerIndex() === _commandQueue.getLength() - 1) {
-                clearInterval(_commandTimer);
+            if (_commandQueue.endOfQueue()) {
+                _commandQueue.stop();
             }
             else {
+                execute(commandObj);
                 _commandQueue.incrementPointer();
             }
         };
-        _commandTimer = setInterval(looply, _delay);
+        _commandQueue.run(looply, _delay);
     };
 
     /**
@@ -204,13 +191,53 @@ var Interpreter = (function(my) {
     var CommandQueue = function() {
         this._queue = [];
         this._curr = 0;
+        this._commandTimer = {};
+        this._commandPreprocess = {};
+
+        this._commandPreprocess[_CONSTANTS.CMD_JUMP] = function(commandObj) {
+            while (commandObj.procedureId === _CONSTANTS.CMD_JUMP) {
+                if (commandObj.options.infiniteLoop) {
+                    this.movePointer(options.jumpTo);
+                }
+                else {
+                    if (commandObj.options.numLooped < commandObj.args[_CONSTANTS.USER_INPUT]) {
+                        commandObj.options.numLooped++;
+                        this.movePointer(commandObj.options.jumpTo);
+                    }
+                    else {
+                        commandObj.options.numLooped = 1;
+                        if (this.endOfQueue()) {
+                            this.stop();
+                            return;
+                        }
+                        this.incrementPointer();
+                    }
+                }
+                commandObj = this._queue[this._curr];
+            }
+            return commandObj;
+        };
+
+        this.run = function(looply, delay) {
+            this._commandTimer = setInterval(looply, delay);
+        };
+
+        this.stop = function() {
+            clearInterval(this._commandTimer);
+        };
 
         this.addCommand = function(commandObj) {
             this._queue.push(commandObj);
         };
 
         this.getCommand = function() {
-            return this._queue[this._curr];
+            var commandObj = this._queue[this._curr];
+
+            if (commandObj.procedureId in this._commandPreprocess) {
+                commandObj = this._commandPreprocess[commandObj.procedureId].call(this, commandObj);
+            }
+            
+            return commandObj;
         };
 
         this.getLength = function() {
@@ -234,7 +261,11 @@ var Interpreter = (function(my) {
 
             this._curr = moveTo;
         };
+
+        this.endOfQueue = function() {
+            return this.getPointerIndex() === this.getLength() - 1;
+        };
     };
     
     return my;
-}(Interpreter || {}));
+}(VisualIDE || {}));
