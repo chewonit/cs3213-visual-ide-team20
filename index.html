@@ -28,15 +28,17 @@
 						<span class="glyphicon glyphicon-th-large"></span>  Command Panel
 					</button>
 				</form>
-					
-				<form class="navbar-form navbar-left no-margin" role="login">
-					<button id="save-btn" type="button" class="btn btn-default navbar-btn">
-						<span class="glyphicon glyphicon-floppy-disk"></span> Save
-					</button>
-					<button id="load-btn" type="button" class="btn btn-default navbar-btn">
-						<span class="glyphicon glyphicon-upload"></span> Load
-					</button>
-				</form>
+				
+				<div class="save-load-file">
+					<form class="navbar-form navbar-left no-margin" role="login">
+						<button id="save-btn" type="button" class="btn btn-default navbar-btn">
+							<span class="glyphicon glyphicon-floppy-disk"></span> Save
+						</button>
+						<button id="load-btn" type="button" class="btn btn-default navbar-btn">
+							<span class="glyphicon glyphicon-upload"></span> Load
+						</button>
+					</form>
+				</div>
 
 				<form class="navbar-form navbar-right no-margin" role="login">
 					<p id="login-area" class="navbar-text navbar-right no-margin">
@@ -109,27 +111,27 @@
 			</div> <!-- cd-panel-content -->
 		</div> <!-- cd-panel-container -->
 	</div> <!-- cd-panel -->
-  
-  <!-- DO NOT MODIFY: Automated dependency injection using grunt-wiredep -->
-  <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/collapse.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tab.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/scrollspy.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip.js"></script>
-  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
-  <script src="bower_components/underscore/underscore.js"></script>
-  <script src="bower_components/backbone/backbone.js"></script>
-  <script src="bower_components/hello/dist/hello.all.min.js"></script>
-  <script src="bower_components/pixi.js/bin/pixi.js"></script>
-  <!-- endbower -->
+	
+	<!-- DO NOT MODIFY: Automated dependency injection using grunt-wiredep -->
+	<!-- bower:js -->
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/collapse.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tab.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/scrollspy.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip.js"></script>
+	<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
+	<script src="bower_components/underscore/underscore.js"></script>
+	<script src="bower_components/backbone/backbone.js"></script>
+	<script src="bower_components/hello/dist/hello.all.min.js"></script>
+	<script src="bower_components/pixi.js/bin/pixi.js"></script>
+	<!-- endbower -->
 	
 	<script src="js/jquery-sortable.js" type="text/javascript"></script>
 	<script src="js/main.js" type="text/javascript"></script>
@@ -137,8 +139,11 @@
 	<script src="js/canvas.js"></script>
 	<script src="js/dragdrop.js"></script>
 	<script src="js/interpreter.js"></script>
+	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+	<script src="js/google.js"></script>
+	<!--
 	<script src="https://www.dropbox.com/static/api/dropbox-datastores-1.0-latest.js"></script>
 	<script src="js/dropbox.js"></script>
-	
+-->
 </body>
 </html> 
