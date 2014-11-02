@@ -14,6 +14,8 @@ var VisualIDE = (function(my) {
     my.Interpreter = function(canvas, spriteName) {
     	_canvas = canvas;
         _spriteName = spriteName;
+
+        
     };
     
     my.Interpreter.stop = function() {
@@ -58,7 +60,22 @@ var VisualIDE = (function(my) {
      */
     var move = function(steps) {
         var currX = _canvas.getSprite(_spriteName).sprite.position.x;
-        _canvas.getSprite(_spriteName).setX(currX + parseInt(steps));
+        _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
+            interpolator: new VisualIDE.CanvasLinearInterpolator(),
+            duration: _delay * 0.98
+        });
+        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
+        //     interpolator: new VisualIDE.CanvasAccelerateInterpolator(3.0),
+        //     duration: _delay * 0.98
+        // });
+        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
+        //     interpolator: new VisualIDE.CanvasDecelerateInterpolator(3.0),
+        //     duration: _delay * 0.98
+        // });
+        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
+        //     interpolator: new VisualIDE.CanvasEasingInterpolator(3.0),
+        //     duration: _delay * 0.98
+        // });
     };
 
     /**
