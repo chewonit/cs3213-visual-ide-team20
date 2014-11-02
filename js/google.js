@@ -65,6 +65,10 @@ function saveFile(){
 			}
 		}
 
+		$("input").each(function(){
+			$(this).attr("value", $(this).val());
+		});
+
 		var procedures = $('ul.list-procedures').html();
 		var mdata = {
 			title:"visual_ide_20_saved_data",
