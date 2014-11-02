@@ -55,6 +55,8 @@ var VisualIDE = (function(ide) {
 		isDragging: false
 	};
 	
+	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	
 	var initDragDrop = function() {
 	
 		var oldContainer;
@@ -77,11 +79,11 @@ var VisualIDE = (function(ide) {
 			onDrop: function (item, container, _super) {
 				container.el.removeClass("active");
 				$( containers.normal ).css({'height' : 'auto'});
+				pageScrollOptions.isDragging = false;
 				if (!container.options.drag) {
 					item.remove();
 					return;
 				}
-				pageScrollOptions.isDragging = false;
 				if (item) _super(item);
 			}
 		});
@@ -133,8 +135,9 @@ var VisualIDE = (function(ide) {
 	
 	var animateScrollPage = function(distance) {
 		pageScrollOptions.isScrolling = true;
-		$('body,html').animate({ 
-			scrollTop: $('body,html').scrollTop() + distance + "px"
+		var target = is_chrome ? $(document.body) : $('body,html');
+		target.animate({ 
+			scrollTop: target.scrollTop() + distance + "px"
 		}, 100, function(){
 			pageScrollOptions.isScrolling = false;
 		});
@@ -184,6 +187,12 @@ var VisualIDE = (function(ide) {
 	cmd.prototype.getAllCommandsHtml = function() {
 		var html = "";
 		var command;
+		for( i=0; i<cmdList.length; i++ ) {
+			html += this.getCommandHtml(i);
+		}
+		for( i=0; i<cmdList.length; i++ ) {
+			html += this.getCommandHtml(i);
+		}
 		for( i=0; i<cmdList.length; i++ ) {
 			html += this.getCommandHtml(i);
 		}

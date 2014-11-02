@@ -71,15 +71,6 @@ function initLayout() {
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
 	
-	// Set up affix components
-	if ( $(window).width() > 991 ) {
-		$('.affix-container').affix({
-			offset: {
-				top: 0
-			}
-		});
-	}
-	
 	// Initialize off canvas command list panel
 	$('.command-panel-btn').on('click', function(event){
 		event.preventDefault();
@@ -93,22 +84,30 @@ function initLayout() {
 		}
 	});
 	
+	resizeAffix();
 	// Re initialize affix components on browser resize
 	$(window).resize(function(){
-		if ( $(window).width() > 991 ) {
-			$('.affix-container').affix({
-				offset: {
-					top: 0
-				}
-			});
-			$('.cd-panel').removeClass('is-visible');
-		} else {
-			$(window).off('.affix');
-			$('.affix-container')
-				.removeClass("affix affix-top affix-bottom")
-				.removeData("bs.affix");
-		}
+		resizeAffix();
 	});
+}
+
+function resizeAffix() {
+	$('.list-commands-raw').height( $(window).height() - 
+		$('.list-commands-raw').offset().top - $('#list-trash').height() - 100 );
+	
+	if ( $(window).width() > 991 ) {
+		$('.affix-container').affix({
+			offset: {
+				top: 0
+			}
+		});
+		$('.cd-panel').removeClass('is-visible');
+	} else {
+		$(window).off('.affix');
+		$('.affix-container')
+			.removeClass("affix affix-top affix-bottom")
+			.removeData("bs.affix");
+	}
 }
 
 Backbone.history.start();

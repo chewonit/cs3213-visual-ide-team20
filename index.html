@@ -51,10 +51,17 @@
 	
 	<div id="wrap" class="container-fluid">
 		<div id="dashboard" class="row">
-			<div class="col-md-3 visible-md-block visible-lg-block">
+			<div class="col-md-3 col-commands visible-md-block visible-lg-block">
 				<div class="affix-container">
 					<h3>Commands</h3>
 					<ul class="list-commands list-commands-raw"></ul>
+					<hr />
+					<ul id="list-trash" class="list-commands list-trash drop-target visible-md-block visible-lg-block">
+						<h3>
+							<span class="glyphicon glyphicon-trash"></span> Trash
+							<button class="btn btn-danger btn-clear-procedure pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
+						</h3>
+					</ul>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -81,16 +88,9 @@
 			</div>
 			
 			<div class="col-sm-12 col-md-5">
-				<div class="affix-container">
+				<div class="col-graphics affix-container">
 					<h3>Graphics</h3>
 					<div id="canvas"></div>
-					<hr />
-					<ul id="list-trash" class="list-commands list-trash drop-target visible-md-block visible-lg-block">
-						<h3>
-							<span class="glyphicon glyphicon-trash"></span> Trash
-							<button class="btn btn-danger btn-clear-procedure pull-right"><span class="glyphicon glyphicon-trash"></span> Clear Procedure</button>
-						</h3>
-					</ul>
 				</div>
 			</div>
 		</div>
