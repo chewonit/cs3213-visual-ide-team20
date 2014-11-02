@@ -41,6 +41,7 @@ var VisualIDE = (function(my) {
     this.backgroundTexture = PIXI.Texture.fromImage(this.backgroundUrl);
     this.backgroundSprite = new PIXI.TilingSprite(this.backgroundTexture, elemWidth, elemHeight);
     this.stage.addChild(this.backgroundSprite);
+
     
     // Define the animation function and begin rendering.
     var animate = function(that) {
@@ -239,15 +240,52 @@ var VisualIDE = (function(my) {
     if (url === undefined) {
       throw 'VisualIDE.CanvasSprite: requires url argument';
     }
+
+    // Define a property animator so that we can animate properties easily.
+    this.animateProperty = function(that) {
+      return function(propertySetter, propertyGetter, newValue, interpolator,
+          duration, callback) {
+        var orig = propertyGetter.call(that);
+        var startTime = null;
+        var animFrame = function(timestamp) {
+          if (startTime === null) {
+            startTime = timestamp;
+          }
+
+          var elapsed = timestamp - startTime;
+          if (elapsed < duration) {
+            var interpolation = interpolator.getInterpolation(elapsed / duration);
+            propertySetter.call(that, orig + ((newValue - orig) * interpolation));
+            requestAnimFrame(animFrame);
+          } else {
+            propertySetter.call(that, newValue);
+            callback.call(that);
+          }
+        };
+
+        requestAnimFrame(animFrame);
+      };
+    }(this);
     
     this.texture = PIXI.Texture.fromImage(url);
     this.sprite = new PIXI.Sprite(this.texture);
+  };
+
+  /**
+   * Gets the position of the sprite.
+   */
+  my.CanvasSprite.prototype.getX = function() {
+    return this.sprite.position.x;
+  };
+
+  my.CanvasSprite.prototype.getY = function() {
+    return this.sprite.position.y;
   };
   
   /**
    * Sets the position of the sprite.
    */
-  my.CanvasSprite.prototype.setX = function(x) {
+  my.CanvasSprite.prototype.setX = function(x, options) {
     if (x === undefined) {
       throw 'VisualIDE.CanvasSprite: setX requires x argument';
     }
@@ -255,11 +293,22 @@ var VisualIDE = (function(my) {
     if (!isFinite(x)) {
       throw 'VisualIDE.CanvasSprite: setX argument x should be a number';
     }
-    
-    this.sprite.position.x = x;
+
+    options = options || {};
+    options.interpolator = options.interpolator || undefined;
+    options.duration = options.duration || 1000;
+    options.callback = options.callback || function() { };
+
+    if (options.interpolator !== undefined &&
+        options.interpolator.getInterpolation) {
+      this.animateProperty(this.setX, this.getX, x, options.interpolator,
+          options.duration, options.callback);
+    } else {
+      this.sprite.position.x = x;
+    }
   };
-  
-  my.CanvasSprite.prototype.setY = function(y) {
+
+  my.CanvasSprite.prototype.setY = function(y, options) {
     if (y === undefined) {
       throw 'VisualIDE.CanvasSprite: setY requires y argument';
     }
@@ -268,12 +317,57 @@ var VisualIDE = (function(my) {
       throw 'VisualIDE.CanvasSprite: setY argument y should be a number';
     }
     
-    this.sprite.position.y = y;
+    options = options || {};
+    options.interpolator = options.interpolator || undefined;
+    options.duration = options.duration || 1000;
+    options.callback = options.callback || function() { };
+
+    if (options.interpolator !== undefined &&
+        options.interpolator.getInterpolation) {
+      this.animateProperty(this.setY, this.getY, y, options.interpolator,
+          options.duration, options.callback);
+    } else {
+      this.sprite.position.y = y;
+    }
   };
   
-  my.CanvasSprite.prototype.setPosition = function(x, y) {
-    this.setX(x);
-    this.setY(y);
+  my.CanvasSprite.prototype.setPosition = function(x, y, options) {
+    this.setX(x, options);
+    this.setY(y, options);
+  };
+
+  /**
+   * Gets the rotation of the sprite in radians.
+   */
+  my.CanvasSprite.prototype.getRotation = function() {
+    return this.sprite.rotation;
+  };
+
+  /**
+   * Sets the rotation of the sprite in radians.
+   */
+  my.CanvasSprite.prototype.setRotation = function(rotation, options) {
+    if (rotation === undefined) {
+      throw 'VisualIDE.CanvasSprite: setRotation requires rotation argument';
+    }
+
+    if (!isFinite(rotation)) {
+      throw 'VisualIDE.CanvasSprite: setRotation argument rotation should be ' +
+        'a number';
+    }
+
+    options = options || {};
+    options.interpolator = options.interpolator || undefined;
+    options.duration = options.duration || 1000;
+    options.callback = options.callback || function() { };
+
+    if (options.interpolator !== undefined &&
+        options.interpolator.getInterpolation) {
+      this.animateProperty(this.setRotation, this.getRotation, rotation,
+          options.interpolator, options.duration, options.callback);
+    } else {
+      this.sprite.rotation = rotation;
+    }
   };
   
   /**
@@ -305,6 +399,130 @@ var VisualIDE = (function(my) {
     
     this.texture = PIXI.Texture.fromImage(url);
     this.sprite.setTexture(this.texture);
+  };
+
+  /**
+   * An interpolator defines the rate of change of an animation. This allows
+   * for basic animation effects to be accelerated, decelerated, repeated,
+   * etc.
+   */
+  my.CanvasBaseInterpolator = function() { };
+
+  /**
+   * Maps a value representing the elapsed fraction of an animation to a value
+   * that represents the interpolated fraction.
+   */
+  my.CanvasBaseInterpolator.prototype.getInterpolation = function(input) {
+    throw 'VisualIDE.CanvasBaseInterpolator: should not be initialized';
+  };
+
+  /**
+   * An interpolator where the rate of change is constant.
+   */
+  my.CanvasLinearInterpolator = function() { };
+  my.CanvasLinearInterpolator.prototype = new my.CanvasBaseInterpolator();
+  my.CanvasLinearInterpolator.prototype.getInterpolation = function(input) {
+    return input;
+  };
+
+  /**
+   * An interpolator where the rate of change starts out slowly and then
+   * accelerates.
+   */
+  my.CanvasAccelerateInterpolator = function(factor) {
+    if (factor === undefined) {
+      factor = 1.0;
+    }
+
+    if (!isFinite(factor)) {
+      throw 'VisualIDE.CanvasAccelerateInterpolator: factor argument should ' +
+        'be a number';
+    }
+
+    this.factor = 1.0;
+    this.doubleFactor = 2.0 * factor;
+  };
+
+  my.CanvasAccelerateInterpolator.prototype = new my.CanvasBaseInterpolator();
+  my.CanvasAccelerateInterpolator.prototype.getInterpolation = function(input) {
+    if (this.factor === 1.0) {
+      return input * input;
+    } else {
+      return Math.pow(input, this.doubleFactor);
+    }
+  };
+
+  /**
+   * An interpolator where the rate of change starts out quickly and then
+   * decelerates.
+   */
+  my.CanvasDecelerateInterpolator = function(factor) {
+    if (factor === undefined) {
+      factor = 1.0;
+    }
+
+    if (!isFinite(factor)) {
+      throw 'VisualIDE.CanvasDecelerateInterpolator: factor argument should ' +
+        'be a number';
+    }
+
+    this.factor = factor;
+  };
+
+  my.CanvasDecelerateInterpolator.prototype = new my.CanvasBaseInterpolator();
+  my.CanvasDecelerateInterpolator.prototype.getInterpolation = function(input) {
+    var result = null;
+    if (this.factor === 1.0) {
+      result = (1.0 - (1.0 - input) * (1.0 - input));
+    } else {
+      result = (1.0 - Math.pow((1.0 - input), 2 * this.factor));
+    }
+
+    return result;
+  };
+
+  /**
+   * An interpolator where the rate of change starts and ends slowly but
+   * accelerates through the middle.
+   */
+  my.CanvasEasingInterpolator = function(factor) {
+    if (factor === undefined) {
+      factor = 1.0;
+    }
+
+    if (!isFinite(factor)) {
+      throw 'VisualIDE.CanvasEasingInterpolator: factor argument should ' +
+        'be a number';
+    }
+
+    this.factor = factor;
+  };
+
+  my.CanvasEasingInterpolator.prototype = new my.CanvasBaseInterpolator();
+  my.CanvasEasingInterpolator.prototype.getInterpolation = function(input) {
+    if (this.factor === 1.0) {
+      return 1.0 - (Math.cos(input * Math.PI) / 2.0 + 0.5);
+    } else {
+      return Math.pow(1.0 - (Math.cos(input * Math.PI) / 2.0 + 0.5), this.factor);
+    }
+  };
+
+  /**
+   * An interpolator where the change bounces at the end.
+   */
+  my.CanvasBounceInterpolator = function() {
+    this.bounce = function(t) {
+      return t * t * 8.0;
+    };
+  };
+
+  my.CanvasBounceInterpolator.prototype = new my.CanvasBounceInterpolator();
+  my.CanvasBounceInterpolator.prototype.getInterpolation = function(input) {
+    input *= 1.1226;
+    if (input < 0.3535) return this.bounce(input);
+    else if (input < 0.7408) return this.bounce(input - 0.54719) + 0.7;
+    else if (input < 0.9644) return this.bounce(input - 0.8526) + 0.9;
+    else return this.bounce(input - 1.0435) + 0.95;
   };
   
   return my;
