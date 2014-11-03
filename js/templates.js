@@ -15,12 +15,18 @@ var VisualIDE = (function(ide) {
 			'</li>',
 			
 		secondary: '<% parms.forEach(function (placeholder) { %>' +
-			'<input id="parm1" class="form-control" placeholder="<%= placeholder %>">' + 
+			'<input id="parm1" class="form-control" placeholder="<%= placeholder %>" value="<%= def_value %>">' + 
 			'<% }); %>' +
 			
 			'<% extraHtml.forEach(function (extraHtml) { %>' +
 			'<%= extraHtml %>' + 
-			'<% }); %>'
+			'<% }); %>',
+			
+		whileCondition: '<input id="parm1" class="form-control" value="<%= def_value %>">' + 
+			'<ul></ul>',
+			
+		ifCondition: '<input id="parm1" class="form-control" value="<%= def_value %>">' + 
+			'<ul></ul><h4 class="sub-heading">Else</h4><ul></ul>',
 	};
 	
 	return ide;

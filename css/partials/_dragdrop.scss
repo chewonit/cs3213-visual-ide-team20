@@ -10,6 +10,24 @@
 	}
 }
 
+.command-executing {
+	.handle {
+		&:before {
+			content: "\f064";
+			font-family: FontAwesome;
+			font-style: normal;
+			font-weight: normal;
+			text-decoration: inherit;
+			color: lighten(#000, 30%);
+			font-size: 18px;
+			position: absolute;
+			top: 10px;
+			left: -20px;
+			z-index: 999;
+		}
+	}
+}
+
 ul.list-commands {
     list-style-type: none;
     padding: 0;
@@ -27,7 +45,7 @@ ul.list-commands {
 	}
 	
 	&.list-commands-raw {
-		input {
+		input, .sub-heading {
 			display: none;
 		}
 		overflow-y: auto;
@@ -65,6 +83,14 @@ ul.list-commands {
 			}
 		}
 		
+		&.command-if {
+			border-left: 10px solid lighten($drag-drop-command-if-color, 5%);
+			
+			&:hover {
+				border-color: darken($drag-drop-command-if-color, 10%) !important;
+			}
+		}
+		
 		&:hover {
 			border-color: darken($drag-drop-command-color, 40%) !important;
 		}
@@ -77,8 +103,11 @@ ul.drop-target{
 	ul {
 		list-style-type: none;
 		padding: 0;
-		margin-top: 15px;
 		min-height: 30px;		
+		
+		&:first-of-type {
+			margin-top: 10px;
+		}
 	}
 	
 	li.placeholder {
@@ -118,6 +147,22 @@ ul.drop-target{
 		
 		&:hover {
 			border-color: darken($drag-drop-command-loop-color, 40%) !important;
+		}
+		
+		li.placeholder {
+			padding: 10px;
+		}
+	}
+	
+	.command-if {
+		border-left: 10px solid lighten($drag-drop-command-if-color, 5%);
+		
+		ul {
+			border: 3px dashed lighten($drag-drop-command-if-color, 5%);
+		}
+		
+		&:hover {
+			border-color: darken($drag-drop-command-if-color, 10%) !important;
 		}
 		
 		li.placeholder {

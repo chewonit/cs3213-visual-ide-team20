@@ -160,11 +160,16 @@ var VisualIDE = (function(ide) {
 	var tpl = ide.Templates;
 	
 	cmd.prototype.getCommandHtml = function(id) {
-		var template = tpl.master;
+		
 		var command = cmdList[id];
+		var template = tpl.master;
+		
+		var test = "ifCondition"; console.log(command.template);
+		var secondaryTemplate = command.template ? tpl[command.template] : tpl.secondary;
+		
 		
 		var compiled = _.template( template );
-		var templateFn = _.template( tpl.secondary );
+		var templateFn = _.template( secondaryTemplate );
 		
 		var html = compiled( {model: command, templateFn: templateFn } );
 		
