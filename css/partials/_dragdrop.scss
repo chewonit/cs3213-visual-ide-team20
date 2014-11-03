@@ -42,6 +42,10 @@ ul.list-commands {
 		display: inline-block;
 		width: auto;
 		max-width: 150px;
+		
+		&.numbers {
+			max-width: 50px;
+		}
 	}
 	
 	&.list-commands-raw {

@@ -41,6 +41,11 @@ jQuery(document).ready(function() {
 	initIntepreter(canvas, spriteName);
 
 	initLayout();
+	
+	// Needs for better design on the placement of this
+	// initialization method.
+	// However, it can only be called when the document is loaded.
+	VisualIDE.Templates.init();
 });
 
 function initCanvas(spriteName, path) {

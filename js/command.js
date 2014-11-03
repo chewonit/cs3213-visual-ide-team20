@@ -92,7 +92,7 @@ var cmdDef = (function(cmd) {
       id: 8,
       name        : "IF",
       parms       : ['Condition'],
-      def_value   : 'true',
+      def_value   : '0',
       classes     : ["command-if"],
       isContainer : true,
       extraHtml   : ["<ul></ul>"],

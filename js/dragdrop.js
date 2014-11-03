@@ -62,7 +62,7 @@ var VisualIDE = (function(ide) {
 		var oldContainer;
 		$( containers.normal ).sortable({
 			group: dragGroup,
-			handle: 'i',
+			handle: 'i.handle',
 			onDragStart: function (item, container, _super) {
 				// Duplicate items of the no drop area
 				if (!container.options.drop) item.clone().insertAfter(item);
@@ -164,7 +164,7 @@ var VisualIDE = (function(ide) {
 		var command = cmdList[id];
 		var template = tpl.master;
 		
-		var test = "ifCondition"; console.log(command.template);
+		var test = "ifCondition";
 		var secondaryTemplate = command.template ? tpl[command.template] : tpl.secondary;
 		
 		
@@ -200,6 +200,7 @@ var VisualIDE = (function(ide) {
 		var loopNode = $( this.getCommandHtml(7) );
 		loopNode.find("ul").append( this.getCommandHtml(4) );
 		html += $('<div>').append(loopNode.clone()).html();
+		html += this.getCommandHtml(8);
 		
 		return html;
 	};
