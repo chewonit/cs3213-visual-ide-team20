@@ -92,8 +92,8 @@ function initLayout() {
 }
 
 function resizeAffix() {
-	$('.list-commands-raw').height( $(window).height() - 
-		$('.list-commands-raw').offset().top - $('#list-trash').height() - 100 );
+	$('.col-commands .list-commands-raw').height( $(window).height() - 
+		$('.col-commands .list-commands-raw').offset().top - $('#list-trash').height() - 100 );
 	
 	if ( $(window).width() > 991 ) {
 		$('.affix-container').affix({

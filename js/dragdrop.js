@@ -162,25 +162,26 @@ var VisualIDE = (function(ide) {
 		var command = cmdList[id];
 		html += '<li class="command command-raw ';
 		
-		for( j=0; j<command.classes.length; j++ ) {
-			var c = command.classes[j];
-			html += c + ' ';
-		}
-		html += '"';
+		html += '<% classes.forEach(function (className) { %>' +
+			'<% print(className + " "); %>' +
+			'<% }); %>';
 		
-		html += 'data-command-id=' + command.id + '>';
-		html += '<h4>' + command.name + '</h4>';
+		html += '" data-command-id=<%= id %>>';
+		html += '<h4><%= name %></h4>';
 		
-		for( j=0; j<command.parms.length; j++ ) {
-			var placeholder = command.parms[j];
-			html += '<input id="parm1" class="form-control" placeholder="' + placeholder + '">';
-		}
+		html += '<% parms.forEach(function (placeholder) { %>' +
+			'<input id="parm1" class="form-control" placeholder="<%= placeholder %>">' + 
+			'<% }); %>';
+			
+		html += '<% extraHtml.forEach(function (extraHtml) { %>' +
+			'<%= extraHtml %>' + 
+			'<% }); %>';
 		
-		for( j=0; j<command.extraHtml.length; j++ ) {
-			var extraHtml = command.extraHtml[j];
-			html += extraHtml;
-		}
 		html += ('</li>');
+		
+		var compiled = _.template( html );
+		html = compiled( command );
+		
 		return html;
 	};
 	
@@ -196,6 +197,7 @@ var VisualIDE = (function(ide) {
 		for( i=0; i<cmdList.length; i++ ) {
 			html += this.getCommandHtml(i);
 		}
+		
 		return html;
 	};
 	
