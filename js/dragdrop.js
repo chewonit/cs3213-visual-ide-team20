@@ -62,6 +62,7 @@ var VisualIDE = (function(ide) {
 		var oldContainer;
 		$( containers.normal ).sortable({
 			group: dragGroup,
+			handle: 'i',
 			onDragStart: function (item, container, _super) {
 				// Duplicate items of the no drop area
 				if (!container.options.drop) item.clone().insertAfter(item);
@@ -156,31 +157,16 @@ var VisualIDE = (function(ide) {
 	
 	var cmd = ide.CommandsHtml;
 	var cmdList = cmdDef.cmds;
+	var tpl = ide.Templates;
 	
 	cmd.prototype.getCommandHtml = function(id) {
-		var html = "";
+		var template = tpl.master;
 		var command = cmdList[id];
-		html += '<li class="command command-raw ';
 		
-		html += '<% classes.forEach(function (className) { %>' +
-			'<% print(className + " "); %>' +
-			'<% }); %>';
+		var compiled = _.template( template );
+		var templateFn = _.template( tpl.secondary );
 		
-		html += '" data-command-id=<%= id %>>';
-		html += '<h4><%= name %></h4>';
-		
-		html += '<% parms.forEach(function (placeholder) { %>' +
-			'<input id="parm1" class="form-control" placeholder="<%= placeholder %>">' + 
-			'<% }); %>';
-			
-		html += '<% extraHtml.forEach(function (extraHtml) { %>' +
-			'<%= extraHtml %>' + 
-			'<% }); %>';
-		
-		html += ('</li>');
-		
-		var compiled = _.template( html );
-		html = compiled( command );
+		var html = compiled( {model: command, templateFn: templateFn } );
 		
 		return html;
 	};
