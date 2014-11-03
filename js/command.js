@@ -6,7 +6,7 @@ var cmdDef = (function(cmd) {
 
   var cmds = {};
 
-  // Default values. 
+  // ---------- Original Commands -----------
   cmds = [
     {
       id          : 0,
@@ -57,7 +57,7 @@ var cmdDef = (function(cmd) {
       id          : 5,
       name        : "Change Costume",
       parms       : ['Image URL'],
-      def_value   : '0',
+      def_value   : 'http://placehold.it/100x150.png/fafafa/000000&text=character',
       classes     : [],
       isContainer : false,
       extraHtml   : []
@@ -66,7 +66,7 @@ var cmdDef = (function(cmd) {
       id          : 6,
       name        : "Change Background",
       parms       : ['Image URL'],
-      def_value   : '0',
+      def_value   : 'http://placehold.it/800x600.png/000000/ffffff&text=background',
       classes     : [],
       isContainer : false,
       extraHtml   : []
@@ -80,10 +80,27 @@ var cmdDef = (function(cmd) {
       isContainer : true,
       extraHtml   : ["<ul></ul>"]
     },
+    {
+      id: 8,
+      name        : "If-Then-Else",
+      parms       : ['Condition'],
+      def_value   : 'true',
+      classes     : ["conditional-cases"],
+      isContainer : true,
+      extraHtml   : ["<ul></ul>"]
+    },
   ];
 
   cmd.cmds = cmds;
+
+
+  // Categories of  commands, 
+  // To allow them to have other views as well?
   
   return cmd;
 
 }(cmdDef || {}));
+
+
+//~ Enum reference(s):
+//~ http://stijndewitt.wordpress.com/2014/01/26/enums-in-javascript/

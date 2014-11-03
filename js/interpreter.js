@@ -9,13 +9,22 @@ var VisualIDE = (function(my) {
             USER_INPUT: 0,
             CMD_JUMP: '-1'
         },
+        _USER_CMD_CONSTANTS = {
+            SET_X: "0",
+            SET_Y: "1",
+            SHOW: "2",
+            HIDE: "3",
+            MOVE: "4",
+            CHANGE_COSTUME: "5",
+            CHANGE_BG: "6",
+            REPEAT: "7",
+            IF: "8"
+        },
         cmdList = cmdDef.cmds;
 
     my.Interpreter = function(canvas, spriteName) {
     	_canvas = canvas;
         _spriteName = spriteName;
-
-        
     };
     
     my.Interpreter.stop = function() {
@@ -100,20 +109,17 @@ var VisualIDE = (function(my) {
         }
     };
 
-    var encapsulatingLogic = {};
-
-    encapsulatingLogic["7"] = function(commandObj, args) {
-        var loopStart = _commandQueue.getLength();
-
-        parse(commandObj.children('ul').children('li'));
-
-        var jumpArgs = [args[_CONSTANTS.USER_INPUT]];
-        _commandQueue.addCommand(new Command(_CONSTANTS.CMD_JUMP, jumpArgs, {
-            jumpTo: loopStart,
-            numLooped: 1,
-            infiniteLoop: 0
-        }));
-    };
+    /**
+     * The mapping from commandId to the actual function.
+     */
+    var _commandMap = {};  
+    _commandMap[_USER_CMD_CONSTANTS.SET_X]          = setX;
+    _commandMap[_USER_CMD_CONSTANTS.SET_Y]          = setY;
+    _commandMap[_USER_CMD_CONSTANTS.SHOW]           = show;
+    _commandMap[_USER_CMD_CONSTANTS.HIDE]           = hide;
+    _commandMap[_USER_CMD_CONSTANTS.MOVE]           = move;
+    _commandMap[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = changeCostume;
+    _commandMap[_USER_CMD_CONSTANTS.CHANGE_BG]      = changeBg;
 
     /**
      * Parses the list of commands.
@@ -128,21 +134,25 @@ var VisualIDE = (function(my) {
      */
     var encapsulateCommand = function() {
         var commandObj = $(this);
-        var procedureId = commandObj.attr('data-command-id');
-        var args = getParams(commandObj, procedureId);
+        var commandId = commandObj.attr('data-command-id');
+        var args = getParams(commandObj, commandId);
 
-        if (procedureId in encapsulatingLogic) {
-            encapsulatingLogic[procedureId].apply(this, [commandObj, args]);
+        var cmd;
+
+        if (commandId === _USER_CMD_CONSTANTS.REPEAT) {
+            cmd = new JumpCommand(commandId, args);
         }
         else {
-            _commandQueue.addCommand(new Command(procedureId, args));
+            cmd = new Command(commandId, args);
         }
+
+        _commandQueue.addCommand(cmd.parseCommand(commandObj));
     };
 
     /**
      * Gets the parameters entered by the user. Returns an array of parameters.
      */
-    var getParams = function(commandObj, procedureId) {
+    var getParams = function(commandObj, commandId) {
         var params = [];
 
         params.push(commandObj.children("input").val());
@@ -165,7 +175,7 @@ var VisualIDE = (function(my) {
                 execute(commandObj);
                 _commandQueue.incrementPointer();
             }
-        };
+        }; 
         _commandQueue.run(looply, _delay);
     };
 
@@ -173,67 +183,82 @@ var VisualIDE = (function(my) {
      * Executes the command.
      */
     var execute = function(commandObj) {
-        var procedureId = commandObj.procedureId;
+        var commandId = commandObj.commandId;
         var args = commandObj.args;
         var options = commandObj.options;
 
-        if (_procedureMap[procedureId] === undefined)
-            throw 'Interpreter: Undefined procedure!';
+        if (!(commandId in _commandMap))
+            throw 'Interpreter: Undefined command! ' + commandId;
 
-        _procedureMap[procedureId].apply(this, [args, options]);
+        _commandMap[commandId].apply(this, [args, options]);
     };
 
     /**
-     * The mapping from procedureId to the actual function.
+     * The encapsulated command object.
      */
-    var _procedureMap = {
-        "0": setX,
-        "1": setY,
-        "2": show,
-        "3": hide,
-        "4": move,
-        "5": changeCostume,
-        "6": changeBg
-    };
-
-    /**
-     * The encapsulated procedure object.
-     */
-    var Command = function(procedureId, args, options) {
-        this.procedureId = procedureId;
+    var Command = function(commandId, args, options) {
+        this.commandId = commandId;
         this.args = args;
         this.options = options || {};
     };
 
+    Command.prototype.parseCommand = function() {
+        return this;
+    };
+
+    Command.prototype.preprocess = function() {
+        return this;
+    };
+
+    var JumpCommand = function(commandId, args, options) {
+        this.commandId = commandId;
+        this.args = args;
+        this.options = options || {};
+    };
+
+    JumpCommand.prototype = new Command();
+
+    JumpCommand.prototype.parseCommand = function(commandObj) {
+        var loopStart = _commandQueue.getLength();
+
+        parse(commandObj.children('ul').children('li'));
+        
+        return new JumpCommand(_CONSTANTS.CMD_JUMP, this.args, {
+            jumpTo: loopStart,
+            numLooped: 1,
+            infiniteLoop: 0
+        });
+    };
+
+    JumpCommand.prototype.preprocess = function(commandObj) {
+        if (this.options.infiniteLoop) {
+            _commandQueue.movePointer(options.jumpTo);
+        }
+        else {
+            if (this.options.numLooped < this.args[_CONSTANTS.USER_INPUT]) {
+                this.options.numLooped++;
+                _commandQueue.movePointer(this.options.jumpTo);
+            }
+            else {
+                this.options.numLooped = 1;
+                if (_commandQueue.endOfQueue()) {
+                    _commandQueue.stop();
+                    return;
+                }
+                _commandQueue.incrementPointer();
+            }
+        }
+        return _commandQueue.getCommand();
+    };
+
+
+    /**
+     * The command queue to store command objects.
+     */
     var CommandQueue = function() {
         this._queue = [];
         this._curr = 0;
         this._commandTimer = {};
-        this._commandPreprocess = {};
-
-        this._commandPreprocess[_CONSTANTS.CMD_JUMP] = function(commandObj) {
-            while (commandObj.procedureId === _CONSTANTS.CMD_JUMP) {
-                if (commandObj.options.infiniteLoop) {
-                    this.movePointer(options.jumpTo);
-                }
-                else {
-                    if (commandObj.options.numLooped < commandObj.args[_CONSTANTS.USER_INPUT]) {
-                        commandObj.options.numLooped++;
-                        this.movePointer(commandObj.options.jumpTo);
-                    }
-                    else {
-                        commandObj.options.numLooped = 1;
-                        if (this.endOfQueue()) {
-                            this.stop();
-                            return;
-                        }
-                        this.incrementPointer();
-                    }
-                }
-                commandObj = this._queue[this._curr];
-            }
-            return commandObj;
-        };
 
         this.run = function(looply, delay) {
             this._commandTimer = setInterval(looply, delay);
@@ -248,13 +273,7 @@ var VisualIDE = (function(my) {
         };
 
         this.getCommand = function() {
-            var commandObj = this._queue[this._curr];
-
-            if (commandObj.procedureId in this._commandPreprocess) {
-                commandObj = this._commandPreprocess[commandObj.procedureId].call(this, commandObj);
-            }
-            
-            return commandObj;
+            return this._queue[this._curr].preprocess();
         };
 
         this.getLength = function() {
