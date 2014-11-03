@@ -22,6 +22,10 @@ var VisualIDE = (function(my) {
         },
         cmdList = cmdDef.cmds;
 
+    var resetStyles = function() {        
+        $('li').removeClass('command-executing');
+    };
+
     my.Interpreter = function(canvas, spriteName) {
     	_canvas = canvas;
         _spriteName = spriteName;
@@ -29,7 +33,7 @@ var VisualIDE = (function(my) {
     
     my.Interpreter.stop = function() {
         if (_commandQueue) 
-            _commandQueue.stop();
+            _commandQueue.stop(resetStyles);
         
         _commandQueue = new CommandQueue();
     };        
@@ -139,11 +143,11 @@ var VisualIDE = (function(my) {
 
         var cmd;
 
-        if (commandId === _USER_CMD_CONSTANTS.REPEAT) {
-            cmd = new JumpCommand(commandId, args);
+        if (commandId === _USER_CMD_CONSTANTS.REPEAT || commandId === _USER_CMD_CONSTANTS.IF) {
+            cmd = new JumpCommand(_CONSTANTS.CMD_JUMP, commandObj, args);
         }
         else {
-            cmd = new Command(commandId, args);
+            cmd = new Command(commandId, commandObj, args);
         }
 
         _commandQueue.addCommand(cmd.parseCommand(commandObj));
@@ -169,7 +173,7 @@ var VisualIDE = (function(my) {
             var commandObj = _commandQueue.getCommand();
 
             if (_commandQueue.endOfQueue()) {
-                _commandQueue.stop();
+                _commandQueue.stop(resetStyles);
             }
             else {
                 execute(commandObj);
@@ -190,14 +194,18 @@ var VisualIDE = (function(my) {
         if (!(commandId in _commandMap))
             throw 'Interpreter: Undefined command! ' + commandId;
 
+        resetStyles();
+        commandObj.commandObjInList.addClass('command-executing');
+
         _commandMap[commandId].apply(this, [args, options]);
     };
 
     /**
      * The encapsulated command object.
      */
-    var Command = function(commandId, args, options) {
+    var Command = function(commandId, cmd, args, options) {
         this.commandId = commandId;
+        this.commandObjInList = cmd;
         this.args = args;
         this.options = options || {};
     };
@@ -210,29 +218,30 @@ var VisualIDE = (function(my) {
         return this;
     };
 
-    var JumpCommand = function(commandId, args, options) {
+    var JumpCommand = function(commandId, cmd, args, options) {
         this.commandId = commandId;
+        this.commandObjInList = cmd;
         this.args = args;
         this.options = options || {};
     };
 
     JumpCommand.prototype = new Command();
 
-    JumpCommand.prototype.parseCommand = function(commandObj) {
+    JumpCommand.prototype.parseCommand = function() {
         var loopStart = _commandQueue.getLength();
 
-        parse(commandObj.children('ul').children('li'));
+        parse(this.commandObjInList.children('ul').children('li'));
         
-        return new JumpCommand(_CONSTANTS.CMD_JUMP, this.args, {
+        return new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
             jumpTo: loopStart,
             numLooped: 1,
             infiniteLoop: 0
         });
     };
 
-    JumpCommand.prototype.preprocess = function(commandObj) {
+    JumpCommand.prototype.preprocess = function() {
         if (this.options.infiniteLoop) {
-            _commandQueue.movePointer(options.jumpTo);
+            _commandQueue.movePointer(this.options.jumpTo);
         }
         else {
             if (this.options.numLooped < this.args[_CONSTANTS.USER_INPUT]) {
@@ -240,11 +249,11 @@ var VisualIDE = (function(my) {
                 _commandQueue.movePointer(this.options.jumpTo);
             }
             else {
-                this.options.numLooped = 1;
                 if (_commandQueue.endOfQueue()) {
-                    _commandQueue.stop();
+                    _commandQueue.stop(resetStyles);
                     return;
                 }
+                this.options.numLooped = 1;
                 _commandQueue.incrementPointer();
             }
         }
@@ -264,8 +273,9 @@ var VisualIDE = (function(my) {
             this._commandTimer = setInterval(looply, delay);
         };
 
-        this.stop = function() {
+        this.stop = function(callback) {
             clearInterval(this._commandTimer);
+            callback.apply(this);
         };
 
         this.addCommand = function(commandObj) {
