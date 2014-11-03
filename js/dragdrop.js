@@ -62,6 +62,7 @@ var VisualIDE = (function(ide) {
 		var oldContainer;
 		$( containers.normal ).sortable({
 			group: dragGroup,
+			handle: 'i',
 			onDragStart: function (item, container, _super) {
 				// Duplicate items of the no drop area
 				if (!container.options.drop) item.clone().insertAfter(item);
@@ -156,31 +157,22 @@ var VisualIDE = (function(ide) {
 	
 	var cmd = ide.CommandsHtml;
 	var cmdList = cmdDef.cmds;
+	var tpl = ide.Templates;
 	
 	cmd.prototype.getCommandHtml = function(id) {
-		var html = "";
+		
 		var command = cmdList[id];
-		html += '<li class="command command-raw ';
+		var template = tpl.master;
 		
-		for( j=0; j<command.classes.length; j++ ) {
-			var c = command.classes[j];
-			html += c + ' ';
-		}
-		html += '"';
+		var test = "ifCondition"; console.log(command.template);
+		var secondaryTemplate = command.template ? tpl[command.template] : tpl.secondary;
 		
-		html += 'data-command-id=' + command.id + '>';
-		html += '<h4>' + command.name + '</h4>';
 		
-		for( j=0; j<command.parms.length; j++ ) {
-			var placeholder = command.parms[j];
-			html += '<input id="parm1" class="form-control" placeholder="' + placeholder + '">';
-		}
+		var compiled = _.template( template );
+		var templateFn = _.template( secondaryTemplate );
 		
-		for( j=0; j<command.extraHtml.length; j++ ) {
-			var extraHtml = command.extraHtml[j];
-			html += extraHtml;
-		}
-		html += ('</li>');
+		var html = compiled( {model: command, templateFn: templateFn } );
+		
 		return html;
 	};
 	
@@ -196,6 +188,7 @@ var VisualIDE = (function(ide) {
 		for( i=0; i<cmdList.length; i++ ) {
 			html += this.getCommandHtml(i);
 		}
+		
 		return html;
 	};
 	

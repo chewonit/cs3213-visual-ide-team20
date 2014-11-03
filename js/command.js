@@ -10,21 +10,23 @@ var cmdDef = (function(cmd) {
   cmds = [
     {
       id          : 0,
-      name        : "Set Horizontal Position",
+      name        : "X Position",
       parms       : ['Horizontal Position'],
       def_value   : '0',
       classes     : [],
       isContainer : false,
-      extraHtml   : []
+      extraHtml   : [],
+	  template    : ""
     },
     {
       id          : 1,
-      name        : "Set Vertical Position",
+      name        : "Y Position",
       parms       : ['Vertical Position'],
       def_value   : '0',
       classes     : [],
       isContainer : false,
-      extraHtml   : []
+      extraHtml   : [],
+	  template    : ""
     },
     {
       id          : 2,
@@ -33,7 +35,8 @@ var cmdDef = (function(cmd) {
       def_value   : '0',
       classes     : [],
       isContainer : false,
-      extraHtml   : []
+      extraHtml   : [],
+	  template    : ""
     },
     {
       id          : 3,
@@ -42,7 +45,8 @@ var cmdDef = (function(cmd) {
       def_value   : '0',
       classes     : [],
       isContainer : false,
-      extraHtml   : []
+      extraHtml   : [],
+	  template    : ""
     },
     {
       id          : 4,
@@ -51,7 +55,8 @@ var cmdDef = (function(cmd) {
       def_value   : '0',
       classes     : [],
       isContainer : false,
-      extraHtml   : []
+      extraHtml   : [],
+	  template    : ""
     },
     {
       id          : 5,
@@ -60,7 +65,8 @@ var cmdDef = (function(cmd) {
       def_value   : 'http://placehold.it/100x150.png/fafafa/000000&text=character',
       classes     : [],
       isContainer : false,
-      extraHtml   : []
+      extraHtml   : [],
+	  template    : ""
     },
     {
       id          : 6,
@@ -69,7 +75,8 @@ var cmdDef = (function(cmd) {
       def_value   : 'http://placehold.it/800x600.png/000000/ffffff&text=background',
       classes     : [],
       isContainer : false,
-      extraHtml   : []
+      extraHtml   : [],
+	  template    : ""
     },
     {
       id: 7,
@@ -78,16 +85,18 @@ var cmdDef = (function(cmd) {
       def_value   : '0',
       classes     : ["command-loop"],
       isContainer : true,
-      extraHtml   : ["<ul></ul>"]
+      extraHtml   : ["<ul></ul>"],
+	  template    : "whileCondition"
     },
     {
       id: 8,
-      name        : "If-Then-Else",
+      name        : "IF",
       parms       : ['Condition'],
       def_value   : 'true',
-      classes     : ["conditional-cases"],
+      classes     : ["command-if"],
       isContainer : true,
-      extraHtml   : ["<ul></ul>"]
+      extraHtml   : ["<ul></ul>"],
+	  template    : "ifCondition"
     },
   ];
 
