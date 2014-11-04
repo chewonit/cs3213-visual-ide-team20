@@ -20,11 +20,23 @@ $('#dropbox-btn').on('click', function (e) {
 });
 
 $('#save-btn').on('click', function (e) {
-	saveToGoogle();
+	if(loggedIntoGoogle()){
+		saveToGoogle();
+	} else if(loggedIntoDropbox()){
+		saveToDropbox();
+	} else {
+		alert("An error has occurred. Please try to refresh this page.");
+	}
 });
 
 $('#load-btn').on('click', function (e) {
-	loadFromGoogle();
+	if(loggedIntoGoogle()){
+		loadFromGoogle();
+	} else if(loggedIntoDropbox()){
+		loadFromDropbox();
+	} else {
+		alert("An error has occurred. Please try to refresh this page.");
+	}
 });
 
 var HomeView = Backbone.View.extend({

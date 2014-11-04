@@ -10,6 +10,13 @@ function loginGoogle() {
 		{'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false}, handleAuthResult);
 }
 
+function loggedIntoGoogle(){
+	if(gapi.auth.getToken()){
+		return true;
+	}
+	return false;
+}
+
 function handleClientLoad() {
 	window.setTimeout(checkAuth, 1);
 }

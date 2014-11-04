@@ -7,9 +7,15 @@ function loginDropbox() {
         } else {
             client.getAccountInfo(function (error, info) {
                 setDropboxProfile(info);
+                $(".save-load-file").show();
             });
         }
     });
+}
+
+function loggedIntoDropbox()
+{
+    return client.isAuthenticated();
 }
 
 function setDropboxProfile(obj) {
@@ -49,12 +55,13 @@ function saveProcedure() {
             // Try to complete OAuth flow.
             alert('Error: '+error);
         } else {
-            alert('Saved into Dropbox!');
+            alert('Procedures saved!');
         }
     });
 }
 
 function loadProcedure() {
+    alert("Please wait while we load your saved procedures.");
     var procedures = $('ul.list-procedures').html();
 
     var result = client.readFile('saved_data.txt', function (error, data) {
