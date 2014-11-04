@@ -140,7 +140,7 @@ var VisualIDE = (function(ide) {
 			
 			'</div>', // END of command input wrap
 			
-		commandCategories: '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">' +
+		commandCategories: '<div class="panel-group accordion-raw-commands" id="accordion" role="tablist" aria-multiselectable="true">' +
 			'<% category.forEach(function ( cat ) { %>' +
 			'<%= templateFn( cat ) %>' +
 			'<% }); %>' + 
@@ -149,7 +149,7 @@ var VisualIDE = (function(ide) {
 		commandCategory: '<div class="panel panel-default">' +
 			'<div class="panel-heading" role="tab" id="headingOne">' +
 			  '<h4 class="panel-title">' +
-				'<a data-toggle="collapse" data-parent="#accordion" href=".collapse-<%= id %>" aria-expanded="true" aria-controls="collapse-<%= id %>">' +
+				'<a data-toggle="collapse" data-parent=".accordion-raw-commands" href=".collapse-<%= id %>" aria-expanded="true" aria-controls="collapse-<%= id %>">' +
 				  '<%= heading %>' +
 				'</a>' +
 			  '</h4>' +
