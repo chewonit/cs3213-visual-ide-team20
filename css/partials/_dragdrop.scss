@@ -44,7 +44,12 @@ ul.list-commands {
 		max-width: 150px;
 		
 		&.numbers {
-			max-width: 80px;
+			@include transition2(max-width, 0.2s, ease-in-out);
+			max-width: 60px;
+			
+			&:focus {
+				max-width: 100px;
+			}
 		}
 	}
 	

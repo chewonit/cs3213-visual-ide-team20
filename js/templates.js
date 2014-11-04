@@ -139,6 +139,28 @@ var VisualIDE = (function(ide) {
 			'</div>' +
 			
 			'</div>', // END of command input wrap
+			
+		commandCategories: '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">' +
+			'<% category.forEach(function ( cat ) { %>' +
+			'<%= templateFn( cat ) %>' +
+			'<% }); %>' + 
+			'</div>',
+			
+		commandCategory: '<div class="panel panel-default">' +
+			'<div class="panel-heading" role="tab" id="headingOne">' +
+			  '<h4 class="panel-title">' +
+				'<a data-toggle="collapse" data-parent="#accordion" href=".collapse-<%= id %>" aria-expanded="true" aria-controls="collapse-<%= id %>">' +
+				  '<%= heading %>' +
+				'</a>' +
+			  '</h4>' +
+			'</div>' +
+			'<div id="collapse-<%= id %>" class="panel-collapse collapse <% if(opened) print("in"); %> collapse-<%= id %>" role="tabpanel" aria-labelledby="headingOne">' +
+			  '<div class="panel-body">' +
+				'<%= content %>' +
+			  '</div>' +
+			'</div>' +
+  '</div>',
+		
 	};
 	
 	return ide;

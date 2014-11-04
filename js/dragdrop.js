@@ -156,12 +156,21 @@ var VisualIDE = (function(ide) {
 	};
 	
 	var cmd = ide.CommandsHtml;
-	var cmdList = cmdDef.cmds;
+	var cmdList = ide.cmds;
 	var tpl = ide.Templates;
 	
 	cmd.prototype.getCommandHtml = function(id) {
+		return this.getCommandWithCategoryHtml(id, -1);
+	};
+	
+	cmd.prototype.getCommandWithCategoryHtml = function(id, catId) {
 		
 		var command = cmdList[id];
+		
+		if ( catId != -1 ) {
+			if ( command.category != catId ) return "";
+		}
+		
 		var template = tpl.master;
 		
 		var test = "ifCondition";
@@ -177,17 +186,30 @@ var VisualIDE = (function(ide) {
 	};
 	
 	cmd.prototype.getAllCommandsHtml = function() {
-		var html = "";
-		var command;
-		for( i=0; i<cmdList.length; i++ ) {
-			html += this.getCommandHtml(i);
+		
+		var categories = [];
+		
+		var catList = ide.Categories.map;
+		for ( i = 0; i < catList.length; i++ ) { 
+			
+			var catObj = {};
+			var commandHtml = "";
+			
+			catObj.id = i;
+			catObj.heading = catList[i];
+			for( j=0; j<cmdList.length; j++ ) {
+				commandHtml += this.getCommandWithCategoryHtml(j, i);
+			}
+			catObj.content = commandHtml;
+			catObj.opened = (i===0) ? true : false;
+			
+			categories.push( catObj );
 		}
-		for( i=0; i<cmdList.length; i++ ) {
-			html += this.getCommandHtml(i);
-		}
-		for( i=0; i<cmdList.length; i++ ) {
-			html += this.getCommandHtml(i);
-		}
+		
+		
+		var compiled = _.template( tpl.commandCategories );
+		var templateFn = _.template( tpl.commandCategory );
+		var html = compiled( {category: categories, templateFn: templateFn } );
 		
 		return html;
 	};
@@ -197,10 +219,10 @@ var VisualIDE = (function(ide) {
 		html += this.getCommandHtml(0);
 		html += this.getCommandHtml(1);
 		
-		var loopNode = $( this.getCommandHtml(7) );
+		var loopNode = $( this.getCommandHtml(6) );
 		loopNode.find("ul").append( this.getCommandHtml(4) );
 		html += $('<div>').append(loopNode.clone()).html();
-		html += this.getCommandHtml(8);
+		html += this.getCommandHtml(5);
 		
 		return html;
 	};
