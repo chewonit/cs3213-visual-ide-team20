@@ -44,7 +44,9 @@ var VisualIDE = (function(ide) {
 		numberInput: '<div class="command-input-wrap">' + 
 			'<input id="parm1" class="form-control numbers" type="number" min="0" value="<%= def_value %>">' + 
 			'</div>' ,  // END of command input wrap
-			
+
+		loop: '<ul></ul>',			
+		
 		repeat: '<div class="command-input-wrap">' + 
 			'<input id="parm1" class="form-control numbers" type="number" min="0" value="<%= def_value %>">' + 
 			'</div>' +  // END of command input wrap
@@ -88,6 +90,55 @@ var VisualIDE = (function(ide) {
 			'</div>' + // END of command input wrap
 			
 			'<ul></ul><h4 class="sub-heading">Else</h4><ul></ul>',
+			
+		assign: '<div class="command-input-wrap">' + 
+			'<div class="display-in-line">' +
+			'<select>' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'</div>' +
+			
+			' = ' +
+			
+			'<div class="display-in-line">' +
+			'<button data-toggle="tooltip" data-placement="left" title="Swap input type between variables and numbers." ' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'<select class="no-show">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'<input id="parm1" class="form-control numbers" type="number" min="0" value="<%= def_value[0] %>">' + 
+			'</div>' +
+			
+			'&nbsp;&nbsp;&nbsp;' +
+			'<div class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">+</span></a>' +
+				'<ol class="dropdown-menu">' +
+					'<li><a href="#">-</a></li>' +
+					'<li><a href="#">*</a></li>' +
+					'<li><a href="#">/</a></li>' +
+					'<li><a href="#">%</a></li>' +
+				'</ol>' +
+			'</div>' +
+			
+			'&nbsp;&nbsp;&nbsp;' +
+			'<div class="display-in-line">' +
+			'<button data-toggle="tooltip" data-placement="left" title="Swap input type between variables and numbers." ' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'<select class="no-show">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'<input id="parm1" class="form-control numbers" type="number" min="0" value="<%= def_value[1] %>">' + 
+			'</div>' +
+			
+			'</div>', // END of command input wrap
 	};
 	
 	return ide;

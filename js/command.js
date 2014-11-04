@@ -52,7 +52,7 @@ var cmdDef = (function(cmd) {
       id          : 4,
       name        : "Move",
       parms       : ['Steps'],
-      def_value   : '0',
+      def_value   : '10',
       classes     : [],
       isContainer : false,
       extraHtml   : [],
@@ -82,7 +82,7 @@ var cmdDef = (function(cmd) {
       id: 7,
       name        : "Repeat",
       parms       : ['Number of times'],
-      def_value   : '0',
+      def_value   : '5',
       classes     : ["command-loop"],
       isContainer : true,
       extraHtml   : ["<ul></ul>"],
@@ -97,6 +97,26 @@ var cmdDef = (function(cmd) {
       isContainer : true,
       extraHtml   : ["<ul></ul>"],
 	  template    : "ifCondition"
+    },
+    {
+      id: 9,
+      name        : "Loop",
+      parms       : [],
+      def_value   : '',
+      classes     : ["command-loop"],
+      isContainer : true,
+      extraHtml   : ["<ul></ul>"],
+	  template    : "loop"
+    },
+    {
+      id: 10,
+      name        : "Assign",
+      parms       : [],
+      def_value   : [5,10],
+      classes     : [],
+      isContainer : true,
+      extraHtml   : [],
+	  template    : "assign"
     },
   ];
 
