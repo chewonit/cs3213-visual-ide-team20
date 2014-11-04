@@ -71,8 +71,9 @@ function initLayout() {
 
 	// Populate the raw static commands
 	var commandsHtml = new VisualIDE.CommandsHtml();
-	$('.list-commands-raw').append( commandsHtml.getAllCommandsHtml() );
-
+	$('.list-commands-raw').append( commandsHtml.populateRawCommands() );
+	commandsHtml.initCommands();
+	
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
 	

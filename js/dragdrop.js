@@ -186,7 +186,7 @@ var VisualIDE = (function(ide) {
 		return html;
 	};
 	
-	cmdHtml.prototype.getAllCommandsHtml = function() {
+	cmdHtml.prototype.populateRawCommands = function() {
 		
 		var html = "";
 		var categories = [];
@@ -225,12 +225,26 @@ var VisualIDE = (function(ide) {
 		html += this.getCommandHtml(0);
 		html += this.getCommandHtml(1);
 		
-		var loopNode = $( this.getCommandHtml(6) );
-		loopNode.find("ul").append( this.getCommandHtml(4) );
+		var loopNode = $( this.getCommandHtml(7) );
+		loopNode.find("ul").append( this.getCommandHtml(2) );
 		html += $('<div>').append(loopNode.clone()).html();
-		html += this.getCommandHtml(5);
+		html += this.getCommandHtml(3);
 		
 		return html;
+	};
+	
+	cmdHtml.prototype.initCommands = function() {
+		$('#btn-variable-manager').on('click', function() {
+			$('#variable-manager').slideToggle();
+			$('#sprite-manager').slideUp();
+		});
+		$('#btn-sprite-manager').on('click', function() {
+			$('#sprite-manager').slideToggle();
+			$('#variable-manager').slideUp();
+		});
+		$('.btn-managers-close').on('click', function() {
+			$(this).parent().parent().slideUp();
+		});
 	};
 	
 	return ide;

@@ -42,7 +42,7 @@ var VisualIDE = (function(ide) {
 				category	  : 0
 			},
 			{
-				id: 10,
+				id			: 10,
 				name        : "Assign",
 				parms       : [],
 				def_value   : [5,10],
@@ -53,7 +53,7 @@ var VisualIDE = (function(ide) {
 				category	  : 0
 			},
 			{
-				id: 11,
+				id			: 11,
 				name        : "Rotate",
 				parms       : [],
 				def_value   : 90,
@@ -64,7 +64,7 @@ var VisualIDE = (function(ide) {
 				category	  : 0
 			},
 			{
-				id: 8,
+				id			: 8,
 				name        : "IF",
 				parms       : ['Condition'],
 				def_value   : '0',
@@ -75,7 +75,18 @@ var VisualIDE = (function(ide) {
 				category	  : 1
 			},
 			{
-				id: 7,
+				id			: 12,
+				name        : "While",
+				parms       : [],
+				def_value   : '0',
+				classes     : ["command-loop"],
+				isContainer : true,
+				extraHtml   : ["<ul></ul>"],
+				template    : "loopWhile",
+				category	  : 1
+			},
+			{
+				id			: 7,
 				name        : "Repeat",
 				parms       : ['Number of times'],
 				def_value   : '5',
@@ -86,7 +97,7 @@ var VisualIDE = (function(ide) {
 				category	  : 1
 			},
 			{
-				id: 9,
+				id			: 9,
 				name        : "Loop",
 				parms       : [],
 				def_value   : '',
@@ -144,11 +155,13 @@ var VisualIDE = (function(ide) {
 		
 		commandButtons: [
 			{
+				cssId: 'btn-variable-manager',
 				tooltip: 'Create or delete variables.',
 				iconClass: 'stack-overflow',
 				name: 'Variable Manager'
 			},
 			{
+				cssId: 'btn-sprite-manager',
 				tooltip: 'Create or delete sprites.',
 				iconClass: 'picture-o',
 				name: 'Sprite Manager'

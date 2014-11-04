@@ -78,6 +78,10 @@ ul.list-commands {
 			color: #333;
 			background-color: #f5f5f5;
 			border-color: #ddd;
+			
+			h4 {
+				padding-left: 0;
+			}
 		}
 	}
 	
@@ -106,6 +110,11 @@ ul.list-commands {
 		
 		.command-input-wrap {
 			display: inline-block;
+			
+			.form-control {
+				width: auto;
+				display: inherit;
+			}
 		}
 		
 		
@@ -230,4 +239,8 @@ div.list-header {
 	h3 {
 		display: inline-block;
 	}
+}
+
+.view-managers {
+	display: none;
 }
