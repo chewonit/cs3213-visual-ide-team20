@@ -5,18 +5,10 @@ var SCOPES = [
 'https://www.googleapis.com/auth/userinfo.profile',
 ];
 
-$('#login-btn').on('click', function (e) {
+function loginGoogle() {
 	gapi.auth.authorize(
 		{'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false}, handleAuthResult);
-});
-
-$('#save-btn').on('click', function (e) {
-	saveFile();
-});
-
-$('#load-btn').on('click', function (e) {
-	loadFile();
-});
+}
 
 function handleClientLoad() {
 	window.setTimeout(checkAuth, 1);
@@ -51,7 +43,7 @@ function handleAuthResult(authResult) {
 	}
 }
 
-function saveFile(){
+function saveToGoogle(){
 	var request = gapi.client.drive.files.list({'q': '\'appfolder\' in parents'});
 	request.execute(function(results) {
 		var data = results.items;
@@ -84,7 +76,7 @@ function saveFile(){
 	});	
 }
 
-function loadFile(){
+function loadFromGoogle(){
 	alert("Please wait while we load your saved procedures.");
 	var request = gapi.client.drive.files.list({'q': '\'appfolder\' in parents'});
 	request.execute(function(results) {

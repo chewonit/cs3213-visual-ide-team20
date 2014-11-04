@@ -11,6 +11,22 @@ $('.btn-clear-procedure').on('click', function (e) {
     $('#list-procedures').html("");
 });
 
+$('#login-btn').on('click', function (e) {
+	loginGoogle();
+});
+
+$('#dropbox-btn').on('click', function (e) {
+    loginDropbox();
+});
+
+$('#save-btn').on('click', function (e) {
+	saveToGoogle();
+});
+
+$('#load-btn').on('click', function (e) {
+	loadFromGoogle();
+});
+
 var HomeView = Backbone.View.extend({
 	el: '.page',
 	render: function () {
