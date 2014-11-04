@@ -155,15 +155,16 @@ var VisualIDE = (function(ide) {
 		console.log("VisualIDE.CommandHtml: Initialized!");
 	};
 	
-	var cmd = ide.CommandsHtml;
-	var cmdList = ide.cmds;
+	var cmdHtml = ide.CommandsHtml;
+	var cmd = ide.Commands;
+	var cmdList = cmd.commands;
 	var tpl = ide.Templates;
 	
-	cmd.prototype.getCommandHtml = function(id) {
+	cmdHtml.prototype.getCommandHtml = function(id) {
 		return this.getCommandWithCategoryHtml(id, -1);
 	};
 	
-	cmd.prototype.getCommandWithCategoryHtml = function(id, catId) {
+	cmdHtml.prototype.getCommandWithCategoryHtml = function(id, catId) {
 		
 		var command = cmdList[id];
 		
@@ -185,11 +186,12 @@ var VisualIDE = (function(ide) {
 		return html;
 	};
 	
-	cmd.prototype.getAllCommandsHtml = function() {
+	cmdHtml.prototype.getAllCommandsHtml = function() {
 		
+		var html = "";
 		var categories = [];
 		
-		var catList = ide.Categories.map;
+		var catList = cmd.categories;
 		for ( i = 0; i < catList.length; i++ ) { 
 			
 			var catObj = {};
@@ -206,15 +208,19 @@ var VisualIDE = (function(ide) {
 			categories.push( catObj );
 		}
 		
-		
 		var compiled = _.template( tpl.commandCategories );
 		var templateFn = _.template( tpl.commandCategory );
-		var html = compiled( {category: categories, templateFn: templateFn } );
+		html += compiled( {category: categories, templateFn: templateFn } );
 		
+		var buttons = cmd.commandButtons;
+		
+		compiled = _.template( tpl.commandButton );
+		html += compiled( { buttons: buttons } );
+			
 		return html;
 	};
 	
-	cmd.prototype.getCommandsDemoSetHtml = function() {
+	cmdHtml.prototype.getCommandsDemoSetHtml = function() {
 		var html = "";
 		html += this.getCommandHtml(0);
 		html += this.getCommandHtml(1);

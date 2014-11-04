@@ -54,7 +54,7 @@ var VisualIDE = (function(ide) {
 			
 		ifCondition: '<div class="command-input-wrap">' + 
 			'<div class="display-in-line">' +
-			'<button data-toggle="tooltip" data-placement="left" title="Swap input type between variables and numbers." ' +
+			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
 			'<select class="no-show">' +
 				'<option value="volvo">Volvo</option>' +
@@ -76,7 +76,7 @@ var VisualIDE = (function(ide) {
 			'</div>' +
 			'&nbsp;&nbsp;&nbsp;' +
 			'<div class="display-in-line">' +
-			'<button data-toggle="tooltip" data-placement="left" title="Swap input type between variables and numbers." ' +
+			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
 			'<select class="no-show">' +
 				'<option value="volvo">Volvo</option>' +
@@ -147,19 +147,33 @@ var VisualIDE = (function(ide) {
 			'</div>',
 			
 		commandCategory: '<div class="panel panel-default">' +
-			'<div class="panel-heading" role="tab" id="headingOne">' +
-			  '<h4 class="panel-title">' +
+			
+			  
 				'<a data-toggle="collapse" data-parent=".accordion-raw-commands" href=".collapse-<%= id %>" aria-expanded="true" aria-controls="collapse-<%= id %>">' +
-				  '<%= heading %>' +
+				  '<div class="panel-heading command-category-heading" role="tab" id="headingOne">' +
+				  '<h4 class="panel-title">' +
+					'<%= heading %>' +
+				  '</h4>' +
+				  '</div>' +
 				'</a>' +
-			  '</h4>' +
-			'</div>' +
+			 
+			
 			'<div id="collapse-<%= id %>" class="panel-collapse collapse <% if(opened) print("in"); %> collapse-<%= id %>" role="tabpanel" aria-labelledby="headingOne">' +
 			  '<div class="panel-body">' +
 				'<%= content %>' +
 			  '</div>' +
 			'</div>' +
-  '</div>',
+			'</div>',
+			
+		commandButton: '<hr />' +
+			'<% buttons.forEach(function ( btn ) { %>' +
+			'<div class="form-group">' +
+			'<button data-toggle="tooltip" data-placement="top" title="<%= btn.tooltip %>" ' +
+			'class="btn btn-default btn-tooltip btn-full-length">' +
+			'<i class="fa fa-<%= btn.iconClass %>"></i>&nbsp; <%= btn.name %></button>' +
+			'</div>' +
+			'<% }); %>',
+			
 		
 	};
 	

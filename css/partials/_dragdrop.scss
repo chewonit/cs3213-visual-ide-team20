@@ -66,6 +66,19 @@ ul.list-commands {
 			display: none !important;
 		}
 		overflow-y: auto;
+		
+		.btn-full-length {
+			width: 100%;
+			i {
+				font-size: 1.4em;
+			}
+		}
+		
+		.command-category-heading {
+			color: #333;
+			background-color: #f5f5f5;
+			border-color: #ddd;
+		}
 	}
 	
 	.command {
