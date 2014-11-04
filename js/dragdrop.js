@@ -62,7 +62,7 @@ var VisualIDE = (function(ide) {
 		var oldContainer;
 		$( containers.normal ).sortable({
 			group: dragGroup,
-			handle: 'i',
+			handle: 'i.handle',
 			onDragStart: function (item, container, _super) {
 				// Duplicate items of the no drop area
 				if (!container.options.drop) item.clone().insertAfter(item);
@@ -155,16 +155,26 @@ var VisualIDE = (function(ide) {
 		console.log("VisualIDE.CommandHtml: Initialized!");
 	};
 	
-	var cmd = ide.CommandsHtml;
-	var cmdList = cmdDef.cmds;
+	var cmdHtml = ide.CommandsHtml;
+	var cmd = ide.Commands;
+	var cmdList = cmd.commands;
 	var tpl = ide.Templates;
 	
-	cmd.prototype.getCommandHtml = function(id) {
+	cmdHtml.prototype.getCommandHtml = function(id) {
+		return this.getCommandWithCategoryHtml(id, -1);
+	};
+	
+	cmdHtml.prototype.getCommandWithCategoryHtml = function(id, catId) {
 		
 		var command = cmdList[id];
+		
+		if ( catId != -1 ) {
+			if ( command.category != catId ) return "";
+		}
+		
 		var template = tpl.master;
 		
-		var test = "ifCondition"; console.log(command.template);
+		var test = "ifCondition";
 		var secondaryTemplate = command.template ? tpl[command.template] : tpl.secondary;
 		
 		
@@ -176,32 +186,65 @@ var VisualIDE = (function(ide) {
 		return html;
 	};
 	
-	cmd.prototype.getAllCommandsHtml = function() {
+	cmdHtml.prototype.populateRawCommands = function() {
+		
 		var html = "";
-		var command;
-		for( i=0; i<cmdList.length; i++ ) {
-			html += this.getCommandHtml(i);
-		}
-		for( i=0; i<cmdList.length; i++ ) {
-			html += this.getCommandHtml(i);
-		}
-		for( i=0; i<cmdList.length; i++ ) {
-			html += this.getCommandHtml(i);
+		var categories = [];
+		
+		var catList = cmd.categories;
+		for ( i = 0; i < catList.length; i++ ) { 
+			
+			var catObj = {};
+			var commandHtml = "";
+			
+			catObj.id = i;
+			catObj.heading = catList[i];
+			for( j=0; j<cmdList.length; j++ ) {
+				commandHtml += this.getCommandWithCategoryHtml(j, i);
+			}
+			catObj.content = commandHtml;
+			catObj.opened = (i===0) ? true : false;
+			
+			categories.push( catObj );
 		}
 		
+		var compiled = _.template( tpl.commandCategories );
+		var templateFn = _.template( tpl.commandCategory );
+		html += compiled( {category: categories, templateFn: templateFn } );
+		
+		var buttons = cmd.commandButtons;
+		
+		compiled = _.template( tpl.commandButton );
+		html += compiled( { buttons: buttons } );
+			
 		return html;
 	};
 	
-	cmd.prototype.getCommandsDemoSetHtml = function() {
+	cmdHtml.prototype.getCommandsDemoSetHtml = function() {
 		var html = "";
 		html += this.getCommandHtml(0);
 		html += this.getCommandHtml(1);
 		
 		var loopNode = $( this.getCommandHtml(7) );
-		loopNode.find("ul").append( this.getCommandHtml(4) );
+		loopNode.find("ul").append( this.getCommandHtml(2) );
 		html += $('<div>').append(loopNode.clone()).html();
+		html += this.getCommandHtml(3);
 		
 		return html;
+	};
+	
+	cmdHtml.prototype.initCommands = function() {
+		$('#btn-variable-manager').on('click', function() {
+			$('#variable-manager').slideToggle();
+			$('#sprite-manager').slideUp();
+		});
+		$('#btn-sprite-manager').on('click', function() {
+			$('#sprite-manager').slideToggle();
+			$('#variable-manager').slideUp();
+		});
+		$('.btn-managers-close').on('click', function() {
+			$(this).parent().parent().slideUp();
+		});
 	};
 	
 	return ide;

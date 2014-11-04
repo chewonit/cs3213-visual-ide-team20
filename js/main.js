@@ -84,6 +84,11 @@ jQuery(document).ready(function() {
 	initIntepreter(canvas, spriteName);
 
 	initLayout();
+	
+	// Needs for better design on the placement of this
+	// initialization method.
+	// However, it can only be called when the document is loaded.
+	VisualIDE.Templates.init();
 });
 
 function initCanvas(spriteName, path) {
@@ -109,8 +114,9 @@ function initLayout() {
 
 	// Populate the raw static commands
 	var commandsHtml = new VisualIDE.CommandsHtml();
-	$('.list-commands-raw').append( commandsHtml.getAllCommandsHtml() );
-
+	$('.list-commands-raw').append( commandsHtml.populateRawCommands() );
+	commandsHtml.initCommands();
+	
 	// Populate some commands into the procedures list for demonstration
 	$('#list-procedures').append( commandsHtml.getCommandsDemoSetHtml() );
 	

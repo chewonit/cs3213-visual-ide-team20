@@ -42,13 +42,47 @@ ul.list-commands {
 		display: inline-block;
 		width: auto;
 		max-width: 150px;
+		
+		&.numbers {
+			@include transition2(max-width, 0.2s, ease-in-out);
+			max-width: 60px;
+			
+			&:focus {
+				max-width: 100px;
+			}
+		}
+	}
+	
+	.no-show {
+		display: none !important;
+	}
+	
+	.display-in-line {
+		display: inline-block;
 	}
 	
 	&.list-commands-raw {
-		input, .sub-heading {
-			display: none;
+		input, .sub-heading, .command-input-wrap {
+			display: none !important;
 		}
 		overflow-y: auto;
+		
+		.btn-full-length {
+			width: 100%;
+			i {
+				font-size: 1.4em;
+			}
+		}
+		
+		.command-category-heading {
+			color: #333;
+			background-color: #f5f5f5;
+			border-color: #ddd;
+			
+			h4 {
+				padding-left: 0;
+			}
+		}
 	}
 	
 	.command {
@@ -71,6 +105,15 @@ ul.list-commands {
 				
 				cursor: move;
 				pointer: move;
+			}
+		}
+		
+		.command-input-wrap {
+			display: inline-block;
+			
+			.form-control {
+				width: auto;
+				display: inherit;
 			}
 		}
 		
@@ -196,4 +239,8 @@ div.list-header {
 	h3 {
 		display: inline-block;
 	}
+}
+
+.view-managers {
+	display: none;
 }
