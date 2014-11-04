@@ -90,6 +90,14 @@ function initLayout() {
 		}
 	});
 	
+	var varManager = VisualIDE.VariableManager;
+	varManager.init( {
+		container: $('#variable-manager-entries'),
+		addBtn: '#btn-variable-manager-add',
+		delBtn: '.btn-variable-manager-delete',
+		selectContainer: '.select-variable'
+	});
+	
 	resizeAffix();
 	// Re initialize affix components on browser resize
 	$(window).resize(function(){

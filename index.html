@@ -70,23 +70,38 @@
 			<div class="col-md-5">
 				<div class="list-header clearfix">
 					<div id="variable-manager" class="clearfix view-managers">
-						<div class="clearfix">
-							<h3 class="pull-left">Variable Manager</h3>
-							<button type="button" class="btn btn-default navbar-btn pull-right btn-managers-close">
-								<span class="fa fa-times"></span> Close
-							</button>
-						</div>
 						<div class="well">
-							<button id="btn-variable-manager-add" type="button" class="btn btn-default navbar-btn">
-								<span class="fa fa-plus"></span> Add Variable
-							</button>
+							<div class="clearfix">
+								<h3 class="pull-left">Variable Manager</h3>
+								<button type="button" data-target="variable-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
+									<span class="fa fa-times"></span> Close
+								</button>
+							</div>
+							<p>
+								All variables are initialized to zero.<br />
+								Some variables have been pre-defined for you.
+							</p>
+							<div id="variable-manager-entries">
+								<div class="form-group input-group">
+									<input type="text" class="form-control" disabled>
+									<span class="input-group-btn">
+										<button class="btn btn-danger" type="button" disabled="disabled"><span class="fa fa-times"></span></button>
+									</span>
+								</div><!-- /input-group -->
+							</div>
+							<div class="form-group input-group">
+								<input type="text" class="form-control">
+								<span class="input-group-btn">
+									<button id="btn-variable-manager-add" class="btn btn-default" type="button"><span class="fa fa-plus"></span> Add Variable</button>
+								</span>
+							</div><!-- /input-group -->
 						</div>
 						<hr />
 					</div>
 					<div id="sprite-manager" class="clearfix view-managers">
 						<div class="clearfix">
 							<h3 class="pull-left">Sprite Manager</h3>
-							<button type="button" class="btn btn-default navbar-btn pull-right btn-managers-close">
+							<button type="button" data-target="sprite-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
 								<span class="fa fa-times"></span> Close
 							</button>
 						</div>
@@ -166,6 +181,7 @@
 	
 	<script src="js/jquery-sortable.js"></script>
 	<script src="js/templates.js"></script>
+	<script src="js/managers.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/command.js"></script>
 	<script src="js/canvas.js"></script>

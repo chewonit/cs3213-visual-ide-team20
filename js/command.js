@@ -155,13 +155,13 @@ var VisualIDE = (function(ide) {
 		
 		commandButtons: [
 			{
-				cssId: 'btn-variable-manager',
+				cssClass: 'btn-variable-manager',
 				tooltip: 'Create or delete variables.',
 				iconClass: 'stack-overflow',
 				name: 'Variable Manager'
 			},
 			{
-				cssId: 'btn-sprite-manager',
+				cssClass: 'btn-sprite-manager',
 				tooltip: 'Create or delete sprites.',
 				iconClass: 'picture-o',
 				name: 'Sprite Manager'

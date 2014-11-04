@@ -56,7 +56,7 @@ var VisualIDE = (function(ide) {
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
-			'<select class="no-show form-control parm1-variable">' +
+			'<select class="no-show form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
@@ -79,7 +79,7 @@ var VisualIDE = (function(ide) {
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
-			'<select class="no-show form-control parm2-variable">' +
+			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
@@ -95,7 +95,7 @@ var VisualIDE = (function(ide) {
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
-			'<select class="no-show form-control parm1-variable">' +
+			'<select class="no-show form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
@@ -118,7 +118,7 @@ var VisualIDE = (function(ide) {
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
-			'<select class="no-show form-control parm2-variable">' +
+			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
@@ -133,7 +133,7 @@ var VisualIDE = (function(ide) {
 			
 		assign: '<div class="command-input-wrap">' + 
 			'<div class="display-in-line">' +
-			'<select class="form-control parm1-variable">' +
+			'<select class="form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
@@ -148,7 +148,7 @@ var VisualIDE = (function(ide) {
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
-			'<select class="no-show form-control parm2-variable">' +
+			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
@@ -171,7 +171,7 @@ var VisualIDE = (function(ide) {
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
 			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
-			'<select class="no-show form-control parm2-variable">' +
+			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
@@ -208,13 +208,26 @@ var VisualIDE = (function(ide) {
 		commandButton: '<hr />' +
 			'<% buttons.forEach(function ( btn ) { %>' +
 			'<div class="form-group">' +
-			'<button id="<%= btn.cssId %>" data-toggle="tooltip" data-placement="top" title="<%= btn.tooltip %>" ' +
-			'class="btn btn-default btn-tooltip btn-full-length">' +
+			'<button data-toggle="tooltip" data-placement="top" title="<%= btn.tooltip %>" ' +
+			'class="btn btn-default btn-tooltip btn-full-length <%= btn.cssClass %>">' +
 			'<i class="fa fa-<%= btn.iconClass %>"></i>&nbsp; <%= btn.name %></button>' +
 			'</div>' +
 			'<% }); %>',
 			
-		
+		variableManagerEntry: '<% varTable.forEach(function ( v ) { %>' +
+			'<div class="form-group input-group">' +
+				'<input type="text" class="form-control" <% if(v.defalut) print("disabled") %> value="<%= v.name %>">' +
+				'<span class="input-group-btn">' +
+					'<button class="btn btn-danger btn-variable-manager-delete" type="button" <% if(v.defalut) print("disabled") %>>' +
+						'<span class="fa fa-times"></span>' + 
+					'</button>' +
+				'</span>' +
+			'</div>' +
+			'<% }); %>',
+			
+		variableSelectEntry: '<% varTable.forEach(function ( v ) { %>' +
+			'<option value="<%= v.name %>"><%= v.name %></option>' +
+			'<% }); %>',
 	};
 	
 	return ide;
