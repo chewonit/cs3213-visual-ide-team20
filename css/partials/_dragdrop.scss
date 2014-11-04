@@ -44,13 +44,21 @@ ul.list-commands {
 		max-width: 150px;
 		
 		&.numbers {
-			max-width: 50px;
+			max-width: 80px;
 		}
 	}
 	
+	.no-show {
+		display: none !important;
+	}
+	
+	.display-in-line {
+		display: inline-block;
+	}
+	
 	&.list-commands-raw {
-		input, .sub-heading {
-			display: none;
+		input, .sub-heading, .command-input-wrap {
+			display: none !important;
 		}
 		overflow-y: auto;
 	}
@@ -76,6 +84,10 @@ ul.list-commands {
 				cursor: move;
 				pointer: move;
 			}
+		}
+		
+		.command-input-wrap {
+			display: inline-block;
 		}
 		
 		

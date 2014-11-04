@@ -16,7 +16,7 @@ var cmdDef = (function(cmd) {
       classes     : [],
       isContainer : false,
       extraHtml   : [],
-	  template    : ""
+	  template    : "numberInput"
     },
     {
       id          : 1,
@@ -26,7 +26,7 @@ var cmdDef = (function(cmd) {
       classes     : [],
       isContainer : false,
       extraHtml   : [],
-	  template    : ""
+	  template    : "numberInput"
     },
     {
       id          : 2,
@@ -56,7 +56,7 @@ var cmdDef = (function(cmd) {
       classes     : [],
       isContainer : false,
       extraHtml   : [],
-	  template    : ""
+	  template    : "numberInput"
     },
     {
       id          : 5,
@@ -66,7 +66,7 @@ var cmdDef = (function(cmd) {
       classes     : [],
       isContainer : false,
       extraHtml   : [],
-	  template    : ""
+	  template    : "textInput"
     },
     {
       id          : 6,
@@ -76,7 +76,7 @@ var cmdDef = (function(cmd) {
       classes     : [],
       isContainer : false,
       extraHtml   : [],
-	  template    : ""
+	  template    : "textInput"
     },
     {
       id: 7,
@@ -86,7 +86,7 @@ var cmdDef = (function(cmd) {
       classes     : ["command-loop"],
       isContainer : true,
       extraHtml   : ["<ul></ul>"],
-	  template    : "whileCondition"
+	  template    : "repeat"
     },
     {
       id: 8,
