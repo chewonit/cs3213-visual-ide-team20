@@ -29,8 +29,6 @@ var VisualIDE = (function(ide) {
 			container = parms.container;
 			selectContainer = parms.selectContainer;
 			
-			container.parent().parent().slideDown();
-			
 			var that = this;
 			
 			$(document).on('click', parms.addBtn, function() {
@@ -55,7 +53,10 @@ var VisualIDE = (function(ide) {
 			refreshVariableManagerView( this );
 			
 			$(document).on( update, selectContainer, function() {
+				var selected = $(this).val();
 				refreshVariableSelectView( that, $(this) );
+				$(this).val( selected );
+				if( !$(this).val() ) $(this)[0].selectedIndex = 0;
 			});
 			triggerSelectViewUpdate();
 		},
@@ -67,12 +68,18 @@ var VisualIDE = (function(ide) {
 		objVar.defalut = false;
 		objVar.name = name;
 		
+		for ( var i=0; i<that.varTable.length; i++ ) {
+			if ( that.varTable[i].name.toLowerCase() == name.toLowerCase() ) {
+				return;
+			}
+		}
+		
 		that.varTable.push(objVar);
 	}
 	
 	function deleteVar( that, name ) {
 		for ( var i=0; i<that.varTable.length; i++ ) {
-			if ( that.varTable[i].name == name ) {
+			if ( that.varTable[i].name.toLowerCase() == name.toLowerCase() ) {
 				that.varTable.splice(i,1);
 				break;
 			}
