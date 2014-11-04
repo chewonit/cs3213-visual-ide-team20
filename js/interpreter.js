@@ -144,13 +144,13 @@ var VisualIDE = (function(my) {
         var cmd;
 
         if (commandId === _USER_CMD_CONSTANTS.REPEAT || commandId === _USER_CMD_CONSTANTS.IF) {
-            cmd = new JumpCommand(_CONSTANTS.CMD_JUMP, commandObj, args);
+            cmd = new JumpCommand(commandId, commandObj, args);
         }
         else {
             cmd = new Command(commandId, commandObj, args);
         }
 
-        _commandQueue.addCommand(cmd.parseCommand(commandObj));
+        cmd.parseCommand(commandObj);
     };
 
     /**
@@ -211,7 +211,7 @@ var VisualIDE = (function(my) {
     };
 
     Command.prototype.parseCommand = function() {
-        return this;
+        _commandQueue.addCommand(this);
     };
 
     Command.prototype.preprocess = function() {
@@ -228,15 +228,49 @@ var VisualIDE = (function(my) {
     JumpCommand.prototype = new Command();
 
     JumpCommand.prototype.parseCommand = function() {
-        var loopStart = _commandQueue.getLength();
+        var options = this.getJumpOptions();
 
-        parse(this.commandObjInList.children('ul').children('li'));
+        if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
+            var loopStart = _commandQueue.getLength();
+
+            parse(this.commandObjInList.children('ul').children('li'));
+            
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, options));
+        }
+        else if (this.commandId === _USER_CMD_CONSTANTS.IF) {
+            
+            var jmpCmd = new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, options);
+            _commandQueue.addCommand(jmpCmd);
+
+            this.commandObjInList.children('ul').each(function() {
+                parse($(this).children('li'));
+            });
+        }
+    };
+
+    JumpCommand.prototype.getJumpOptions = function() {
+        var jmpTo = -1, 
+            numLoop = -1, 
+            loopLim = -1;
+
+        if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
+            jmpTo = _commandQueue.getLength();
+            numLoop = 1;
+            loopLim = this.args[_CONSTANTS.USER_INPUT];
+        }
+        else if (this.commandId === _USER_CMD_CONSTANTS.IF) {
+            jmpTo = _commandQueue.getPointerIndex() + this.commandObjInList.children('ul > li').length + 1;
+            numLoop = 0;
+            loopLim = 1;
+            console.log(this.commandObjInList);
+        }
         
-        return new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
-            jumpTo: loopStart,
-            numLooped: 1,
+        return {
+            jumpTo: jmpTo,
+            numLooped: numLoop,
+            loopLimit: loopLim,
             infiniteLoop: 0
-        });
+        };
     };
 
     JumpCommand.prototype.preprocess = function() {
@@ -244,7 +278,7 @@ var VisualIDE = (function(my) {
             _commandQueue.movePointer(this.options.jumpTo);
         }
         else {
-            if (this.options.numLooped < this.args[_CONSTANTS.USER_INPUT]) {
+            if (this.evaluateJumpCondition(this.options)) {
                 this.options.numLooped++;
                 _commandQueue.movePointer(this.options.jumpTo);
             }
@@ -260,6 +294,9 @@ var VisualIDE = (function(my) {
         return _commandQueue.getCommand();
     };
 
+    JumpCommand.prototype.evaluateJumpCondition = function(options) {
+        return options.numLooped < options.loopLimit;
+    };
 
     /**
      * The command queue to store command objects.
