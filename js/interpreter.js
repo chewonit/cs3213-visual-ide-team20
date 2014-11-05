@@ -243,7 +243,7 @@ console.log(_commandQueue);
         if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
 
             _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
-                jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 1,
+                jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 2,
                 arg1: 0,
                 arg2: this.args[_CONSTANTS.USER_INPUT],
                 evaluator: Comparators["="]
@@ -304,22 +304,27 @@ console.log(_commandQueue);
     };
 
     JumpCommand.prototype.evaluateJumpCondition = function(commandObj) {
-        console.log(commandObj.options);
         var res = commandObj.options.evaluator.apply(this, [commandObj.options.arg1, commandObj.options.arg2]);
-        return commandObj.commandId == _USER_CMD_CONSTANTS.IF ? res : res;
+        console.log(commandObj.options);
+        console.log(res);
+        return res;
     };
 
     var Comparators = {
         "=": function(arg1, arg2) {
+            console.log('=');
             return arg1 == arg2;   
         },
         "!=": function(arg1, arg2) {
+            console.log('!=');
             return arg1 != arg2;   
         },
         "<": function(arg1, arg2) {
+            console.log('<');
             return arg1 < arg2;   
         },
         ">": function(arg1, arg2) {
+            console.log('>');
             return arg1 > arg2;   
         }
     };
