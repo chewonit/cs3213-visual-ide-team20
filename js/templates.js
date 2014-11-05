@@ -12,6 +12,30 @@ var VisualIDE = (function(ide) {
 				$(this).parent().find('input').toggleClass('no-show');
 			});
 			
+			$(".btn-toggle-move-dir").on('click', function(){
+				$(this).find('i').toggleClass('fa-arrows-h');
+				$(this).find('i').toggleClass('fa-arrows-v');
+				$(this).parent().find('input').toggleClass('move-horizontal');
+				$(this).parent().find('input').toggleClass('move-vertical');
+			});
+			
+			$("input.numbers").on('input', function(){
+				var input = $(this).val();
+				var patt = new RegExp("^[0-9]+$");
+				if( ! patt.test(input) ) {
+					$(this).parent().addClass("has-error");
+					return;
+				}
+				$(this).parent().removeClass("has-error");
+			});
+			
+			$("input.numbers").on('blur', function(){
+				if ( $(this).parent().hasClass("has-error") ) {
+					$(this).focus();
+				}
+			});
+			
+			
 			$("body").tooltip({ selector: '[data-toggle=tooltip]' });
 		},
 		
@@ -43,6 +67,25 @@ var VisualIDE = (function(ide) {
 		
 		numberInput: '<div class="command-input-wrap">' + 
 			'<input class="form-control numbers parm1" type="number" min="0" value="<%= def_value %>">' + 
+			'</div>' ,  // END of command input wrap
+			
+		move: '<div class="command-input-wrap">' + 
+			'<div class="display-in-line">' +
+			'<button data-toggle="tooltip" data-placement="top" title="Swap between the horizontal and vertical move direction." ' +
+			'class="btn btn-default btn-toggle-move-dir btn-tooltip"><i class="fa fa-arrows-h"></i></button>' +
+			'<input class="form-control numbers parm1 move-horizontal" type="number" min="0" value="<%= def_value %>">' + 
+			'</div>' +
+			
+			'&nbsp;&nbsp;&nbsp;' +
+			'<select data-toggle="tooltip" data-placement="top" title="Select an easing function for the movement." ' + 
+			'class="form-control parm1-easing select-easing">' +
+				'<option value="normla">Normal</option>' +
+				'<option value="faster">Faster</option>' +
+				'<option value="slower">Slower</option>' +
+				'<option value="smooth">Smooth</option>' +
+				'<option value="bounce">Bounce</option>' +
+			'</select>' +
+			
 			'</div>' ,  // END of command input wrap
 
 		loop: '<ul></ul>',			

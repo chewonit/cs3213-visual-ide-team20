@@ -38,7 +38,7 @@ var VisualIDE = (function(ide) {
 				classes     : [],
 				isContainer : false,
 				extraHtml   : [],
-				template    : "numberInput",
+				template    : "move",
 				category	  : 0
 			},
 			{
