@@ -50,7 +50,39 @@ $('#stop-btn').on('click', function (e) {
 });
 
 $('.btn-clear-procedure').on('click', function (e) {
-    $('#list-procedures').html("");
+	$('#list-procedures').html("");
+});
+
+$('#login-btn').on('click', function (e) {
+	loginGoogle();
+});
+
+$('#dropbox-btn').on('click', function (e) {
+	loginDropbox();
+});
+
+$('#howitworks-btn').on('click', function (e) {
+	startTour();
+});
+
+$('#save-btn').on('click', function (e) {
+	if(loggedIntoGoogle()){
+		saveToGoogle();
+	} else if(loggedIntoDropbox()){
+		saveToDropbox();
+	} else {
+		alert("An error has occurred. Please try to refresh this page.");
+	}
+});
+
+$('#load-btn').on('click', function (e) {
+	if(loggedIntoGoogle()){
+		loadFromGoogle();
+	} else if(loggedIntoDropbox()){
+		loadFromDropbox();
+	} else {
+		alert("An error has occurred. Please try to refresh this page.");
+	}
 });
 
 var HomeView = Backbone.View.extend({
@@ -133,6 +165,14 @@ function initLayout() {
 		}
 	});
 	
+	var varManager = VisualIDE.VariableManager;
+	varManager.init( {
+		container: $('#variable-manager-entries'),
+		addBtn: '#btn-variable-manager-add',
+		delBtn: '.btn-variable-manager-delete',
+		selectContainer: '.select-variable'
+	});
+	
 	resizeAffix();
 	// Re initialize affix components on browser resize
 	$(window).resize(function(){
@@ -154,9 +194,44 @@ function resizeAffix() {
 	} else {
 		$(window).off('.affix');
 		$('.affix-container')
-			.removeClass("affix affix-top affix-bottom")
-			.removeData("bs.affix");
+		.removeClass("affix affix-top affix-bottom")
+		.removeData("bs.affix");
 	}
+}
+
+function startTour() {
+	var tour = new Tour({
+		steps: [
+		{
+			element: ".tour-commands",
+			content: "Choose your desired command."
+		},
+		{
+			element: ".tour-procedures",
+			content: "Drag the command into this area and attach a value to it."
+		},
+		{
+			element: ".tour-run-stop-buttons",
+			placement: "bottom",
+			content: "Once you're satisfied with the commands. You can start running the program."
+		},
+		{
+			element: ".tour-trash",
+			content: "Trash an existing command in procedure by dragging into this area. You can also clear all existing commands by clicking on the \"Clear Procedure\" button."
+		},
+		{
+			element: ".tour-login",
+			placement: "bottom",
+			content: "Login to your desired platform to save your work. You can also load an previous saved work."
+		}
+		],
+		backdrop: true,
+		backdropPadding: 2,
+		storage: false
+	});
+
+	tour.init();
+	tour.start();
 }
 
 Backbone.history.start();

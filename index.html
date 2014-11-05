@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="css/style.css">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-	
+	<link rel="stylesheet" href="http://bootstraptour.com/assets/css/bootstrap-tour.css">
 </head>
 <body>
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -42,8 +42,10 @@
 				</div>
 
 				<form class="navbar-form navbar-right no-margin" role="login">
-					<p id="login-area" class="navbar-text navbar-right no-margin">
+					<div id="login-area" class="navbar-text navbar-right no-margin tour-login">
 						<button id="login-btn" type="button" class="btn btn-default navbar-btn"><i class="fa fa-google-plus"></i>&nbsp; Log In</button>
+						<button id="dropbox-btn" type="button" class="btn btn-default navbar-btn"><i class="fa fa-dropbox"></i>&nbsp; Log In</button>
+						<button id="howitworks-btn" type="button" class="btn btn-default navbar-btn"><i class="fa fa-question-circle"></i>&nbsp; Tour</button>
 					</p>
 				</form>
 			</div><!-- /.navbar-collapse -->
@@ -54,39 +56,58 @@
 		<div id="dashboard" class="row">
 			<div class="col-md-2 col-commands visible-md-block visible-lg-block">
 				<div class="affix-container">
-					<h3>Commands</h3>
-					<ul class="list-commands list-commands-raw"></ul>
+					<div class="tour-commands">
+						<h3>Commands</h3>
+						<ul class="list-commands list-commands-raw"></ul>
+					</div>
 					<hr />
-					<ul id="list-trash" class="list-commands list-trash drop-target visible-md-block visible-lg-block">
-						<h3>
-							<span class="glyphicon glyphicon-trash"></span> Trash <br />
-							<button class="btn btn-danger btn-clear-procedure">
-								Clear Procedure
-							</button>
-						</h3>
-					</ul>
+					<div class="tour-trash">
+						<ul id="list-trash" class="list-commands list-trash drop-target visible-md-block visible-lg-block">
+							<h3>
+								<span class="glyphicon glyphicon-trash"></span> Trash <br />
+								<button class="btn btn-danger btn-clear-procedure">
+									Clear Procedure
+								</button>
+							</h3>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-5">
 				<div class="list-header clearfix">
 					<div id="variable-manager" class="clearfix view-managers">
-						<div class="clearfix">
-							<h3 class="pull-left">Variable Manager</h3>
-							<button type="button" class="btn btn-default navbar-btn pull-right btn-managers-close">
-								<span class="fa fa-times"></span> Close
-							</button>
-						</div>
 						<div class="well">
-							<button id="btn-variable-manager-add" type="button" class="btn btn-default navbar-btn">
-								<span class="fa fa-plus"></span> Add Variable
-							</button>
+							<div class="clearfix">
+								<h3 class="pull-left">Variable Manager</h3>
+								<button type="button" data-target="variable-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
+									<span class="fa fa-times"></span> Close
+								</button>
+							</div>
+							<p>
+								All variables are initialized to zero.<br />
+								Some variables have been pre-defined for you.
+							</p>
+							<div id="variable-manager-entries">
+								<div class="form-group input-group">
+									<input type="text" class="form-control" disabled>
+									<span class="input-group-btn">
+										<button class="btn btn-danger" type="button" disabled="disabled"><span class="fa fa-times"></span></button>
+									</span>
+								</div><!-- /input-group -->
+							</div>
+							<div class="form-group input-group">
+								<input type="text" class="form-control">
+								<span class="input-group-btn">
+									<button id="btn-variable-manager-add" class="btn btn-default" type="button"><span class="fa fa-plus"></span> Add Variable</button>
+								</span>
+							</div><!-- /input-group -->
 						</div>
 						<hr />
 					</div>
 					<div id="sprite-manager" class="clearfix view-managers">
 						<div class="clearfix">
 							<h3 class="pull-left">Sprite Manager</h3>
-							<button type="button" class="btn btn-default navbar-btn pull-right btn-managers-close">
+							<button type="button" data-target="sprite-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
 								<span class="fa fa-times"></span> Close
 							</button>
 						</div>
@@ -98,7 +119,7 @@
 						<hr />
 					</div>
 					<h3 class="pull-left">Procedure</h3>
-					<div id="player-controls" class="pull-right">
+					<div id="player-controls" class="pull-right tour-run-stop-buttons">
 						<button id="stop-btn" type="button" class="btn btn-danger navbar-btn">
 							<span class="glyphicon glyphicon-stop"></span> Stop
 						</button>
@@ -107,7 +128,9 @@
 						</button>
 					</div>
 				</div>
-				<ul id="list-procedures" class="list-commands list-procedures drop-target"></ul>
+				<div class="tour-procedures">
+					<ul id="list-procedures" class="list-commands list-procedures drop-target"></ul>
+				</div>
 			</div>
 			
 			<div class="col-xs-12 visible-xs-block visible-sm-block">
@@ -164,18 +187,19 @@
 	<script src="bower_components/pixi.js/bin/pixi.js"></script>
 	<!-- endbower -->
 	
+
 	<script src="js/jquery-sortable.js"></script>
 	<script src="js/templates.js"></script>
-	<script src="js/main.js"></script>
+	<script src="js/managers.js"></script>
 	<script src="js/command.js"></script>
 	<script src="js/canvas.js"></script>
 	<script src="js/dragdrop.js"></script>
 	<script src="js/interpreter.js"></script>
 	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 	<script src="js/google.js"></script>
-	<!--
 	<script src="https://www.dropbox.com/static/api/dropbox-datastores-1.0-latest.js"></script>
 	<script src="js/dropbox.js"></script>
--->
+	<script src="http://bootstraptour.com/assets/js/bootstrap-tour.js"></script>
+	<script src="js/main.js"></script>
 </body>
 </html> 

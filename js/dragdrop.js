@@ -234,16 +234,16 @@ var VisualIDE = (function(ide) {
 	};
 	
 	cmdHtml.prototype.initCommands = function() {
-		$('#btn-variable-manager').on('click', function() {
+		$('.btn-variable-manager').on('click', function() {
 			$('#variable-manager').slideToggle();
 			$('#sprite-manager').slideUp();
 		});
-		$('#btn-sprite-manager').on('click', function() {
+		$('.btn-sprite-manager').on('click', function() {
 			$('#sprite-manager').slideToggle();
 			$('#variable-manager').slideUp();
 		});
 		$('.btn-managers-close').on('click', function() {
-			$(this).parent().parent().slideUp();
+			$( '#'+ $(this).data('target') ).slideUp();
 		});
 	};
 	
