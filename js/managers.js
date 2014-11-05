@@ -13,14 +13,17 @@ var VisualIDE = (function(ide) {
 			{
 				name: "count",
 				defalut: true,
+				value: 0
 			},
 			{
 				name: "value",
 				defalut: true,
+				value: 0
 			},
 			{
 				name: "total",
 				defalut: true,
+				value: 0
 			}
 		],
 		

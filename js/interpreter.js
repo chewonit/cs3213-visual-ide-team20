@@ -24,7 +24,8 @@ var VisualIDE = (function(my) {
             ROTATE: "11",
             WHILE: "12"
         },
-        cmdList = VisualIDE.Commands.commands;
+        cmdList = VisualIDE.Commands.commands,
+        varManager = VisualIDE.VariableManager;
 
     var resetStyles = function() {        
         $('li').removeClass('command-executing');
@@ -94,6 +95,10 @@ console.log(_commandQueue);
         //     interpolator: new VisualIDE.CanvasEasingInterpolator(3.0),
         //     duration: _delay * 0.98
         // });
+        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
+        //     interpolator: new VisualIDE.CanvasBounceInterpolator(),
+        //     duration: _delay * 0.98
+        // });
     };
 
     /**
@@ -126,6 +131,13 @@ console.log(_commandQueue);
         });
     };
 
+    var assign = function(args, options) {
+        var varName = args[0],
+            operand1 = args[1],
+            operand2 = args[2],
+            operator = args[3];
+    };
+
     /**
      * The mapping from commandId to the actual function.
      */
@@ -138,6 +150,7 @@ console.log(_commandQueue);
     _commandMap[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = changeCostume;
     _commandMap[_USER_CMD_CONSTANTS.CHANGE_BG]      = changeBg;
     _commandMap[_USER_CMD_CONSTANTS.ROTATE]         = rotate;
+    _commandMap[_USER_CMD_CONSTANTS.ASSIGN]         = assign;
 
     /**
      * Parses the list of commands.
@@ -157,8 +170,14 @@ console.log(_commandQueue);
 
         var cmd;
 
-        if (commandId === _USER_CMD_CONSTANTS.REPEAT || commandId === _USER_CMD_CONSTANTS.IF) {
+        if (commandId === _USER_CMD_CONSTANTS.REPEAT || 
+            commandId === _USER_CMD_CONSTANTS.IF || 
+            commandId === _USER_CMD_CONSTANTS.WHILE ||
+            commandId === _USER_CMD_CONSTANTS.LOOP) {
             cmd = new JumpCommand(commandId, commandObj, args);
+        }
+        else if (commandId === _USER_CMD_CONSTANTS.ASSIGN) {
+            cmd = new AssignCommand(commandId, commandObj, args);
         }
         else {
             cmd = new Command(commandId, commandObj, args);
@@ -173,7 +192,7 @@ console.log(_commandQueue);
     var getParams = function(commandObj, commandId) {
         var params = [];
 
-        if (commandId == 10)
+        if (commandId == _USER_CMD_CONSTANTS.ASSIGN)
             commandObj.children(".command-input-wrap").children(".display-in-line").children("select").each(function() {
                 params.push($(this).val());
             });
@@ -243,6 +262,21 @@ console.log(_commandQueue);
         return this;
     };
 
+    var AssignCommand = function(commandId, cmd, args, options) {
+        this.commandId = commandId;
+        this.commandObjInList = cmd;
+        this.args = args;
+        this.options = options || {};
+    };
+
+    AssignCommand.prototype.parseCommand = function() {
+        _commandQueue.addCommand(this);
+    };
+
+    AssignCommand.prototype.preprocess = function() {
+        return this;
+    };
+
     var JumpCommand = function(commandId, cmd, args, options) {
         this.commandId = commandId;
         this.commandObjInList = cmd;
@@ -253,6 +287,7 @@ console.log(_commandQueue);
     JumpCommand.prototype = new Command();
 
     JumpCommand.prototype.parseCommand = function() {
+        var loopStart;
         if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
 
             _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
@@ -262,7 +297,7 @@ console.log(_commandQueue);
                 evaluator: Comparators["="]
             }));
 
-            var loopStart = _commandQueue.getLength();
+            loopStart = _commandQueue.getLength();
             parse(this.commandObjInList.children('ul').children('li'));
             
             _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
@@ -271,6 +306,36 @@ console.log(_commandQueue);
                 arg2: this.args[_CONSTANTS.USER_INPUT],
                 evaluator: Comparators["!="],
                 infiniteLoop: 0
+            }));
+        }
+        else if (this.commandId === _USER_CMD_CONSTANTS.LOOP) {
+
+            loopStart = _commandQueue.getLength();
+            parse(this.commandObjInList.children('ul').children('li'));
+            
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+                jumpTo: loopStart,
+                infiniteLoop: 1
+            }));
+        }
+        else if (this.commandId === _USER_CMD_CONSTANTS.WHILE) {
+
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+                jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 2,
+                arg1: this.args[0],
+                arg2: this.args[1],
+                evaluator: Comparators[this.args[2]],
+                negateEvaluator: true
+            }));
+
+            loopStart = _commandQueue.getLength();
+            parse(this.commandObjInList.children('ul').children('li'));
+            
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+                jumpTo: loopStart,
+                arg1: this.args[0],
+                arg2: this.args[1],
+                evaluator: Comparators[this.args[2]]
             }));
         }
         else if (this.commandId === _USER_CMD_CONSTANTS.IF) {
@@ -304,7 +369,8 @@ console.log(_commandQueue);
         }
         else {
             if (this.evaluateJumpCondition(this)) {
-                this.options.arg1++;
+                if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) 
+                    this.options.arg1++;
                 _commandQueue.movePointer(this.options.jumpTo);
             }
             else {
@@ -322,8 +388,7 @@ console.log(_commandQueue);
     JumpCommand.prototype.evaluateJumpCondition = function(commandObj) {
         var res = commandObj.options.evaluator.apply(this, [commandObj.options.arg1, commandObj.options.arg2]);
         console.log(commandObj.options);
-        console.log(res);
-        return res;
+        return commandObj.options.negateEvaluator ? !res : res;
     };
 
     var Comparators = {
