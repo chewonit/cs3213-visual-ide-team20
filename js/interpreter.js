@@ -262,23 +262,26 @@ console.log(_commandQueue);
         }
         else if (this.commandId === _USER_CMD_CONSTANTS.IF) {
 
+            var trueStatementList = $(this.commandObjInList.children('ul')[0]).children('li'),
+                falseStatementList = $(this.commandObjInList.children('ul')[1]).children('li');
+
             _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
-                jumpTo: _commandQueue.getLength() + $(this.commandObjInList.children('ul')[0]).children('li').length + 2,
+                jumpTo: _commandQueue.getLength() + falseStatementList.length + 2,
                 arg1: this.args[0],
                 arg2: this.args[1],
                 evaluator: Comparators[this.args[2]]
             }));
 
-            parse($(this.commandObjInList.children('ul')[0]).children('li'));
+            parse(falseStatementList);
 
             _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
-                jumpTo: _commandQueue.getLength() + $(this.commandObjInList.children('ul')[1]).children('li').length + 1,
+                jumpTo: _commandQueue.getLength() + trueStatementList.length + 1,
                 arg1: 0,
                 arg2: 0,
                 evaluator: Comparators["="]
             }));
 
-            parse($(this.commandObjInList.children('ul')[1]).children('li'));
+            parse(trueStatementList);
         }
     };
 
