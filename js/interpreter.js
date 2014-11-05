@@ -18,7 +18,11 @@ var VisualIDE = (function(my) {
             CHANGE_COSTUME: "5",
             CHANGE_BG: "6",
             REPEAT: "7",
-            IF: "8"
+            IF: "8",
+            LOOP: "9",
+            ASSIGN: "10",
+            ROTATE: "11",
+            WHILE: "12"
         },
         cmdList = VisualIDE.Commands.commands;
 
@@ -114,6 +118,14 @@ console.log(_commandQueue);
         }
     };
 
+    var rotate = function(degree) {
+        var radians = (parseInt(degree) / 180) * Math.PI;
+        _canvas.getSprite(_spriteName).setRotation(radians, {
+            interpolator: new VisualIDE.CanvasLinearInterpolator(),
+            duration: _delay * 0.98
+        });
+    };
+
     /**
      * The mapping from commandId to the actual function.
      */
@@ -125,6 +137,7 @@ console.log(_commandQueue);
     _commandMap[_USER_CMD_CONSTANTS.MOVE]           = move;
     _commandMap[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = changeCostume;
     _commandMap[_USER_CMD_CONSTANTS.CHANGE_BG]      = changeBg;
+    _commandMap[_USER_CMD_CONSTANTS.ROTATE]         = rotate;
 
     /**
      * Parses the list of commands.
