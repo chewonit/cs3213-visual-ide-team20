@@ -20,7 +20,7 @@ var VisualIDE = (function(my) {
             REPEAT: "7",
             IF: "8"
         },
-        cmdList = cmdDef.cmds;
+        cmdList = VisualIDE.Commands.commands;
 
     var resetStyles = function() {        
         $('li').removeClass('command-executing');
@@ -42,6 +42,7 @@ var VisualIDE = (function(my) {
         my.Interpreter.stop();
 
         parse($('#list-procedures > li'));
+console.log(_commandQueue);
 
         executeCommands();
     };        
@@ -159,8 +160,19 @@ var VisualIDE = (function(my) {
     var getParams = function(commandObj, commandId) {
         var params = [];
 
-        params.push(commandObj.children("input").val());
-        
+        if (commandId == 10)
+            commandObj.children(".command-input-wrap").children(".display-in-line").children("select").each(function() {
+                params.push($(this).val());
+            });
+
+        commandObj.children(".command-input-wrap").find("input").each(function() {
+            params.push($(this).val());
+        });
+
+        commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
+            params.push($(this).text());
+        });
+
         return params;
     };
 
@@ -228,49 +240,46 @@ var VisualIDE = (function(my) {
     JumpCommand.prototype = new Command();
 
     JumpCommand.prototype.parseCommand = function() {
-        var options = this.getJumpOptions();
-
         if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
-            var loopStart = _commandQueue.getLength();
 
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+                jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 1,
+                arg1: 0,
+                arg2: this.args[_CONSTANTS.USER_INPUT],
+                evaluator: Comparators["="]
+            }));
+
+            var loopStart = _commandQueue.getLength();
             parse(this.commandObjInList.children('ul').children('li'));
             
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, options));
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+                jumpTo: loopStart,
+                arg1: 1,
+                arg2: this.args[_CONSTANTS.USER_INPUT],
+                evaluator: Comparators["!="],
+                infiniteLoop: 0
+            }));
         }
         else if (this.commandId === _USER_CMD_CONSTANTS.IF) {
-            
-            var jmpCmd = new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, options);
-            _commandQueue.addCommand(jmpCmd);
 
-            this.commandObjInList.children('ul').each(function() {
-                parse($(this).children('li'));
-            });
-        }
-    };
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+                jumpTo: _commandQueue.getLength() + $(this.commandObjInList.children('ul')[0]).children('li').length + 2,
+                arg1: this.args[0],
+                arg2: this.args[1],
+                evaluator: Comparators[this.args[2]]
+            }));
 
-    JumpCommand.prototype.getJumpOptions = function() {
-        var jmpTo = -1, 
-            numLoop = -1, 
-            loopLim = -1;
+            parse($(this.commandObjInList.children('ul')[0]).children('li'));
 
-        if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
-            jmpTo = _commandQueue.getLength();
-            numLoop = 1;
-            loopLim = this.args[_CONSTANTS.USER_INPUT];
+            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+                jumpTo: _commandQueue.getLength() + $(this.commandObjInList.children('ul')[1]).children('li').length + 1,
+                arg1: 0,
+                arg2: 0,
+                evaluator: Comparators["="]
+            }));
+
+            parse($(this.commandObjInList.children('ul')[1]).children('li'));
         }
-        else if (this.commandId === _USER_CMD_CONSTANTS.IF) {
-            jmpTo = _commandQueue.getPointerIndex() + this.commandObjInList.children('ul > li').length + 1;
-            numLoop = 0;
-            loopLim = 1;
-            console.log(this.commandObjInList);
-        }
-        
-        return {
-            jumpTo: jmpTo,
-            numLooped: numLoop,
-            loopLimit: loopLim,
-            infiniteLoop: 0
-        };
     };
 
     JumpCommand.prototype.preprocess = function() {
@@ -278,8 +287,8 @@ var VisualIDE = (function(my) {
             _commandQueue.movePointer(this.options.jumpTo);
         }
         else {
-            if (this.evaluateJumpCondition(this.options)) {
-                this.options.numLooped++;
+            if (this.evaluateJumpCondition(this)) {
+                this.options.arg1++;
                 _commandQueue.movePointer(this.options.jumpTo);
             }
             else {
@@ -287,15 +296,32 @@ var VisualIDE = (function(my) {
                     _commandQueue.stop(resetStyles);
                     return;
                 }
-                this.options.numLooped = 1;
+                this.options.arg1 = 1;
                 _commandQueue.incrementPointer();
             }
         }
         return _commandQueue.getCommand();
     };
 
-    JumpCommand.prototype.evaluateJumpCondition = function(options) {
-        return options.numLooped < options.loopLimit;
+    JumpCommand.prototype.evaluateJumpCondition = function(commandObj) {
+        console.log(commandObj.options);
+        var res = commandObj.options.evaluator.apply(this, [commandObj.options.arg1, commandObj.options.arg2]);
+        return commandObj.commandId == _USER_CMD_CONSTANTS.IF ? res : res;
+    };
+
+    var Comparators = {
+        "=": function(arg1, arg2) {
+            return arg1 == arg2;   
+        },
+        "!=": function(arg1, arg2) {
+            return arg1 != arg2;   
+        },
+        "<": function(arg1, arg2) {
+            return arg1 < arg2;   
+        },
+        ">": function(arg1, arg2) {
+            return arg1 > arg2;   
+        }
     };
 
     /**
