@@ -16,7 +16,7 @@ var VisualIDE = (function(ide) {
 				classes     : [],
 				isContainer : false,
 				extraHtml   : [],
-				template    : "numberInput",
+				template    : "spriteNumberInput",
 				category	  : 0
 			},
 			{
@@ -27,7 +27,7 @@ var VisualIDE = (function(ide) {
 				classes     : [],
 				isContainer : false,
 				extraHtml   : [],
-				template    : "numberInput",
+				template    : "spriteNumberInput",
 				category	  : 0
 			},
 			{
@@ -60,7 +60,7 @@ var VisualIDE = (function(ide) {
 				classes     : [],
 				isContainer : true,
 				extraHtml   : [],
-				template    : "numberInput",
+				template    : "spriteNumberInput",
 				category	  : 0
 			},
 			{
@@ -137,7 +137,7 @@ var VisualIDE = (function(ide) {
 				classes     : [],
 				isContainer : false,
 				extraHtml   : [],
-				template    : "",
+				template    : "sprite",
 				category	  : 2
 			},
 			{
@@ -148,7 +148,7 @@ var VisualIDE = (function(ide) {
 				classes     : [],
 				isContainer : false,
 				extraHtml   : [],
-				template    : "",
+				template    : "sprite",
 				category	  : 2
 			},
 		],

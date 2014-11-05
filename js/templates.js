@@ -9,7 +9,9 @@ var VisualIDE = (function(ide) {
 			});
 			$(".btn-toggle-if").on('click', function(){
 				$(this).parent().find('select').toggleClass('no-show');
+				$(this).parent().find('select').toggleClass('active');
 				$(this).parent().find('input').toggleClass('no-show');
+				$(this).parent().find('input').toggleClass('active');
 			});
 			
 			$(".btn-toggle-move-dir").on('click', function(){
@@ -66,19 +68,65 @@ var VisualIDE = (function(ide) {
 			'</div>' ,  // END of command input wrap
 		
 		numberInput: '<div class="command-input-wrap">' + 
-			'<input class="form-control numbers parm1" type="number" min="0" value="<%= def_value %>">' + 
+			'<input class="form-control numbers parm1" type="number" value="<%= def_value %>">' + 
+			'</div>' ,  // END of command input wrap
+			
+		spriteNumberInput: '<div class="command-input-wrap">' + 
+			'<div class="display-in-line">' +
+			'<select data-toggle="tooltip" data-placement="top" title="Select a sprite." ' + 
+			'class="form-control parm1-sprite select-sprite">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'</div> ' +
+			
+			'<div class="display-in-line">' +
+			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'<select class="no-show form-control parm1-variable select-variable">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'<input class="form-control numbers parm1-value active" type="number" value="<%= def_value %>">' + 
+			'</div>' +
+			'</div>' ,  // END of command input wrap
+			
+		sprite: '<div class="command-input-wrap">' + 
+			'<div class="display-in-line">' +
+			'<select data-toggle="tooltip" data-placement="top" title="Select a sprite." ' + 
+			'class="form-control parm1-sprite select-sprite">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'</div> ' +
 			'</div>' ,  // END of command input wrap
 			
 		move: '<div class="command-input-wrap">' + 
 			'<div class="display-in-line">' +
+			'<select data-toggle="tooltip" data-placement="top" title="Select a sprite." ' + 
+			'class="form-control parm1-sprite select-sprite">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'</div> ' +
+			
+			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap between the horizontal and vertical move direction." ' +
 			'class="btn btn-default btn-toggle-move-dir btn-tooltip"><i class="fa fa-arrows-h"></i></button>' +
-			'<input class="form-control numbers parm1 move-horizontal" type="number" min="0" value="<%= def_value %>">' + 
+			'<input class="form-control numbers parm2 move-horizontal" type="number" value="<%= def_value %>">' + 
 			'</div>' +
 			
 			'&nbsp;&nbsp;&nbsp;' +
 			'<select data-toggle="tooltip" data-placement="top" title="Select an easing function for the movement." ' + 
-			'class="form-control parm1-easing select-easing">' +
+			'class="form-control parm3-easing select-easing">' +
 				'<option value="normla">Normal</option>' +
 				'<option value="faster">Faster</option>' +
 				'<option value="slower">Slower</option>' +
@@ -91,21 +139,21 @@ var VisualIDE = (function(ide) {
 		loop: '<ul></ul>',			
 		
 		repeat: '<div class="command-input-wrap">' + 
-			'<input class="form-control numbers parm1" type="number" min="0" value="<%= def_value %>">' + 
+			'<input class="form-control numbers parm1" type="number" value="<%= def_value %>">' + 
 			'</div>' +  // END of command input wrap
 			'<ul></ul>',
 			
 		loopWhile: '<div class="command-input-wrap">' + 
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
 				'<option value="audi">Audi</option>' +
 			'</select>' +
-			'<input class="form-control numbers parm1-value" type="number" min="0" value="<%= def_value %>">' + 
+			'<input class="form-control numbers parm1-value active" type="number" value="<%= def_value %>">' + 
 			'</div>' +
 			
 			'&nbsp;&nbsp;&nbsp;' +
@@ -121,14 +169,14 @@ var VisualIDE = (function(ide) {
 			
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
 				'<option value="audi">Audi</option>' +
 			'</select>' +
-			'<input class="form-control numbers parm2-value" type="number" min="0" value="<%= def_value %>">' + 
+			'<input class="form-control numbers parm2-value active" type="number" value="<%= def_value %>">' + 
 			'</div>' +
 			
 			'</div>' + // END of command input wrap
@@ -137,14 +185,14 @@ var VisualIDE = (function(ide) {
 		ifCondition: '<div class="command-input-wrap">' + 
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
 				'<option value="audi">Audi</option>' +
 			'</select>' +
-			'<input class="form-control numbers parm1-value" type="number" min="0" value="<%= def_value %>">' + 
+			'<input class="form-control numbers parm1-value active" type="number" value="<%= def_value %>">' + 
 			'</div>' +
 			
 			'&nbsp;&nbsp;&nbsp;' +
@@ -160,14 +208,14 @@ var VisualIDE = (function(ide) {
 			
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
 				'<option value="audi">Audi</option>' +
 			'</select>' +
-			'<input class="form-control numbers parm2-value" type="number" min="0" value="<%= def_value %>">' + 
+			'<input class="form-control numbers parm2-value active" type="number" value="<%= def_value %>">' + 
 			'</div>' +
 			
 			'</div>' + // END of command input wrap
@@ -190,14 +238,14 @@ var VisualIDE = (function(ide) {
 			
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
 				'<option value="audi">Audi</option>' +
 			'</select>' +
-			'<input class="form-control numbers parm2-value" type="number" min="0" value="<%= def_value[0] %>">' + 
+			'<input class="form-control numbers parm2-value active" type="number" value="<%= def_value[0] %>">' + 
 			'</div>' +
 			
 			'&nbsp;&nbsp;&nbsp;' +
@@ -213,14 +261,14 @@ var VisualIDE = (function(ide) {
 			'&nbsp;&nbsp;&nbsp;' +
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-undo"></i></button>' +
+			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
 				'<option value="mercedes">Mercedes</option>' +
 				'<option value="audi">Audi</option>' +
 			'</select>' +
-			'<input class="form-control numbers parm2-value" type="number" min="0" value="<%= def_value[1] %>">' + 
+			'<input class="form-control numbers parm2-value active" type="number" value="<%= def_value[1] %>">' + 
 			'</div>' +
 			
 			'</div>' +
@@ -286,6 +334,10 @@ var VisualIDE = (function(ide) {
 					'</button>' +
 				'</div>' +
 			'</div>' +
+			'<% }); %>',
+			
+		spriteSelectEntry: '<% spriteTable.forEach(function ( s ) { %>' +
+			'<option value="<%= s.name %>"><%= s.name %></option>' +
 			'<% }); %>',
 			
 		demoProgram: '<% programs.forEach(function ( program ) { %>' +

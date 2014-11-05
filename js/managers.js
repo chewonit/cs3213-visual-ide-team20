@@ -109,6 +109,8 @@ var VisualIDE = (function(ide) {
 	var container;
 	var selectContainer;
 	var canvas;
+	
+	var update = "spriteTableUpdate";
 
 	ide.SpriteManager = {
 		
@@ -153,10 +155,18 @@ var VisualIDE = (function(ide) {
 				
 				deleteVar( that, name );
 				refreshManagerView( container, { spriteTable: that.spriteTable }, tpl.spriteManagerEntry );
-				//triggerSelectViewUpdate();
+				triggerSelectViewUpdate();
 			});
 			
 			refreshManagerView( container, { spriteTable: this.spriteTable }, tpl.spriteManagerEntry );
+			
+			$(document).on( update, selectContainer, function() {
+				var selected = $(this).val();
+				refreshVariableSelectView( that, $(this) );
+				$(this).val( selected );
+				if( !$(this).val() ) $(this)[0].selectedIndex = 0;
+			});
+			triggerSelectViewUpdate();
 		},
 	};
 	
@@ -172,6 +182,7 @@ var VisualIDE = (function(ide) {
 				canvas.addSprite(parms.name, sprite);
 				addVar( parms.that, parms.name, parms.url, sprite );
 				refreshManagerView( container, { spriteTable: parms.that.spriteTable }, tpl.spriteManagerEntry );
+				triggerSelectViewUpdate();
 				
 				parms.nameField.val('');
 				parms.urlField.val('');
@@ -214,6 +225,17 @@ var VisualIDE = (function(ide) {
 				break;
 			}
 		}
+	}
+	
+	function refreshVariableSelectView( that, selectContainer ) {
+		var compiled = _.template( tpl.spriteSelectEntry );
+		var html = compiled( { spriteTable: that.spriteTable } );
+		
+		selectContainer.html( html );
+	}
+	
+	function triggerSelectViewUpdate() {
+		$( selectContainer ).trigger( update );
 	}
 	
 	return ide;
