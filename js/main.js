@@ -8,7 +8,7 @@ $('#run-btn').on('click', function (e) {
 });
 
 $('.btn-clear-procedure').on('click', function (e) {
-    $('#list-procedures').html("");
+	$('#list-procedures').html("");
 });
 
 $('#login-btn').on('click', function (e) {
@@ -16,7 +16,11 @@ $('#login-btn').on('click', function (e) {
 });
 
 $('#dropbox-btn').on('click', function (e) {
-    loginDropbox();
+	loginDropbox();
+});
+
+$('#howitworks-btn').on('click', function (e) {
+	startTour();
 });
 
 $('#save-btn').on('click', function (e) {
@@ -147,9 +151,44 @@ function resizeAffix() {
 	} else {
 		$(window).off('.affix');
 		$('.affix-container')
-			.removeClass("affix affix-top affix-bottom")
-			.removeData("bs.affix");
+		.removeClass("affix affix-top affix-bottom")
+		.removeData("bs.affix");
 	}
+}
+
+function startTour() {
+	var tour = new Tour({
+		steps: [
+		{
+			element: ".tour-commands",
+			content: "Choose your desired command."
+		},
+		{
+			element: ".tour-procedures",
+			content: "Drag the command into this area and attach a value to it."
+		},
+		{
+			element: ".tour-run-stop-buttons",
+			placement: "bottom",
+			content: "Once you're satisfied with the commands. You can start running the program."
+		},
+		{
+			element: ".tour-trash",
+			content: "Trash an existing command in procedure by dragging into this area. You can also clear all existing commands by clicking on the \"Clear Procedure\" button."
+		},
+		{
+			element: ".tour-login",
+			placement: "bottom",
+			content: "Login to your desired platform to save your work. You can also load an previous saved work."
+		}
+		],
+		backdrop: true,
+		backdropPadding: 2,
+		storage: false
+	});
+
+	tour.init();
+	tour.start();
 }
 
 Backbone.history.start();
