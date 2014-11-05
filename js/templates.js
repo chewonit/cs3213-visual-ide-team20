@@ -259,7 +259,7 @@ var VisualIDE = (function(ide) {
 			
 		variableManagerEntry: '<% varTable.forEach(function ( v ) { %>' +
 			'<div class="form-group input-group">' +
-				'<input type="text" class="form-control" <% if(v.defalut) print("disabled") %> value="<%= v.name %>">' +
+				'<input type="text" class="form-control" readonly value="<%= v.name %>">' +
 				'<span class="input-group-btn">' +
 					'<button class="btn btn-danger btn-variable-manager-delete" type="button" <% if(v.defalut) print("disabled") %>>' +
 						'<span class="fa fa-times"></span>' + 
@@ -270,6 +270,22 @@ var VisualIDE = (function(ide) {
 			
 		variableSelectEntry: '<% varTable.forEach(function ( v ) { %>' +
 			'<option value="<%= v.name %>"><%= v.name %></option>' +
+			'<% }); %>',
+			
+		spriteManagerEntry: '<% spriteTable.forEach(function ( s ) { %>' +
+			'<div class="row">' +
+				'<div class="col-xs-2">' +
+					'<img src="<%= s.url %>" ></img>' +
+				'</div>' +
+				'<div class="col-xs-8">' +
+					'<input type="text" class="form-control" readonly value="<%= s.name %>">' +
+				'</div>' +
+				'<div class="col-xs-2">' +
+					'<button class="btn btn-danger btn-sprite-manager-delete" type="button" <% if(s.defalut) print("disabled") %>>' +
+						'<span class="fa fa-times"></span>' + 
+					'</button>' +
+				'</div>' +
+			'</div>' +
 			'<% }); %>',
 			
 		demoProgram: '<% programs.forEach(function ( program ) { %>' +

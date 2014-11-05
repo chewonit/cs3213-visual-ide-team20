@@ -115,7 +115,7 @@ jQuery(document).ready(function() {
 	
 	initIntepreter(canvas, spriteName);
 
-	initLayout();
+	initLayout(canvas);
 	
 	// Needs for better design on the placement of this
 	// initialization method.
@@ -136,7 +136,7 @@ function initIntepreter(canvas, spriteName) {
 	VisualIDE.Interpreter(canvas, spriteName);
 }
 
-function initLayout() {
+function initLayout(canvas) {
 	
 	var dragDrop = new VisualIDE.DragDrop({
 		commands: "ul.list-commands-raw",
@@ -171,6 +171,17 @@ function initLayout() {
 		addBtn: '#btn-variable-manager-add',
 		delBtn: '.btn-variable-manager-delete',
 		selectContainer: '.select-variable'
+	});
+	
+	var spriteManager = VisualIDE.SpriteManager;
+	spriteManager.init( {
+		container: $('#sprite-manager-entries-container'),
+		addBtn: '#btn-sprite-manager-add',
+		delBtn: '.btn-sprite-manager-delete',
+		selectContainer: '.select-sprite',
+		nameClass: '.sprite-manager-form-name',
+		urlClass: '.sprite-manager-form-image-url',
+		canvas: canvas
 	});
 	
 	var demoManager = VisualIDE.Demo;

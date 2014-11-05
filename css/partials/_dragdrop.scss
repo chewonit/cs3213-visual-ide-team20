@@ -4,6 +4,10 @@
     z-index: 2000;
 }
 
+.display-in-line {
+	display: inline-block;
+}
+	
 .col-commands {
 	.affix {
 		width: 14.3%;
@@ -67,10 +71,6 @@ ul.list-commands {
 	
 	.no-show {
 		display: none !important;
-	}
-	
-	.display-in-line {
-		display: inline-block;
 	}
 	
 	&.list-commands-raw {
@@ -256,4 +256,16 @@ div.list-header {
 .view-managers {
 	margin-top: 10px;
 	display: none;
+	
+	.sprite-manager-entries {
+		margin: 15px 0;
+		
+		.row {
+			margin-top: 10px;
+		}
+		
+		img {
+			width: 100%;
+		}
+	}
 }
