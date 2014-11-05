@@ -173,6 +173,9 @@ function initLayout() {
 		selectContainer: '.select-variable'
 	});
 	
+	var demoManager = VisualIDE.Demo;
+	demoManager.populatePrograms( $('#demo-manager-programs') );
+	
 	resizeAffix();
 	// Re initialize affix components on browser resize
 	$(window).resize(function(){

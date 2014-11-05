@@ -8,6 +8,18 @@
 	.affix {
 		width: 14.3%;
 	}
+	
+	.panel-group {
+		padding-right: 10px;
+		
+		.panel-body {
+			padding: 3px;
+		}
+	}
+	
+	.btn-command-wrap {
+		padding-right: 10px;
+	}
 }
 
 .command-executing {
@@ -242,5 +254,6 @@ div.list-header {
 }
 
 .view-managers {
+	margin-top: 10px;
 	display: none;
 }

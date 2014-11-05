@@ -165,6 +165,12 @@ var VisualIDE = (function(ide) {
 				tooltip: 'Create or delete sprites.',
 				iconClass: 'picture-o',
 				name: 'Sprite Manager'
+			},
+			{
+				cssClass: 'btn-demo-manager',
+				tooltip: 'Jump start with demo programs.',
+				iconClass: 'file-code-o',
+				name: 'Demo Programs'
 			}
 		],
 	};

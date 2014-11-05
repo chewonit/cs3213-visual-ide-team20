@@ -237,10 +237,17 @@ var VisualIDE = (function(ide) {
 		$('.btn-variable-manager').on('click', function() {
 			$('#variable-manager').slideToggle();
 			$('#sprite-manager').slideUp();
+			$('#demo-manager').slideUp();
 		});
 		$('.btn-sprite-manager').on('click', function() {
 			$('#sprite-manager').slideToggle();
 			$('#variable-manager').slideUp();
+			$('#demo-manager').slideUp();
+		});
+		$('.btn-demo-manager').on('click', function() {
+			$('#demo-manager').slideToggle();
+			$('#variable-manager').slideUp();
+			$('#sprite-manager').slideUp();
 		});
 		$('.btn-managers-close').on('click', function() {
 			$( '#'+ $(this).data('target') ).slideUp();
