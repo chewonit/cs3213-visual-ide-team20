@@ -365,6 +365,10 @@ console.log(_commandQueue);
     ParamGetters[_USER_CMD_CONSTANTS.HIDE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.ROTATE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
 
+    ParamGetters[_USER_CMD_CONSTANTS.LOOP] = function(commandObj) {
+        return [];
+    };
+
     /**
      * Executes commands in order in _commandQueue. Speed of execution 
      * is specified by _delay.
