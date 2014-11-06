@@ -77,28 +77,34 @@ console.log(_commandQueue);
     /**
      * Moves the sprite by the amount specified by steps. Each step is one pixel.
      */
-    var move = function(steps) {
-        var currX = _canvas.getSprite(_spriteName).sprite.position.x;
-        _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
-            interpolator: new VisualIDE.CanvasLinearInterpolator(),
-            duration: _delay * 0.98
-        });
-        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
-        //     interpolator: new VisualIDE.CanvasAccelerateInterpolator(3.0),
-        //     duration: _delay * 0.98
-        // });
-        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
-        //     interpolator: new VisualIDE.CanvasDecelerateInterpolator(3.0),
-        //     duration: _delay * 0.98
-        // });
-        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
-        //     interpolator: new VisualIDE.CanvasEasingInterpolator(3.0),
-        //     duration: _delay * 0.98
-        // });
-        // _canvas.getSprite(_spriteName).setX(currX + parseInt(steps), {
-        //     interpolator: new VisualIDE.CanvasBounceInterpolator(),
-        //     duration: _delay * 0.98
-        // });
+    var move = function(args, options) {
+        var direction = args[0], 
+            steps = args[1], 
+            interpolator = args[2];
+
+        var Interpolators = {
+            "normla": VisualIDE.CanvasLinearInterpolator,
+            "faster": VisualIDE.CanvasAccelerateInterpolator,
+            "slower": VisualIDE.CanvasDecelerateInterpolator,
+            "smooth": VisualIDE.CanvasEasingInterpolator,
+            "bounce": VisualIDE.CanvasBounceInterpolator,
+        };
+
+        var curr;
+        if (direction == "h") {
+            curr = _canvas.getSprite(_spriteName).sprite.position.x;
+            _canvas.getSprite(_spriteName).setX(curr + parseInt(steps), {
+                interpolator: new Interpolators[interpolator](3.0),
+                duration: _delay * 0.98
+            });
+        }
+        else {
+            curr = _canvas.getSprite(_spriteName).sprite.position.y;
+            _canvas.getSprite(_spriteName).setY(curr + parseInt(steps), {
+                interpolator: new Interpolators[interpolator](3.0),
+                duration: _delay * 0.98
+            });
+        }
     };
 
     /**
@@ -147,11 +153,14 @@ console.log(_commandQueue);
 
     var resolveOperand = function(operand) {
         if (isNaN(operand)) {
-            return varTable[operand].value;
+            if (varTable[i].name.toLowerCase() === operand.toLowerCase()) {
+                return varTable[i].value;
+            }
         }
         else {
             return parseInt(operand);
         }
+        throw 'Interpreter: Unable to resolve operand "' + operand + '".';
     };
 
     var MathOperations = {
@@ -208,6 +217,7 @@ console.log(_commandQueue);
             commandId === _USER_CMD_CONSTANTS.IF || 
             commandId === _USER_CMD_CONSTANTS.WHILE ||
             commandId === _USER_CMD_CONSTANTS.LOOP) {
+
             cmd = new JumpCommand(commandId, commandObj, args);
         }
         else if (commandId === _USER_CMD_CONSTANTS.ASSIGN) {
@@ -226,18 +236,58 @@ console.log(_commandQueue);
     var getParams = function(commandObj, commandId) {
         var params = [];
 
-        if (commandId == _USER_CMD_CONSTANTS.ASSIGN)
-            commandObj.children(".command-input-wrap").children(".display-in-line").children("select").each(function() {
+        if (commandId == _USER_CMD_CONSTANTS.ASSIGN ||
+            commandId == _USER_CMD_CONSTANTS.IF || 
+            commandId == _USER_CMD_CONSTANTS.WHILE) {
+
+            if (commandId == _USER_CMD_CONSTANTS.ASSIGN) {
+                // lhs
+                commandObj.children(".command-input-wrap").children(".display-in-line").children("select").each(function() {
+                    if (!$(this).hasClass("no-show")) {
+                        params.push($(this).val());
+                    }
+                });
+
+                // rhs
+                commandObj.children(".command-input-wrap").children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
+                    if (!$(this).hasClass("no-show")) {
+                        params.push($(this).val());
+                    }
+                });
+            }
+            else {
+                commandObj.children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
+                    if (!$(this).hasClass("no-show")) {
+                        params.push($(this).val());
+                    }
+                });
+            }
+
+            commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
+                params.push($(this).text());
+            });
+        }
+        else if (commandId == _USER_CMD_CONSTANTS.MOVE) {
+            commandObj.children(".command-input-wrap").children(".display-in-line").children("button").children("i").each(function() {
+                if ($(this).hasClass("fa-arrows-v")) {
+                    params.push("v");
+                }
+                else {
+                    params.push("h");
+                }
+            });
+
+            commandObj.children(".command-input-wrap").children(".display-in-line").children("input").each(function() {
                 params.push($(this).val());
             });
 
-        commandObj.children(".command-input-wrap").find("input").each(function() {
-            params.push($(this).val());
-        });
-
-        commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
-            params.push($(this).text());
-        });
+            params.push(commandObj.children(".command-input-wrap").children("select").val());
+        }
+        else {
+            commandObj.children(".command-input-wrap").children("input").each(function() {
+                params.push($(this).val());
+            });
+        }
 console.log(params);
         return params;
     };
@@ -248,14 +298,18 @@ console.log(params);
      */
     var executeCommands = function() {
         var looply = function() {
-            var commandObj = _commandQueue.getCommand();
-
             if (_commandQueue.endOfQueue()) {
                 _commandQueue.stop(resetStyles);
             }
             else {
-                execute(commandObj);
-                _commandQueue.incrementPointer();
+                var commandObj = _commandQueue.getCommand();
+                if (commandObj) {
+                    execute(commandObj);
+                    _commandQueue.incrementPointer();
+                }
+                else {
+                    _commandQueue.stop(resetStyles);
+                }
             }
         }; 
         _commandQueue.run(looply, _delay);
@@ -324,7 +378,7 @@ console.log(params);
         var loopStart;
         if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
 
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+            _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 2,
                 arg1: 0,
                 arg2: this.args[_CONSTANTS.USER_INPUT],
@@ -334,12 +388,11 @@ console.log(params);
             loopStart = _commandQueue.getLength();
             parse(this.commandObjInList.children('ul').children('li'));
             
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+            _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: loopStart,
                 arg1: 1,
                 arg2: this.args[_CONSTANTS.USER_INPUT],
-                evaluator: Comparators["!="],
-                infiniteLoop: 0
+                evaluator: Comparators["!="]
             }));
         }
         else if (this.commandId === _USER_CMD_CONSTANTS.LOOP) {
@@ -347,14 +400,14 @@ console.log(params);
             loopStart = _commandQueue.getLength();
             parse(this.commandObjInList.children('ul').children('li'));
             
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+            _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: loopStart,
                 infiniteLoop: 1
             }));
         }
         else if (this.commandId === _USER_CMD_CONSTANTS.WHILE) {
 
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+            _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 2,
                 arg1: this.args[0],
                 arg2: this.args[1],
@@ -365,7 +418,7 @@ console.log(params);
             loopStart = _commandQueue.getLength();
             parse(this.commandObjInList.children('ul').children('li'));
             
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+            _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: loopStart,
                 arg1: this.args[0],
                 arg2: this.args[1],
@@ -377,7 +430,7 @@ console.log(params);
             var trueStatementList = $(this.commandObjInList.children('ul')[0]).children('li'),
                 falseStatementList = $(this.commandObjInList.children('ul')[1]).children('li');
 
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+            _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: _commandQueue.getLength() + falseStatementList.length + 2,
                 arg1: this.args[0],
                 arg2: this.args[1],
@@ -386,7 +439,7 @@ console.log(params);
 
             parse(falseStatementList);
 
-            _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
+            _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: _commandQueue.getLength() + trueStatementList.length + 1,
                 arg1: 0,
                 arg2: 0,
@@ -403,18 +456,23 @@ console.log(params);
         }
         else {
             if (this.evaluateJumpCondition(this)) {
-                if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) 
+                if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
                     this.options.arg1++;
+                }
                 _commandQueue.movePointer(this.options.jumpTo);
             }
             else {
-                if (_commandQueue.endOfQueue()) {
-                    _commandQueue.stop(resetStyles);
-                    return;
-                }
+                // if (_commandQueue.endOfQueue()) {
+                //     _commandQueue.stop(resetStyles);
+                //     return;
+                // }
                 this.options.arg1 = 1;
                 _commandQueue.incrementPointer();
             }
+        }
+        if (_commandQueue.endOfQueue()) {
+            _commandQueue.stop(resetStyles);
+            return;
         }
         return _commandQueue.getCommand();
     };
@@ -427,20 +485,20 @@ console.log(params);
 
     var Comparators = {
         "=": function(arg1, arg2) {
-            console.log(arg1 + ' ' + arg2);
-            return arg1 == arg2;   
+            // console.log(arg1 + ' ' + arg2);
+            return resolveOperand(arg1) == resolveOperand(arg2);   
         },
         "!=": function(arg1, arg2) {
-            console.log(arg1 + ' ' + arg2);
-            return arg1 != arg2;   
+            // console.log(arg1 + ' ' + arg2);
+            return resolveOperand(arg1) != resolveOperand(arg2);   
         },
         "<": function(arg1, arg2) {
-            console.log(arg1 + ' ' + arg2);
-            return arg1 < arg2;   
+            // console.log(arg1 + ' ' + arg2);
+            return resolveOperand(arg1) < resolveOperand(arg2);   
         },
         ">": function(arg1, arg2) {
-            console.log(arg1 + ' ' + arg2);
-            return arg1 > arg2;   
+            // console.log(arg1 + ' ' + arg2);
+            return resolveOperand(arg1) > resolveOperand(arg2);   
         }
     };
 
@@ -478,9 +536,8 @@ console.log(params);
         };
 
         this.incrementPointer = function() {
-            if (this._curr === this.getLength() - 1)
+            if (this.endOfQueue())
                 throw 'CommandQueue: Reached the end of queue!';
-
             this._curr++;
         };
 
@@ -492,7 +549,7 @@ console.log(params);
         };
 
         this.endOfQueue = function() {
-            return this.getPointerIndex() === this.getLength() - 1;
+            return this.getPointerIndex() >= this.getLength();
         };
     };
     
