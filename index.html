@@ -75,7 +75,7 @@
 			</div>
 			<div class="col-md-5">
 				<div class="list-header clearfix">
-					<div id="variable-manager" class="clearfix view-managers">
+					<div id="variable-manager" class="clearfix view-managers variable-manager">
 						<div class="well">
 							<div class="clearfix">
 								<h3 class="pull-left">Variable Manager</h3>
@@ -104,17 +104,33 @@
 						</div>
 						<hr />
 					</div>
-					<div id="sprite-manager" class="clearfix view-managers">
-						<div class="clearfix">
-							<h3 class="pull-left">Sprite Manager</h3>
-							<button type="button" data-target="sprite-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
-								<span class="fa fa-times"></span> Close
-							</button>
-						</div>
+					<div id="sprite-manager" class="clearfix view-managers sprite-manager">
 						<div class="well">
+							<div class="clearfix">
+								<h3 class="pull-left">Sprite Manager</h3>
+								<button type="button" data-target="sprite-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
+									<span class="fa fa-times"></span> Close
+								</button>
+							</div>
+
 							<button id="btn-variable-manager-add" type="button" class="btn btn-default navbar-btn">
 								<span class="fa fa-plus"></span> Add Sprite
 							</button>
+						</div>
+						<hr />
+					</div>
+					<div id="demo-manager" class="clearfix view-managers demo-manager">
+						<div class="well">
+							<div class="clearfix">
+								<h3 class="pull-left">Demo Programs</h3>
+								<button type="button" data-target="demo-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
+									<span class="fa fa-times"></span> Close
+								</button>
+							</div>
+
+							<div id="demo-manager-programs">
+							
+							</div>
 						</div>
 						<hr />
 					</div>
@@ -190,6 +206,7 @@
 
 	<script src="js/jquery-sortable.js"></script>
 	<script src="js/templates.js"></script>
+	<script src="js/demo.js"></script>
 	<script src="js/managers.js"></script>
 	<script src="js/command.js"></script>
 	<script src="js/canvas.js"></script>

@@ -250,7 +250,7 @@ var VisualIDE = (function(ide) {
 			
 		commandButton: '<hr />' +
 			'<% buttons.forEach(function ( btn ) { %>' +
-			'<div class="form-group">' +
+			'<div class="form-group btn-command-wrap">' +
 			'<button data-toggle="tooltip" data-placement="top" title="<%= btn.tooltip %>" ' +
 			'class="btn btn-default btn-tooltip btn-full-length <%= btn.cssClass %>">' +
 			'<i class="fa fa-<%= btn.iconClass %>"></i>&nbsp; <%= btn.name %></button>' +
@@ -270,6 +270,22 @@ var VisualIDE = (function(ide) {
 			
 		variableSelectEntry: '<% varTable.forEach(function ( v ) { %>' +
 			'<option value="<%= v.name %>"><%= v.name %></option>' +
+			'<% }); %>',
+			
+		demoProgram: '<% programs.forEach(function ( program ) { %>' +
+			'<div class="panel panel-primary">' +
+				'<div class="panel-heading">' +
+					'<%= program.name %>' +
+				'</div>' +
+				'<div class="panel-body">' +
+					'<%= program.description %>' +
+					'<div>' +
+						'<button type="button" class="btn btn-default navbar-btn">' +
+							'<span class="fa fa-folder-open"></span> Load Program' +
+						'</button>' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
 			'<% }); %>',
 	};
 	
