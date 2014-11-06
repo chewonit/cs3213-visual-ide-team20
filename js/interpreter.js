@@ -343,7 +343,7 @@ console.log(_commandQueue);
 
         params.push(commandObj.children(".command-input-wrap").children("select").val());
 
-        params.push(commandObj.find(".select-sprite").val().toLowerCase());
+        params.push(commandObj.find(".select-sprite").val());
 
         return params;
     };
@@ -355,7 +355,7 @@ console.log(_commandQueue);
             params.push($(this).val());
         });
 
-        params.push(commandObj.find(".select-sprite").val().toLowerCase());
+        params.push(commandObj.find(".select-sprite").val());
 
         return params;
     };

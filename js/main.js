@@ -71,7 +71,7 @@ router.on('route:home', function() {
 // Create a new rendering area.
 jQuery(document).ready(function() {
 	
-	var spriteName = "pikachu";
+	var spriteName = "Pikachu";
 	var path = "../img/pikachu.gif";
 	var canvas = initCanvas(spriteName, path);
 	
