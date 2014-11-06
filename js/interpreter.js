@@ -25,7 +25,7 @@ var VisualIDE = (function(my) {
             WHILE: "12"
         },
         cmdList = VisualIDE.Commands.commands,
-        varManager = VisualIDE.VariableManager;
+        varTable = VisualIDE.VariableManager.varTable;
 
     var resetStyles = function() {        
         $('li').removeClass('command-executing');
@@ -133,9 +133,43 @@ console.log(_commandQueue);
 
     var assign = function(args, options) {
         var varName = args[0],
-            operand1 = args[1],
-            operand2 = args[2],
+            operand1 = resolveOperand(args[1]),
+            operand2 = resolveOperand(args[2]),
             operator = args[3];
+
+        for (var i = 0; i < varTable.length; i++) {
+            if (varTable[i].name.toLowerCase() === varName.toLowerCase()) {
+                varTable[i].value = MathOperations[operator].apply(this, [operand1, operand2]);
+                break;
+            }
+        }
+    };
+
+    var resolveOperand = function(operand) {
+        if (isNaN(operand)) {
+            return varTable[operand].value;
+        }
+        else {
+            return parseInt(operand);
+        }
+    };
+
+    var MathOperations = {
+        "+": function(arg1, arg2) {
+            return arg1 + arg2;   
+        },
+        "-": function(arg1, arg2) {
+            return arg1 - arg2;   
+        },
+        "*": function(arg1, arg2) {
+            return arg1 * arg2;   
+        },
+        "/": function(arg1, arg2) {
+            return arg1 / arg2;   
+        },
+        "%": function(arg1, arg2) {
+            return arg1 % arg2;   
+        }
     };
 
     /**
@@ -204,7 +238,7 @@ console.log(_commandQueue);
         commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
             params.push($(this).text());
         });
-
+console.log(params);
         return params;
     };
 
@@ -387,25 +421,25 @@ console.log(_commandQueue);
 
     JumpCommand.prototype.evaluateJumpCondition = function(commandObj) {
         var res = commandObj.options.evaluator.apply(this, [commandObj.options.arg1, commandObj.options.arg2]);
-        console.log(commandObj.options);
+        console.log(res);
         return commandObj.options.negateEvaluator ? !res : res;
     };
 
     var Comparators = {
         "=": function(arg1, arg2) {
-            console.log('=');
+            console.log(arg1 + ' ' + arg2);
             return arg1 == arg2;   
         },
         "!=": function(arg1, arg2) {
-            console.log('!=');
+            console.log(arg1 + ' ' + arg2);
             return arg1 != arg2;   
         },
         "<": function(arg1, arg2) {
-            console.log('<');
+            console.log(arg1 + ' ' + arg2);
             return arg1 < arg2;   
         },
         ">": function(arg1, arg2) {
-            console.log('>');
+            console.log(arg1 + ' ' + arg2);
             return arg1 > arg2;   
         }
     };
