@@ -78,7 +78,7 @@
 					<div id="variable-manager" class="clearfix view-managers variable-manager">
 						<div class="well">
 							<div class="clearfix">
-								<h3 class="pull-left">Variable Manager</h3>
+								<h3 class="pull-left"><i class="fa fa-stack-overflow fa-2x"></i> Variable Manager</h3>
 								<button type="button" data-target="variable-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
 									<span class="fa fa-times"></span> Close
 								</button>
@@ -96,7 +96,7 @@
 								</div><!-- /input-group -->
 							</div>
 							<div class="form-group input-group">
-								<input type="text" class="form-control">
+								<input type="text" class="form-control" placeholder="Variable Name">
 								<span class="input-group-btn">
 									<button id="btn-variable-manager-add" class="btn btn-default" type="button"><span class="fa fa-plus"></span> Add Variable</button>
 								</span>
@@ -107,22 +107,58 @@
 					<div id="sprite-manager" class="clearfix view-managers sprite-manager">
 						<div class="well">
 							<div class="clearfix">
-								<h3 class="pull-left">Sprite Manager</h3>
+								<h3 class="pull-left"><i class="fa fa-picture-o fa-2x"></i> Sprite Manager</h3>
 								<button type="button" data-target="sprite-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
 									<span class="fa fa-times"></span> Close
 								</button>
 							</div>
 
-							<button id="btn-variable-manager-add" type="button" class="btn btn-default navbar-btn">
-								<span class="fa fa-plus"></span> Add Sprite
-							</button>
+							<p>
+								Enter the URL of your desired image and give a name to it.<br />
+								Please note that the actual size of the image will be used.<br />
+								Pikachu has already been created for you.
+							</p>
+							
+							<div id="sprite-manager-entries" class="sprite-manager-entries">
+								<div id="sprite-manager-entries-container" class="fluid-container sprite-manager-entries-container">
+									<div class="row">
+										<div class="col-xs-2">
+											<img src="http://farm3.static.flickr.com/2405/2238919394_4c9b5aa921_o.jpg" ></img>
+										</div>
+										<div class="col-xs-8">
+											<input type="text" class="form-control" disabled>
+										</div>
+										<div class="col-xs-2">
+											<button class="btn btn-danger" type="button" disabled="disabled"><span class="fa fa-times"></span></button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<form class="form" role="form">
+								<div class="form-group">
+									<div class="input-group">
+										<div class="input-group-addon"><span class="fa fa-link"></span></div>
+										<input type="text" class="form-control sprite-manager-form-image-url" id="sprite-manager-form-image-url" placeholder="Image URL">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<input class="form-control sprite-manager-form-name" type="text" placeholder="Sprite Name">
+										<span class="input-group-btn">
+											<button id="btn-sprite-manager-add" type="button" class="btn btn-default">
+												<span class="fa fa-plus"></span> Add Sprite
+											</button>
+										</span>
+									</div>
+								</div>
+							</form>
 						</div>
 						<hr />
 					</div>
 					<div id="demo-manager" class="clearfix view-managers demo-manager">
 						<div class="well">
 							<div class="clearfix">
-								<h3 class="pull-left">Demo Programs</h3>
+								<h3 class="pull-left"><i class="fa fa-file-code-o fa-2x"></i> Demo Programs</h3>
 								<button type="button" data-target="demo-manager" class="btn btn-default navbar-btn pull-right btn-managers-close">
 									<span class="fa fa-times"></span> Close
 								</button>
