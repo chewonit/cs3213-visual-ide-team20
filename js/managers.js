@@ -74,6 +74,7 @@ var VisualIDE = (function(ide) {
 		var objVar = {};
 		objVar.defalut = false;
 		objVar.name = name;
+		objVar.value = 0;
 		
 		for ( var i=0; i<that.varTable.length; i++ ) {
 			if ( that.varTable[i].name.toLowerCase() == name.toLowerCase() ) {
