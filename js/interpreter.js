@@ -55,33 +55,29 @@ console.log(_commandQueue);
     /**
      * Sets the position of the sprite.
      */
-    var setX = function(x) {
-        _canvas.getSprite(_spriteName).setX(parseInt(x));
+    var setX = function(x, sprite) {
+        _canvas.getSprite(sprite).setX(parseInt(x));
     };
 
-    var setY = function(y) {
-        _canvas.getSprite(_spriteName).setY(parseInt(y));
+    var setY = function(y, sprite) {
+        _canvas.getSprite(sprite).setY(parseInt(y));
     };
 
     /**
      * Sets the visibility of the sprite.
      */
-    var show = function() {
-        _canvas.getSprite(_spriteName).show();
+    var show = function(sprite) {
+        _canvas.getSprite(sprite).show();
     };
 
-    var hide = function() {
-        _canvas.getSprite(_spriteName).hide();
+    var hide = function(sprite) {
+        _canvas.getSprite(sprite).hide();
     };
 
     /**
      * Moves the sprite by the amount specified by steps. Each step is one pixel.
      */
-    var move = function(args, options) {
-        var direction = args[0], 
-            steps = args[1], 
-            interpolator = args[2];
-
+    var move = function(direction, steps, interpolator, sprite) {
         var Interpolators = {
             "normla": VisualIDE.CanvasLinearInterpolator,
             "faster": VisualIDE.CanvasAccelerateInterpolator,
@@ -92,15 +88,15 @@ console.log(_commandQueue);
 
         var curr;
         if (direction == "h") {
-            curr = _canvas.getSprite(_spriteName).sprite.position.x;
-            _canvas.getSprite(_spriteName).setX(curr + parseInt(steps), {
+            curr = _canvas.getSprite(sprite).sprite.position.x;
+            _canvas.getSprite(sprite).setX(curr + parseInt(steps), {
                 interpolator: new Interpolators[interpolator](3.0),
                 duration: _delay * 0.98
             });
         }
         else {
-            curr = _canvas.getSprite(_spriteName).sprite.position.y;
-            _canvas.getSprite(_spriteName).setY(curr + parseInt(steps), {
+            curr = _canvas.getSprite(sprite).sprite.position.y;
+            _canvas.getSprite(sprite).setY(curr + parseInt(steps), {
                 interpolator: new Interpolators[interpolator](3.0),
                 duration: _delay * 0.98
             });
@@ -129,19 +125,18 @@ console.log(_commandQueue);
         }
     };
 
-    var rotate = function(degree) {
+    var rotate = function(degree, sprite) {
         var radians = (parseInt(degree) / 180) * Math.PI;
-        _canvas.getSprite(_spriteName).setRotation(radians, {
+        
+        _canvas.getSprite(sprite).setRotation(radians, {
             interpolator: new VisualIDE.CanvasLinearInterpolator(),
             duration: _delay * 0.98
         });
     };
 
-    var assign = function(args, options) {
-        var varName = args[0],
-            operand1 = resolveOperand(args[1]),
-            operand2 = resolveOperand(args[2]),
-            operator = args[3];
+    var assign = function(varName, operand1, operand2, operator) {
+        operand1 = resolveOperand(operand1);
+        operand2 = resolveOperand(operand2);
 
         for (var i = 0; i < varTable.length; i++) {
             if (varTable[i].name.toLowerCase() === varName.toLowerCase()) {
@@ -234,63 +229,141 @@ console.log(_commandQueue);
      * Gets the parameters entered by the user. Returns an array of parameters.
      */
     var getParams = function(commandObj, commandId) {
-        var params = [];
-
-        if (commandId == _USER_CMD_CONSTANTS.ASSIGN ||
-            commandId == _USER_CMD_CONSTANTS.IF || 
-            commandId == _USER_CMD_CONSTANTS.WHILE) {
-
-            if (commandId == _USER_CMD_CONSTANTS.ASSIGN) {
-                // lhs
-                commandObj.children(".command-input-wrap").children(".display-in-line").children("select").each(function() {
-                    if (!$(this).hasClass("no-show")) {
-                        params.push($(this).val());
-                    }
-                });
-
-                // rhs
-                commandObj.children(".command-input-wrap").children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
-                    if (!$(this).hasClass("no-show")) {
-                        params.push($(this).val());
-                    }
-                });
-            }
-            else {
-                commandObj.children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
-                    if (!$(this).hasClass("no-show")) {
-                        params.push($(this).val());
-                    }
-                });
-            }
-
-            commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
-                params.push($(this).text());
-            });
-        }
-        else if (commandId == _USER_CMD_CONSTANTS.MOVE) {
-            commandObj.children(".command-input-wrap").children(".display-in-line").children("button").children("i").each(function() {
-                if ($(this).hasClass("fa-arrows-v")) {
-                    params.push("v");
-                }
-                else {
-                    params.push("h");
-                }
-            });
-
-            commandObj.children(".command-input-wrap").children(".display-in-line").children("input").each(function() {
-                params.push($(this).val());
-            });
-
-            params.push(commandObj.children(".command-input-wrap").children("select").val());
-        }
-        else {
-            commandObj.children(".command-input-wrap").children("input").each(function() {
-                params.push($(this).val());
-            });
-        }
-console.log(params);
+        var params = ParamGetters[commandId].apply(this, [commandObj]);
+        console.log(params);
         return params;
     };
+
+    var ParamGetters = {};
+
+    ParamGetters[_USER_CMD_CONSTANTS.ASSIGN] = function(commandObj) {
+        var params = [];
+
+        // lhs
+        commandObj.children(".command-input-wrap").children(".display-in-line").children("select").each(function() {
+            if (!$(this).hasClass("no-show")) {
+                params.push($(this).val());
+            }
+        });
+
+        // rhs
+        commandObj.children(".command-input-wrap").children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
+            if (!$(this).hasClass("no-show")) {
+                params.push($(this).val());
+            }
+        });
+
+        commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
+            params.push($(this).text());
+        });
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.IF] = function(commandObj) {
+        var params = [];
+
+        commandObj.children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
+            if (!$(this).hasClass("no-show")) {
+                params.push($(this).val());
+            }
+        });
+
+        commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
+            params.push($(this).text());
+        });
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.WHILE] = function(commandObj) {
+        var params = [];
+        
+        commandObj.children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
+            if (!$(this).hasClass("no-show")) {
+                params.push($(this).val());
+            }
+        });
+
+        commandObj.children(".command-input-wrap").find(".operator").children('a').each(function() {
+            params.push($(this).text());
+        });
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.REPEAT] = function(commandObj) {
+        var params = [];
+
+        commandObj.children(".command-input-wrap").children("input").each(function() {
+            params.push($(this).val());
+        });
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.MOVE] = function(commandObj) {
+        var params = [];
+
+        commandObj.children(".command-input-wrap").children(".display-in-line:not(:first-child)").children("button").children("i").each(function() {
+            if ($(this).hasClass("fa-arrows-v")) {
+                params.push("v");
+            }
+            else {
+                params.push("h");
+            }
+        });
+
+        commandObj.children(".command-input-wrap").children(".display-in-line").children("input").each(function() {
+            params.push($(this).val());
+        });
+
+        params.push(commandObj.children(".command-input-wrap").children("select").val());
+
+        params.push(commandObj.find(".select-sprite").val());
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.MOVE] = function(commandObj) {
+        var params = [];
+
+        commandObj.children(".command-input-wrap").children(".display-in-line:not(:first-child)").children("button").children("i").each(function() {
+            if ($(this).hasClass("fa-arrows-v")) {
+                params.push("v");
+            }
+            else {
+                params.push("h");
+            }
+        });
+
+        commandObj.children(".command-input-wrap").children(".display-in-line").children("input").each(function() {
+            params.push($(this).val());
+        });
+
+        params.push(commandObj.children(".command-input-wrap").children("select").val());
+
+        params.push(commandObj.find(".select-sprite").val().toLowerCase());
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.SET_X] = function(commandObj) {
+        var params = [];
+
+        commandObj.children(".command-input-wrap").find("input").each(function() {
+            params.push($(this).val());
+        });
+
+        params.push(commandObj.find(".select-sprite").val().toLowerCase());
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.SET_Y] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
+    ParamGetters[_USER_CMD_CONSTANTS.SHOW] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
+    ParamGetters[_USER_CMD_CONSTANTS.HIDE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
+    ParamGetters[_USER_CMD_CONSTANTS.ROTATE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
 
     /**
      * Executes commands in order in _commandQueue. Speed of execution 
@@ -329,7 +402,7 @@ console.log(params);
         resetStyles();
         commandObj.commandObjInList.addClass('command-executing');
 
-        _commandMap[commandId].apply(this, [args, options]);
+        _commandMap[commandId].apply(this, args);
     };
 
     /**
