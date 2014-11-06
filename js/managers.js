@@ -62,6 +62,9 @@ var VisualIDE = (function(ide) {
 			triggerSelectViewUpdate();
 		},
 		
+		refreshSelectVeiws: function() {
+			triggerSelectViewUpdate();
+		}
 	};
 	
 	function addVar( that, name ) {
@@ -168,6 +171,10 @@ var VisualIDE = (function(ide) {
 			});
 			triggerSelectViewUpdate();
 		},
+		
+		refreshSelectVeiws: function() {
+			triggerSelectViewUpdate();
+		}
 	};
 	
 	function checkUrl( parms ) {

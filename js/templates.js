@@ -3,25 +3,25 @@ var VisualIDE = (function(ide) {
 	ide.Templates = {
 	
 		init: function() {
-			$(".dropdown-menu li a").on('click', function(){
+			$(document).on('click', '.dropdown-menu li a', function(){
 				var selText = $(this).text();
 				$(this).parents('.btn-group').find('.dropdown-toggle').html(selText);
 			});
-			$(".btn-toggle-if").on('click', function(){
+			$(document).on('click', '.btn-toggle-var-num', function(){
 				$(this).parent().find('select').toggleClass('no-show');
 				$(this).parent().find('select').toggleClass('active');
 				$(this).parent().find('input').toggleClass('no-show');
 				$(this).parent().find('input').toggleClass('active');
 			});
 			
-			$(".btn-toggle-move-dir").on('click', function(){
+			$(document).on('click', '.btn-toggle-move-dir', function(){
 				$(this).find('i').toggleClass('fa-arrows-h');
 				$(this).find('i').toggleClass('fa-arrows-v');
 				$(this).parent().find('input').toggleClass('move-horizontal');
 				$(this).parent().find('input').toggleClass('move-vertical');
 			});
 			
-			$("input.numbers").on('input', function(){
+			$(document).on('input', 'input.numbers', function(){
 				var input = $(this).val();
 				var patt = new RegExp("^[0-9]+$");
 				if( ! patt.test(input) ) {
@@ -31,7 +31,7 @@ var VisualIDE = (function(ide) {
 				$(this).parent().removeClass("has-error");
 			});
 			
-			$("input.numbers").on('blur', function(){
+			$(document).on('blur', 'input.numbers', function(){
 				if ( $(this).parent().hasClass("has-error") ) {
 					$(this).focus();
 				}
@@ -84,7 +84,7 @@ var VisualIDE = (function(ide) {
 			
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
@@ -146,7 +146,7 @@ var VisualIDE = (function(ide) {
 		loopWhile: '<div class="command-input-wrap">' + 
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
@@ -169,7 +169,7 @@ var VisualIDE = (function(ide) {
 			
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
@@ -185,7 +185,7 @@ var VisualIDE = (function(ide) {
 		ifCondition: '<div class="command-input-wrap">' + 
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm1-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
@@ -208,7 +208,7 @@ var VisualIDE = (function(ide) {
 			
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
@@ -238,7 +238,7 @@ var VisualIDE = (function(ide) {
 			
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
@@ -261,7 +261,7 @@ var VisualIDE = (function(ide) {
 			'&nbsp;&nbsp;&nbsp;' +
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
-			'class="btn btn-default btn-toggle-if btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
 			'<select class="no-show form-control parm2-variable select-variable">' +
 				'<option value="volvo">Volvo</option>' +
 				'<option value="saab">Saab</option>' +
