@@ -102,6 +102,18 @@ var VisualIDE = (function(ide) {
 		initPageScrollOnDrag();
 	};
 	
+	ide.DragDrop.disableDrag = function(id) {
+		$( containers.normal ).sortable("disable");
+		$( containers.commands ).sortable("disable");
+		$( containers.trash ).sortable("disable");
+	};
+	
+	ide.DragDrop.enableDrag = function(id) {
+		$( containers.normal ).sortable("enable");
+		$( containers.commands ).sortable("enable");
+		$( containers.trash ).sortable("enable");
+	};
+	
 	/*
 	 * Add listeners to the mouse move and touch move events to scroll
 	 * the page when the user drags the drag item beyond the window boundary.
