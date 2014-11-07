@@ -1,3 +1,9 @@
+#login-area {
+	button {
+		margin-bottom: 0;
+	}
+}
+
 .dragged {
     position: absolute;
     opacity: 0.5;
@@ -6,6 +12,14 @@
 
 .display-in-line {
 	display: inline-block;
+}
+	
+.cd-panel-content {
+	.list-commands-raw {
+		.panel-body {
+			padding: 3px;
+		}
+	}
 }
 	
 .col-commands {
@@ -28,7 +42,7 @@
 
 .command-executing {
 	.handle {
-		&:before {
+		&:after {
 			content: "\f064";
 			font-family: FontAwesome;
 			font-style: normal;
