@@ -3,10 +3,10 @@ $(document).ready(function(){
 });
 
 $('#run-btn').on('click', function (e) {
+	VisualIDE.Interpreter.stop();
 	$(this).attr('disabled','disabled');
 	$('#stop-btn').removeAttr('disabled');
 	VisualIDE.DragDrop.disableDrag();
-	VisualIDE.Interpreter.stop();
 	VisualIDE.Interpreter.run();
 });
 

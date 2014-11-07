@@ -27,8 +27,15 @@ var VisualIDE = (function(my) {
         cmdList = VisualIDE.Commands.commands,
         varTable = VisualIDE.VariableManager.varTable;
 
-    var resetStyles = function() {        
+    var resetStyles = function() {   
         $('li').removeClass('command-executing');
+    };
+
+    var restoreUI = function() {
+        resetStyles();
+        $('#stop-btn').attr('disabled','disabled');
+        $('#run-btn').removeAttr('disabled');
+        VisualIDE.DragDrop.enableDrag();
     };
 
     my.Interpreter = function(canvas, spriteName) {
@@ -38,24 +45,26 @@ var VisualIDE = (function(my) {
     
     my.Interpreter.stop = function() {
         if (_commandQueue) 
-            _commandQueue.stop(resetStyles);
+            _commandQueue.stop(restoreUI);
         
         _commandQueue = new CommandQueue();
     };        
     
     my.Interpreter.run = function() {
-        my.Interpreter.stop();
+        initVarTable();
+        
+        parse($('#list-procedures > li'));
+        // console.log(_commandQueue);
 
+        executeCommands();
+    };        
+
+    var initVarTable = function() {
         varTable = VisualIDE.VariableManager.varTable;
         for (var v in varTable) {
             varTable[v].value = 0;
         }
-
-        parse($('#list-procedures > li'));
-console.log(_commandQueue);
-
-        executeCommands();
-    };        
+    };
 
     /**
      * Sets the position of the sprite.
@@ -145,18 +154,14 @@ console.log(_commandQueue);
 
         for (var i = 0; i < varTable.length; i++) {
             if (varTable[i].name.toLowerCase() === varName.toLowerCase()) {
-                console.log('--');
-                console.log(varTable[i].value);
                 varTable[i].value = MathOperations[operator].apply(this, [operand1, operand2]);
-                console.log(varTable[i].value);
-                console.log('--');
                 break;
             }
         }
     };
 
     var resolveOperand = function(operand) {
-        console.log('resolve ' + operand);
+        // console.log('resolve ' + operand);
         if (isNaN(operand)) {
             for (var i = 0; i < varTable.length; i++) {
                 if (varTable[i].name.toLowerCase() === operand.toLowerCase()) {
@@ -201,6 +206,9 @@ console.log(_commandQueue);
     _commandMap[_USER_CMD_CONSTANTS.CHANGE_BG]      = changeBg;
     _commandMap[_USER_CMD_CONSTANTS.ROTATE]         = rotate;
     _commandMap[_USER_CMD_CONSTANTS.ASSIGN]         = assign;
+    _commandMap[_USER_CMD_CONSTANTS.WHILE]          = function(){};
+    _commandMap[_USER_CMD_CONSTANTS.REPEAT]         = function(){};
+    _commandMap[_USER_CMD_CONSTANTS.LOOP]           = function(){};
 
     /**
      * Parses the list of commands.
@@ -242,7 +250,7 @@ console.log(_commandQueue);
      */
     var getParams = function(commandObj, commandId) {
         var params = ParamGetters[commandId].apply(this, [commandObj]);
-        console.log(params);
+        // console.log(params);
         return params;
     };
 
@@ -388,7 +396,7 @@ console.log(_commandQueue);
     var executeCommands = function() {
         var looply = function() {
             if (_commandQueue.endOfQueue()) {
-                _commandQueue.stop(resetStyles);
+                _commandQueue.stop(restoreUI);
             }
             else {
                 var commandObj = _commandQueue.getCommand();
@@ -397,7 +405,7 @@ console.log(_commandQueue);
                     _commandQueue.incrementPointer();
                 }
                 else {
-                    _commandQueue.stop(resetStyles);
+                    _commandQueue.stop(restoreUI);
                 }
             }
         }; 
@@ -464,11 +472,14 @@ console.log(_commandQueue);
     JumpCommand.prototype = new Command();
 
     JumpCommand.prototype.parseCommand = function() {
-        var loopStart;
+        var loopStart, statementList;
+
         if (this.commandId === _USER_CMD_CONSTANTS.REPEAT) {
 
+            statementList = this.commandObjInList.children('ul').children('li');
+
             _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
-                jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 2,
+                jumpTo: _commandQueue.getLength() + statementList.length + 2,
                 arg1: 0,
                 arg2: this.args[_CONSTANTS.USER_INPUT],
                 evaluator: Comparators["="]
@@ -476,6 +487,10 @@ console.log(_commandQueue);
 
             loopStart = _commandQueue.getLength();
             parse(this.commandObjInList.children('ul').children('li'));
+
+            if (statementList.length === 0) {
+                _commandQueue.addCommand(new Command(this.commandId, this.commandObjInList, this.args, {}));
+            }
             
             _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: loopStart,
@@ -487,8 +502,14 @@ console.log(_commandQueue);
         else if (this.commandId === _USER_CMD_CONSTANTS.LOOP) {
 
             loopStart = _commandQueue.getLength();
-            parse(this.commandObjInList.children('ul').children('li'));
+            statementList = this.commandObjInList.children('ul').children('li');
             
+            parse(statementList);
+
+            if (statementList.length === 0) {
+                _commandQueue.addCommand(new Command(this.commandId, this.commandObjInList, this.args, {}));
+            }
+
             _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: loopStart,
                 infiniteLoop: 1
@@ -496,8 +517,10 @@ console.log(_commandQueue);
         }
         else if (this.commandId === _USER_CMD_CONSTANTS.WHILE) {
 
+            statementList = this.commandObjInList.children('ul').children('li');
+
             _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
-                jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 2,
+                jumpTo: _commandQueue.getLength() + statementList.length + 2,
                 arg1: this.args[0],
                 arg2: this.args[1],
                 evaluator: Comparators[this.args[2]],
@@ -505,7 +528,12 @@ console.log(_commandQueue);
             }));
 
             loopStart = _commandQueue.getLength();
-            parse(this.commandObjInList.children('ul').children('li'));
+            
+            parse(statementList);
+
+            if (statementList.length === 0) {
+                _commandQueue.addCommand(new Command(this.commandId, this.commandObjInList, this.args, {}));
+            }
             
             _commandQueue.addCommand(new JumpCommand(_CONSTANTS.CMD_JUMP, undefined, this.args, {
                 jumpTo: loopStart - 1,
@@ -555,14 +583,14 @@ console.log(_commandQueue);
             }
         }
         if (_commandQueue.endOfQueue()) {
-            _commandQueue.stop(resetStyles);
+            _commandQueue.stop(restoreUI);
             return;
         }
         return _commandQueue.getCommand();
     };
 
     JumpCommand.prototype.evaluateJumpCondition = function(commandObj) {
-        console.log(commandObj);
+        // console.log(commandObj);
         var res = commandObj.options.evaluator.apply(this, [commandObj.options.arg1, commandObj.options.arg2]);
         // console.log(commandObj.options.arg1);
         // console.log(commandObj.options.arg2);
@@ -571,19 +599,19 @@ console.log(_commandQueue);
 
     var Comparators = {
         "=": function(arg1, arg2) {
-            console.log('compare =: ' + arg1 + ' ' + arg2);
+            // console.log('compare =: ' + arg1 + ' ' + arg2);
             return resolveOperand(arg1) == resolveOperand(arg2);   
         },
         "!=": function(arg1, arg2) {
-            console.log('compare !=: ' + arg1 + ' ' + arg2);
+            // console.log('compare !=: ' + arg1 + ' ' + arg2);
             return resolveOperand(arg1) != resolveOperand(arg2);   
         },
         "<": function(arg1, arg2) {
-            console.log('compare <: ' + arg1 + ' ' + arg2);
+            // console.log('compare <: ' + arg1 + ' ' + arg2);
             return resolveOperand(arg1) < resolveOperand(arg2);   
         },
         ">": function(arg1, arg2) {
-            console.log('compare >: ' + arg1 + ' ' + arg2);
+            // console.log('compare >: ' + arg1 + ' ' + arg2);
             return resolveOperand(arg1) > resolveOperand(arg2);   
         }
     };
