@@ -16,7 +16,7 @@ $('#stop-btn').on('click', function (e) {
 });
 
 function endRun() {
-	$(this).attr('disabled','disabled');
+	$('#stop-btn').attr('disabled','disabled');
 	$('#run-btn').removeAttr('disabled');
 	VisualIDE.DragDrop.enableDrag();
 	VisualIDE.Interpreter.stop();
