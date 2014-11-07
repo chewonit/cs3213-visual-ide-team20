@@ -69,6 +69,11 @@ function saveToGoogle(){
 		});
 
 		var procedures = $('ul.list-procedures').html();
+		var variables = $('#variable-manager-entries').html();
+		var sprites = $('#sprite-manager-entries').html();
+
+		var dataToSave = procedures+'--=--'+variables+'--=--'+sprites;
+
 		var mdata = {
 			title:"visual_ide_20_saved_data",
 			mimeType:"text/html",
@@ -76,9 +81,9 @@ function saveToGoogle(){
 		};
 		
 		if(isFound){
-			uploadString(fileId, procedures, mdata, null);
+			uploadString(fileId, dataToSave, mdata, null);
 		} else {
-			uploadString(null, procedures, mdata, null);
+			uploadString(null, dataToSave, mdata, null);
 		}
 	});	
 }
@@ -107,7 +112,20 @@ function loadFromGoogle(){
 					xhr.open('GET', file.downloadUrl);
 					xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
 					xhr.onload = function() {
-						$('ul.list-procedures').html(xhr.responseText);
+						var storedData = xhr.responseText;
+						var processedStoredData = storedData.split('--=--');
+						console.log(processedStoredData);
+						$('ul.list-procedures').html(processedStoredData[0]);
+						$('#variable-manager-entries').html(processedStoredData[1]);
+						$('#sprite-manager-entries').html(processedStoredData[2]);
+						//$('select').val($('select').val());
+						/*
+						$("select").each(function(){
+							alert($(this).val());
+							$(this).val(bounce);
+							$(this).attr("value", $(this).val());
+						});
+						*/
 					};
 					xhr.onerror = function() {
 						alert("No record was found!");
