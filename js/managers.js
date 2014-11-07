@@ -12,18 +12,15 @@ var VisualIDE = (function(ide) {
 		varTable: [
 			{
 				name: "count",
-				defalut: true,
-				value: 0
+				defalut: true
 			},
 			{
 				name: "value",
-				defalut: true,
-				value: 0
+				defalut: true
 			},
 			{
 				name: "total",
-				defalut: true,
-				value: 0
+				defalut: true
 			}
 		],
 		
