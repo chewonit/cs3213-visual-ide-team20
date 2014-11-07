@@ -23,7 +23,7 @@ var VisualIDE = (function(ide) {
 			
 			$(document).on('input', 'input.numbers', function(){
 				var input = $(this).val();
-				var patt = new RegExp("^[0-9]+$");
+				var patt = new RegExp("^-{0,1}[0-9]+$");
 				if( ! patt.test(input) ) {
 					$(this).parent().addClass("has-error");
 					return;
