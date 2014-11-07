@@ -148,8 +148,10 @@ console.log(_commandQueue);
 
     var resolveOperand = function(operand) {
         if (isNaN(operand)) {
-            if (varTable[i].name.toLowerCase() === operand.toLowerCase()) {
-                return varTable[i].value;
+            for (var i = 0; i < varTable.length; i++) {
+                if (varTable[i].name.toLowerCase() === operand.toLowerCase()) {
+                    return varTable[i].value;
+                }
             }
         }
         else {
