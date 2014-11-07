@@ -488,8 +488,8 @@ console.log(_commandQueue);
 
             _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: _commandQueue.getLength() + this.commandObjInList.children('ul').children('li').length + 2,
-                arg1: this.args[0],
-                arg2: this.args[1],
+                arg1: resolveOperand(this.args[0]),
+                arg2: resolveOperand(this.args[1]),
                 evaluator: Comparators[this.args[2]],
                 negateEvaluator: true
             }));
@@ -499,8 +499,8 @@ console.log(_commandQueue);
             
             _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: loopStart,
-                arg1: this.args[0],
-                arg2: this.args[1],
+                arg1: resolveOperand(this.args[0]),
+                arg2: resolveOperand(this.args[1]),
                 evaluator: Comparators[this.args[2]]
             }));
         }
@@ -511,8 +511,8 @@ console.log(_commandQueue);
 
             _commandQueue.addCommand(new JumpCommand(this.commandId, undefined, this.args, {
                 jumpTo: _commandQueue.getLength() + falseStatementList.length + 2,
-                arg1: this.args[0],
-                arg2: this.args[1],
+                arg1: resolveOperand(this.args[0]),
+                arg2: resolveOperand(this.args[1]),
                 evaluator: Comparators[this.args[2]]
             }));
 
@@ -558,7 +558,6 @@ console.log(_commandQueue);
 
     JumpCommand.prototype.evaluateJumpCondition = function(commandObj) {
         var res = commandObj.options.evaluator.apply(this, [commandObj.options.arg1, commandObj.options.arg2]);
-        console.log(res);
         return commandObj.options.negateEvaluator ? !res : res;
     };
 
