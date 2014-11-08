@@ -103,11 +103,6 @@ jQuery(document).ready(function() {
 	initIntepreter(canvas, spriteName);
 
 	initLayout(canvas);
-	
-	// Needs for better design on the placement of this
-	// initialization method.
-	// However, it can only be called when the document is loaded.
-	VisualIDE.Templates.init();
 });
 
 function initCanvas(spriteName, path) {
@@ -124,6 +119,8 @@ function initIntepreter(canvas, spriteName) {
 }
 
 function initLayout(canvas) {
+	
+	VisualIDE.Templates.init();
 	
 	var dragDrop = new VisualIDE.DragDrop({
 		commands: "ul.list-commands-raw",
