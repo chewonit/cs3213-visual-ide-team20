@@ -115,7 +115,7 @@ var VisualIDE = (function(ide) {
 				classes     : [],
 				isContainer : false,
 				extraHtml   : [],
-				template    : "textInput",
+				template    : "spriteTextInput",
 				category	  : 2
 			},
 			{

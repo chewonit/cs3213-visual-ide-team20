@@ -63,6 +63,19 @@ var VisualIDE = (function(ide) {
 			'<%= extraHtml %>' + 
 			'<% }); %>',
 		
+		spriteTextInput: '<div class="command-input-wrap">' + 
+			'<div class="display-in-line">' +
+			'<select data-toggle="tooltip" data-placement="top" title="Select a sprite." ' + 
+			'class="form-control parm1-sprite select-sprite">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'</div> ' +
+			'<input class="form-control parm1" value="<%= def_value %>">' + 
+			'</div>' ,  // END of command input wrap
+			
 		textInput: '<div class="command-input-wrap">' + 
 			'<input class="form-control parm1" value="<%= def_value %>">' + 
 			'</div>' ,  // END of command input wrap
