@@ -25,7 +25,8 @@ var VisualIDE = (function(my) {
             WHILE: "12"
         },
         cmdList = VisualIDE.Commands.commands,
-        varTable = VisualIDE.VariableManager.varTable;
+        varTable = VisualIDE.VariableManager.varTable,
+        spriteTable = VisualIDE.SpriteManager.spriteTable;
 
     var resetStyles = function() {   
         $('li').removeClass('command-executing');
@@ -52,6 +53,7 @@ var VisualIDE = (function(my) {
     
     my.Interpreter.run = function() {
         initVarTable();
+        initSpriteTable();
         
         parse($('#list-procedures > li'));
         // console.log(_commandQueue);
@@ -63,6 +65,13 @@ var VisualIDE = (function(my) {
         varTable = VisualIDE.VariableManager.varTable;
         for (var v in varTable) {
             varTable[v].value = 0;
+        }
+    };
+
+    var initSpriteTable = function() {
+        spriteTable = VisualIDE.SpriteManager.spriteTable;
+        for (var s in spriteTable) {
+            changeCostume(spriteTable[s].url, spriteTable[s].name);
         }
     };
 
@@ -89,7 +98,7 @@ var VisualIDE = (function(my) {
     };
 
     /**
-     * Moves the sprite by the amount specified by steps. Each step is one pixel.
+     * Moves the sprite by the amount specified by steps in the specified direction using the specified interpolator. Each step is one pixel.
      */
     var move = function(direction, steps, interpolator, sprite) {
         var Interpolators = {
@@ -124,9 +133,9 @@ var VisualIDE = (function(my) {
      * Sets the image of the sprite to that specified by the url. If no 
      * url is provided, sets the sprite to the default sprite.
      */
-    var changeCostume = function(url) {
+    var changeCostume = function(url, sprite) {
         if (!url) url = "../img/pikachu.gif";
-        _canvas.getSprite(_spriteName).setImage(url);
+        _canvas.getSprite(sprite).setImage(url);
     };
 
     /**
@@ -142,6 +151,10 @@ var VisualIDE = (function(my) {
         }
     };
 
+    /**
+     * Rotates the specified sprite by the amount. Converts the amount from degree to radians
+     * before calling canvas API.
+     */
     var rotate = function(degree, sprite) {
         var radians = (parseInt(degree) / 180) * Math.PI;
         
@@ -151,6 +164,9 @@ var VisualIDE = (function(my) {
         });
     };
 
+    /**
+     * Modifies the value of the variable with the evaluated result of the expression.
+     */
     var assign = function(varName, operand1, operand2, operator) {
         operand1 = resolveVariable(operand1);
         operand2 = resolveVariable(operand2);
@@ -163,6 +179,9 @@ var VisualIDE = (function(my) {
         }
     };
 
+    /**
+     * Resolves the variable argument to it's value in varTable.
+     */
     var resolveVariable = function(operand) {
         // console.log('resolve ' + operand);
         if (isNaN(operand)) {
@@ -178,6 +197,9 @@ var VisualIDE = (function(my) {
         }
     };
 
+    /**
+     * Array of mathematical operations (add, subtract etc.) for use in assign command.
+     */
     var MathOperations = {
         "+": function(arg1, arg2) {
             return arg1 + arg2;   
@@ -197,7 +219,9 @@ var VisualIDE = (function(my) {
     };
 
     /**
-     * The mapping from commandId to the actual function.
+     * The mapping from commandId to the actual function. Commands such as WHILE, REPEAT, and LOOP
+     * have a dummy map to ensure that the command does not hang the browser if user does not drag
+     * any commands into the statement list. 
      */
     var _commandMap = {};  
     _commandMap[_USER_CMD_CONSTANTS.SET_X]          = setX;
@@ -257,6 +281,9 @@ var VisualIDE = (function(my) {
         return params;
     };
 
+    /**
+     * A list of the parameter getter methods.
+     */
     var ParamGetters = {};
 
     ParamGetters[_USER_CMD_CONSTANTS.ASSIGN] = function(commandObj) {
@@ -363,11 +390,15 @@ var VisualIDE = (function(my) {
             params.push($(this).val());
         });
 
-        params.push(commandObj.find(".select-sprite").val());
+        commandObj.find(".select-sprite").each(function() {
+            params.push($(this).val());
+        });
 
         return params;
     };
 
+    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
+    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_BG] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.SET_Y] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.SHOW] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.HIDE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
@@ -378,8 +409,7 @@ var VisualIDE = (function(my) {
     };
 
     /**
-     * Executes commands in order in _commandQueue. Speed of execution 
-     * is specified by _delay.
+     * Executes commands in order in _commandQueue. Speed of execution is specified by _delay.
      */
     var executeCommands = function() {
         var looply = function() {
@@ -427,10 +457,18 @@ var VisualIDE = (function(my) {
         this.options = options || {};
     };
 
+    /**
+     * Perform any special functions to the commandQueue here (e.g. see JumpCommand.parseCommand).
+     * Then add the command to the commandQueue. This method will be called when parsing the main list of commands.
+     */
     Command.prototype.parseCommand = function() {
         _commandQueue.addCommand(this);
     };
 
+    /**
+     * Perform any preprocessing of the command before executing this command (e.g. see JumpCommand.preprocess).
+     * This method will be called just before executing the command, during the command loop (in executeCommands()).
+     */
     Command.prototype.preprocess = function() {
         return this;
     };
@@ -448,16 +486,16 @@ var VisualIDE = (function(my) {
 
     AssignCommand.prototype.preprocess = function() {
 
-        execute(this);
+        // execute(this);
 
-        _commandQueue.incrementPointer();
+        // _commandQueue.incrementPointer();
 
-        if (_commandQueue.endOfQueue()) {
-            _commandQueue.stop(restoreUI);
-            return;
-        }
-        return _commandQueue.getCommand();
-        // return this;
+        // if (_commandQueue.endOfQueue()) {
+        //     _commandQueue.stop(restoreUI);
+        //     return;
+        // }
+        // return _commandQueue.getCommand();
+        return this;
     };
 
     var JumpCommand = function(commandId, cmd, args, options) {
@@ -587,6 +625,9 @@ var VisualIDE = (function(my) {
         return _commandQueue.getCommand();
     };
 
+    /**
+     * Evaluates the jumping boolean condition. 
+     */
     JumpCommand.prototype.evaluateJumpCondition = function(commandObj) {
         // console.log(commandObj);
         var res = commandObj.options.evaluator.apply(this, [commandObj.options.arg1, commandObj.options.arg2]);
@@ -595,6 +636,9 @@ var VisualIDE = (function(my) {
         return commandObj.options.negateEvaluator ? !res : res;
     };
 
+    /**
+     * A list of the available boolean expressions for jumping conditions.
+     */
     var Comparators = {
         "=": function(arg1, arg2) {
             // console.log('compare =: ' + arg1 + ' ' + arg2);
