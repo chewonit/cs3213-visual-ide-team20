@@ -101,16 +101,19 @@ var VisualIDE = (function(my) {
         };
 
         var curr;
+
+        steps = resolveVariable(steps);
+
         if (direction == "h") {
             curr = _canvas.getSprite(sprite).sprite.position.x;
-            _canvas.getSprite(sprite).setX(curr + parseInt(steps), {
+            _canvas.getSprite(sprite).setX(curr + steps, {
                 interpolator: new Interpolators[interpolator](3.0),
                 duration: _delay * 0.98
             });
         }
         else {
             curr = _canvas.getSprite(sprite).sprite.position.y;
-            _canvas.getSprite(sprite).setY(curr + parseInt(steps), {
+            _canvas.getSprite(sprite).setY(curr + steps, {
                 interpolator: new Interpolators[interpolator](3.0),
                 duration: _delay * 0.98
             });
@@ -149,8 +152,8 @@ var VisualIDE = (function(my) {
     };
 
     var assign = function(varName, operand1, operand2, operator) {
-        operand1 = resolveOperand(operand1);
-        operand2 = resolveOperand(operand2);
+        operand1 = resolveVariable(operand1);
+        operand2 = resolveVariable(operand2);
 
         for (var i = 0; i < varTable.length; i++) {
             if (varTable[i].name.toLowerCase() === varName.toLowerCase()) {
@@ -160,7 +163,7 @@ var VisualIDE = (function(my) {
         }
     };
 
-    var resolveOperand = function(operand) {
+    var resolveVariable = function(operand) {
         // console.log('resolve ' + operand);
         if (isNaN(operand)) {
             for (var i = 0; i < varTable.length; i++) {
@@ -168,11 +171,11 @@ var VisualIDE = (function(my) {
                     return varTable[i].value;
                 }
             }
+            throw 'Interpreter: Unable to resolve operand "' + operand + '".';
         }
         else {
             return parseInt(operand);
         }
-        throw 'Interpreter: Unable to resolve operand "' + operand + '".';
     };
 
     var MathOperations = {
@@ -250,7 +253,7 @@ var VisualIDE = (function(my) {
      */
     var getParams = function(commandObj, commandId) {
         var params = ParamGetters[commandId].apply(this, [commandObj]);
-        // console.log(params);
+        console.log(params);
         return params;
     };
 
@@ -325,7 +328,7 @@ var VisualIDE = (function(my) {
     ParamGetters[_USER_CMD_CONSTANTS.MOVE] = function(commandObj) {
         var params = [];
 
-        commandObj.children(".command-input-wrap").children(".display-in-line:not(:first-child)").children("button").children("i").each(function() {
+        commandObj.children(".command-input-wrap").children(".display-in-line:not(:first-child)").children("button:first-child").children("i").each(function() {
             if ($(this).hasClass("fa-arrows-v")) {
                 params.push("v");
             }
@@ -334,31 +337,16 @@ var VisualIDE = (function(my) {
             }
         });
 
-        commandObj.children(".command-input-wrap").children(".display-in-line").children("input").each(function() {
-            params.push($(this).val());
-        });
-
-        params.push(commandObj.children(".command-input-wrap").children("select").val());
-
-        params.push(commandObj.find(".select-sprite").val());
-
-        return params;
-    };
-
-    ParamGetters[_USER_CMD_CONSTANTS.MOVE] = function(commandObj) {
-        var params = [];
-
-        commandObj.children(".command-input-wrap").children(".display-in-line:not(:first-child)").children("button").children("i").each(function() {
-            if ($(this).hasClass("fa-arrows-v")) {
-                params.push("v");
-            }
-            else {
-                params.push("h");
+        commandObj.children(".command-input-wrap").children(".display-in-line:not(:first-child)").children("select").each(function() {
+            if (!$(this).hasClass("no-show")) {
+                params.push($(this).val());
             }
         });
 
-        commandObj.children(".command-input-wrap").children(".display-in-line").children("input").each(function() {
-            params.push($(this).val());
+        commandObj.children(".command-input-wrap").children(".display-in-line:not(:first-child)").children("input").each(function() {
+            if (!$(this).hasClass("no-show")) {
+                params.push($(this).val());
+            }
         });
 
         params.push(commandObj.children(".command-input-wrap").children("select").val());
@@ -459,7 +447,17 @@ var VisualIDE = (function(my) {
     };
 
     AssignCommand.prototype.preprocess = function() {
-        return this;
+
+        execute(this);
+
+        _commandQueue.incrementPointer();
+
+        if (_commandQueue.endOfQueue()) {
+            _commandQueue.stop(restoreUI);
+            return;
+        }
+        return _commandQueue.getCommand();
+        // return this;
     };
 
     var JumpCommand = function(commandId, cmd, args, options) {
@@ -600,19 +598,19 @@ var VisualIDE = (function(my) {
     var Comparators = {
         "=": function(arg1, arg2) {
             // console.log('compare =: ' + arg1 + ' ' + arg2);
-            return resolveOperand(arg1) == resolveOperand(arg2);   
+            return resolveVariable(arg1) == resolveVariable(arg2);   
         },
         "!=": function(arg1, arg2) {
             // console.log('compare !=: ' + arg1 + ' ' + arg2);
-            return resolveOperand(arg1) != resolveOperand(arg2);   
+            return resolveVariable(arg1) != resolveVariable(arg2);   
         },
         "<": function(arg1, arg2) {
             // console.log('compare <: ' + arg1 + ' ' + arg2);
-            return resolveOperand(arg1) < resolveOperand(arg2);   
+            return resolveVariable(arg1) < resolveVariable(arg2);   
         },
         ">": function(arg1, arg2) {
             // console.log('compare >: ' + arg1 + ' ' + arg2);
-            return resolveOperand(arg1) > resolveOperand(arg2);   
+            return resolveVariable(arg1) > resolveVariable(arg2);   
         }
     };
 
