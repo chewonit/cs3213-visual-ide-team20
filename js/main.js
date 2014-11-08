@@ -174,6 +174,13 @@ function initLayout(canvas) {
 	$(window).resize(function(){
 		resizeAffix();
 	});
+
+    $('.navbar-brand').click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
 }
 
 function resizeAffix() {
