@@ -23,7 +23,16 @@ function endRun() {
 }
 
 $('.btn-clear-procedure').on('click', function (e) {
-	$('#list-procedures').html("");
+	var delay = 1;
+	$( $('#list-procedures > li').get().reverse() ).each( function() {
+		delay++;
+        $( this ).delay( 100 * delay ).animate( {
+            opacity: '0',
+            width: 'toggle'
+        }, 400, function() {
+            $(this).remove();
+        });
+	});
 });
 
 $('#login-btn').on('click', function (e) {
@@ -165,6 +174,13 @@ function initLayout(canvas) {
 	$(window).resize(function(){
 		resizeAffix();
 	});
+
+    $('.navbar-brand').click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
 }
 
 function resizeAffix() {

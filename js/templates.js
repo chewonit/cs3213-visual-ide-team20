@@ -63,6 +63,19 @@ var VisualIDE = (function(ide) {
 			'<%= extraHtml %>' + 
 			'<% }); %>',
 		
+		spriteTextInput: '<div class="command-input-wrap">' + 
+			'<div class="display-in-line">' +
+			'<select data-toggle="tooltip" data-placement="top" title="Select a sprite." ' + 
+			'class="form-control parm1-sprite select-sprite">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
+			'</div> ' +
+			'<input class="form-control parm1" value="<%= def_value %>">' + 
+			'</div>' ,  // END of command input wrap
+			
 		textInput: '<div class="command-input-wrap">' + 
 			'<input class="form-control parm1" value="<%= def_value %>">' + 
 			'</div>' ,  // END of command input wrap
@@ -121,7 +134,19 @@ var VisualIDE = (function(ide) {
 			'<div class="display-in-line">' +
 			'<button data-toggle="tooltip" data-placement="top" title="Swap between the horizontal and vertical move direction." ' +
 			'class="btn btn-default btn-toggle-move-dir btn-tooltip"><i class="fa fa-arrows-h"></i></button>' +
+			'&nbsp;&nbsp;'+
+			'<button data-toggle="tooltip" data-placement="top" title="Swap input type between variables and numbers." ' +
+			'class="btn btn-default btn-toggle-var-num btn-tooltip"><i class="fa fa-random"></i></button>' +
+			'<select class="no-show form-control parm2-variable select-variable">' +
+				'<option value="volvo">Volvo</option>' +
+				'<option value="saab">Saab</option>' +
+				'<option value="mercedes">Mercedes</option>' +
+				'<option value="audi">Audi</option>' +
+			'</select>' +
 			'<input class="form-control numbers parm2 move-horizontal" type="number" value="<%= def_value %>">' + 
+			'</div>' +
+			
+			'<div class="display-in-line">' +
 			'</div>' +
 			
 			'&nbsp;&nbsp;&nbsp;' +
