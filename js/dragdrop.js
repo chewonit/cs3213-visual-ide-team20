@@ -234,13 +234,54 @@ var VisualIDE = (function(ide) {
 	
 	cmdHtml.prototype.getCommandsDemoSetHtml = function() {
 		var html = "";
-		html += this.getCommandHtml(0);
-		html += this.getCommandHtml(1);
 		
+		var width = parseInt( $('#canvas canvas').width()/12 );
+		var height = parseInt( $('#canvas canvas').height()/2 );
+		
+		// Initialize BG to blank
+		var changeBg = $( this.getCommandHtml(10) );
+		changeBg.find( 'input' ).attr( 'value', '' );
+		html += $('<div>').append(changeBg.clone()).html();
+		
+		// Set X Position to 0
+		html += this.getCommandHtml(0);
+		
+		// Set Y position to 200
+		var setY = $( this.getCommandHtml(1) );
+		setY.find('input').attr('value', height);
+		html += $('<div>').append(setY.clone()).html();
+		
+		// Show character
+		html += this.getCommandHtml(11);
+			
+		// Assignment to 'value' variable of 100.
+		var assign = $( this.getCommandHtml(3) );
+		assign.find('.parm1-variable').html('<option value="value">value</option>');
+		assign.find('.parm2-value').attr( 'value', width );
+		html += $('<div>').append(assign.clone()).html();
+		
+		// Move character with the 'value' variable
+		var move = $( this.getCommandHtml(2) );
+		move.find('.no-show').html('<option value="value">value</option>');
+		move.find('.no-show').addClass('active');
+		move.find('.no-show').removeClass('no-show');
+		move.find('input').addClass('no-show');
+		move.find('input').removeClass('active');
+		move.find('.select-easing option:nth-child(4)').attr('selected', 'selected');
+		
+		// Insert the move command into a loop node
 		var loopNode = $( this.getCommandHtml(7) );
-		loopNode.find("ul").append( this.getCommandHtml(2) );
+		loopNode.find("input").attr( 'value', '2' );
+		loopNode.find("ul").append( move );
 		html += $('<div>').append(loopNode.clone()).html();
-		html += this.getCommandHtml(3);
+		
+		// Change to the final background image
+		var bg = "http://3.bp.blogspot.com/-jeUvFn97RYE/T-p2FZBhICI/AAAAAAAAHog/grtvCr-S9l4/s320/Ash_Pikachu_Thunder.png";
+		changeBg.find( 'input' ).attr( 'value', bg );
+		html += $('<div>').append(changeBg.clone()).html();
+		
+		// Hide the original character
+		html += this.getCommandHtml(12);
 		
 		return html;
 	};
