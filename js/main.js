@@ -23,7 +23,16 @@ function endRun() {
 }
 
 $('.btn-clear-procedure').on('click', function (e) {
-	$('#list-procedures').html("");
+	var delay = 1;
+	$( $('#list-procedures > li').get().reverse() ).each( function() {
+		delay++;
+        $( this ).delay( 100 * delay ).animate( {
+            opacity: '0',
+            width: 'toggle'
+        }, 400, function() {
+            $(this).remove();
+        });
+	});
 });
 
 $('#login-btn').on('click', function (e) {
