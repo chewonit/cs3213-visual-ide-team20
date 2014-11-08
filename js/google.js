@@ -93,7 +93,7 @@ function saveToGoogle(){
 }
 
 function loadFromGoogle(){
-	alert("Please wait while we load your saved procedures.");
+	$('ul.list-procedures').html('<div id=\'loading-div\'><img src=\'../img/loading.gif\'></div>');
 	var request = gapi.client.drive.files.list({'q': '\'appfolder\' in parents'});
 	request.execute(function(results) {
 		var data = results.items;

@@ -69,7 +69,7 @@ function saveProcedure() {
 }
 
 function loadProcedure() {
-    alert("Please wait while we load your saved procedures.");
+    $('ul.list-procedures').html('<div id=\'loading-div\'><img src=\'../img/loading.gif\'></div>');
 
     var result = client.readFile('saved_data.txt', function (error, data) {
         if (error) {
