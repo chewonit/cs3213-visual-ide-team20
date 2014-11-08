@@ -26,12 +26,12 @@ $('.btn-clear-procedure').on('click', function (e) {
 	var delay = 1;
 	$( $('#list-procedures > li').get().reverse() ).each( function() {
 		delay++;
-        $( this ).delay( 100 * delay ).animate( {
-            opacity: '0',
-            width: 'toggle'
-        }, 400, function() {
-            $(this).remove();
-        });
+		$( this ).delay( 100 * delay ).animate( {
+			opacity: '0',
+			width: 'toggle'
+		}, 400, function() {
+			$(this).remove();
+		});
 	});
 });
 
@@ -94,6 +94,11 @@ jQuery(document).ready(function() {
 	var spriteName = "Pikachu";
 	var path = "../img/pikachu.gif";
 	var canvas = initCanvas(spriteName, path);
+
+	var thatCanvas = canvas;
+
+	// Load demo program
+	loadDemoProgram(canvas);
 	
 	initIntepreter(canvas, spriteName);
 
@@ -172,12 +177,12 @@ function initLayout(canvas) {
 		resizeAffix();
 	});
 
-    $('.navbar-brand').click(function () {
-        $("html, body").animate({
-            scrollTop: 0
-        }, 600);
-        return false;
-    });
+	$('.navbar-brand').click(function () {
+		$("html, body").animate({
+			scrollTop: 0
+		}, 600);
+		return false;
+	});
 }
 
 function resizeAffix() {
@@ -232,6 +237,24 @@ function startTour() {
 
 	tour.init();
 	tour.start();
+}
+
+function loadDemoProgram(canvas)
+{
+	$('#demo-manager-programs').on('click', '#load-demo',function () {
+		var loadDemoButton = $(this);
+		VisualIDE.Demo.programs.forEach(function ( program ) {
+			if(loadDemoButton.val() == program.panelId){
+				$('ul.list-procedures').html(program.procedures);
+				$('#variable-manager-entries').html(program.variables);
+				$('#sprite-manager-entries').html(program.sprites);
+
+				var sprite = new VisualIDE.CanvasSprite(program.spriteImg);
+				canvas.addSprite(program.spriteName, sprite);
+				initIntepreter(canvas, program.spriteName);
+			}
+		});
+	});
 }
 
 Backbone.history.start();

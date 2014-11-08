@@ -68,7 +68,16 @@ function saveToGoogle(){
 			$(this).attr("value", $(this).val());
 		});
 
+		$("ul.list-procedures select").each(function(){
+			this.options[this.options.selectedIndex].setAttribute("selected","selected");
+		});
+
 		var procedures = $('ul.list-procedures').html();
+		var variables = $('#variable-manager-entries').html();
+		var sprites = $('#sprite-manager-entries').html();
+
+		var dataToSave = procedures+'--=--'+variables+'--=--'+sprites;
+
 		var mdata = {
 			title:"visual_ide_20_saved_data",
 			mimeType:"text/html",
@@ -76,9 +85,9 @@ function saveToGoogle(){
 		};
 		
 		if(isFound){
-			uploadString(fileId, procedures, mdata, null);
+			uploadString(fileId, dataToSave, mdata, null);
 		} else {
-			uploadString(null, procedures, mdata, null);
+			uploadString(null, dataToSave, mdata, null);
 		}
 	});	
 }
@@ -107,16 +116,21 @@ function loadFromGoogle(){
 					xhr.open('GET', file.downloadUrl);
 					xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
 					xhr.onload = function() {
-						$('ul.list-procedures').html(xhr.responseText);
-					};
-					xhr.onerror = function() {
-						alert("No record was found!");
-					};
-					xhr.send();
-				} else {
-					alert("No record was found!");
-				}
-			});
+						var storedData = xhr.responseText;
+						var processedStoredData = storedData.split('--=--');
+						console.log(processedStoredData);
+						$('ul.list-procedures').html(processedStoredData[0]);
+						$('#variable-manager-entries').html(processedStoredData[1]);
+						$('#sprite-manager-entries').html(processedStoredData[2]);
+		};
+		xhr.onerror = function() {
+			alert("No record was found!");
+		};
+		xhr.send();
+	} else {
+		alert("No record was found!");
+	}
+});
 		} else {
 			alert("No record was found!");
 		}

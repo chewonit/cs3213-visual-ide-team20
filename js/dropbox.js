@@ -48,9 +48,17 @@ function saveProcedure() {
         $(this).attr("value", $(this).val());
     });
 
-    var procedures = $('ul.list-procedures').html();
+    $("ul.list-procedures select").each(function(){
+        this.options[this.options.selectedIndex].setAttribute("selected","selected");
+    });
 
-    client.writeFile('saved_data.txt', procedures, function (error) {
+    var procedures = $('ul.list-procedures').html();
+    var variables = $('#variable-manager-entries').html();
+    var sprites = $('#sprite-manager-entries').html();
+
+    var dataToSave = procedures+'--=--'+variables+'--=--'+sprites;
+
+    client.writeFile('saved_data.txt', dataToSave, function (error) {
         if (error) {
             // Try to complete OAuth flow.
             alert('Error: '+error);
@@ -62,13 +70,15 @@ function saveProcedure() {
 
 function loadProcedure() {
     alert("Please wait while we load your saved procedures.");
-    var procedures = $('ul.list-procedures').html();
 
     var result = client.readFile('saved_data.txt', function (error, data) {
         if (error) {
             // Try to complete OAuth flow.
             alert('Error: '+error);
         }
-        $('ul.list-procedures').html(data);
+        var processedStoredData = data.split('--=--');
+        $('ul.list-procedures').html(processedStoredData[0]);
+        $('#variable-manager-entries').html(processedStoredData[1]);
+        $('#sprite-manager-entries').html(processedStoredData[2]);
     });
 }
