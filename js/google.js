@@ -68,10 +68,14 @@ function saveToGoogle(){
 			$(this).attr("value", $(this).val());
 		});
 
+		$("ul.list-procedures select").each(function(){
+			this.options[this.options.selectedIndex].setAttribute("selected","selected");
+		});
+
 		var procedures = $('ul.list-procedures').html();
 		var variables = $('#variable-manager-entries').html();
 		var sprites = $('#sprite-manager-entries').html();
-
+		
 		var dataToSave = procedures+'--=--'+variables+'--=--'+sprites;
 
 		var mdata = {
@@ -125,16 +129,16 @@ function loadFromGoogle(){
 							$(this).val(bounce);
 							$(this).attr("value", $(this).val());
 						});
-						*/
-					};
-					xhr.onerror = function() {
-						alert("No record was found!");
-					};
-					xhr.send();
-				} else {
-					alert("No record was found!");
-				}
-			});
+			*/
+		};
+		xhr.onerror = function() {
+			alert("No record was found!");
+		};
+		xhr.send();
+	} else {
+		alert("No record was found!");
+	}
+});
 		} else {
 			alert("No record was found!");
 		}

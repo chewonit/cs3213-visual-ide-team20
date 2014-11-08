@@ -48,6 +48,10 @@ function saveProcedure() {
         $(this).attr("value", $(this).val());
     });
 
+    $("ul.list-procedures select").each(function(){
+        this.options[this.options.selectedIndex].setAttribute("selected","selected");
+    });
+
     var procedures = $('ul.list-procedures').html();
     var variables = $('#variable-manager-entries').html();
     var sprites = $('#sprite-manager-entries').html();
