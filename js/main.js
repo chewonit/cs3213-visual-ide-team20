@@ -247,9 +247,9 @@ function saveLoadProgram(canvas)
 {
 	$('#save-btn').on('click', function (e) {
 		if(loggedIntoGoogle()){
-			saveToGoogle(canvas);
+			saveToGoogle();
 		} else if(loggedIntoDropbox()){
-			saveToDropbox(canvas);
+			saveToDropbox();
 		} else {
 			alert("An error has occurred. Please try to refresh this page.");
 		}
@@ -274,20 +274,23 @@ function loadDemoProgram(canvas)
 			if(loadDemoButton.val() == program.panelId){
 				$('ul.list-procedures').html(program.procedures);
 				$('#variable-manager-entries').html(program.variables);
-				//$('#sprite-manager-entries').html(program.sprites);
-
+				
+				var i;
 				var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
-				for(var i=1; i<spriteTableArray; i++){
+				var varTableArray = VisualIDE.VariableManager.varTable;
+				
+				for(i=1; i<spriteTableArray.length; i++){
+					canvas.removeSprite(spriteTableArray[i].name);
 					spriteTableArray.splice(i, 1);
 				}
 
-				console.log(spriteTableArray);
+				for(i=3; i<varTableArray.length; i++){
+					varTableArray.splice(i, 1);
+				}
 
 				var sprite = new VisualIDE.CanvasSprite(program.spriteImg);
 
 				addVar(VisualIDE.SpriteManager, program.spriteName, program.spriteImg, sprite);
-
-				console.log(spriteTableArray);
 
 				canvas.addSprite(program.spriteName, sprite);
 				//console.log(canvas);
