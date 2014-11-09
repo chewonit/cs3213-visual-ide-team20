@@ -107,15 +107,30 @@ function loadProcedure(canvas) {
         });
 
         for (i = 3; i < varname_array.length; i++) {
-            addVar(VisualIDE.VariableManager, varname_array[i]);
+            VisualIDE.VariableManager.varTable.push({
+                name: varname_array[i],
+                defalut: false,
+            });
         }
 
         for (i = 1; i < spriteimg_array.length; i++) {
             var sprite = new VisualIDE.CanvasSprite(spriteimg_array[i]);
-            addSprite(VisualIDE.SpriteManager, spritename_array[i], spriteimg_array[i], sprite);
+            
+            VisualIDE.SpriteManager.spriteTable.push({
+                name: spritename_array[i],
+                target: "sprite",
+                url: spriteimg_array[i],
+                defalut: false,
+            });
+
             canvas.addSprite(spritename_array[i], sprite);
             initIntepreter(canvas, spritename_array[i]);
         }
+
+        VisualIDE.VariableManager.refreshView();
+        VisualIDE.VariableManager.refreshSelectVeiws();
+        VisualIDE.SpriteManager.refreshView();
+        VisualIDE.SpriteManager.refreshSelectVeiws();
     });
 
 function addVar( that, name ) {

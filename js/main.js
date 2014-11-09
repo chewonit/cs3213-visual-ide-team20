@@ -290,31 +290,21 @@ function loadDemoProgram(canvas)
 
 				var sprite = new VisualIDE.CanvasSprite(program.spriteImg);
 
-				addVar(VisualIDE.SpriteManager, program.spriteName, program.spriteImg, sprite);
+				VisualIDE.SpriteManager.spriteTable.push({
+					name: program.spriteName,
+					target: "sprite",
+					url: program.spriteImg,
+					defalut: false,
+				});
+
+				VisualIDE.SpriteManager.refreshView();
+				VisualIDE.SpriteManager.refreshSelectVeiws();
 
 				canvas.addSprite(program.spriteName, sprite);
-				//console.log(canvas);
 				initIntepreter(canvas, program.spriteName);
 			}
 		});
 	});
-
-	function addVar( that, name, url, target ) {
-		var objVar = {};
-		objVar.defalut = false;
-		objVar.name = name;
-		objVar.url = url;
-		objVar.target = target;
-		
-		for ( var i=0; i<that.spriteTable.length; i++ ) {
-			if ( that.spriteTable[i].name.toLowerCase() == name.toLowerCase() ) {
-				return;
-			}
-		}
-		
-		that.spriteTable.push(objVar);
-		refreshManagerView( $('#sprite-manager-entries-container'), { spriteTable: that.spriteTable }, VisualIDE.Templates.spriteManagerEntry );
-	}
 }
 
 Backbone.history.start();
