@@ -8,6 +8,7 @@ $('#run-btn').on('click', function (e) {
 	$('#stop-btn').removeAttr('disabled');
 	VisualIDE.DragDrop.disableDrag();
 	VisualIDE.Interpreter.run();
+	$( document ).trigger( "miaRunning" );
 });
 
 $('#stop-btn').attr('disabled','disabled');
@@ -15,7 +16,8 @@ $('#stop-btn').on('click', function (e) {
 	endRun();
 });
 
-function endRun() {
+function endRun() {	
+	$( document ).trigger( "miaStop" );
 	$('#stop-btn').attr('disabled','disabled');
 	$('#run-btn').removeAttr('disabled');
 	VisualIDE.DragDrop.enableDrag();

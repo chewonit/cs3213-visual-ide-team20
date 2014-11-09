@@ -28,6 +28,20 @@ var VisualIDE = (function(ide) {
 			var html = compiled( {programs: this.programs} );
 			
 			container.html( html );
+			
+			$(document).on('miaRunning', function() {
+				$(container).find('button').each( function() {
+					if ( !$(this).hasClass('btn-managers-close') ) {
+						$(this).attr('disabled','disabled');
+						$(this).addClass('disabled-demo-load-run');
+					}
+				});
+			});
+			
+			$(document).on('miaStop', function() {
+				$('.disabled-demo-load-run').removeAttr('disabled');
+				$('.disabled-demo-load-run').removeClass('.disabled-demo-load-run');
+			});
 		}
 	};
 	
