@@ -92,8 +92,8 @@ function saveToGoogle(){
 	});	
 }
 
-function loadFromGoogle(){
-	alert("Please wait while we load your saved procedures.");
+function loadFromGoogle(canvas){
+	$('ul.list-procedures').html('<div id=\'loading-div\'><img src=\'../img/loading.gif\'></div>');
 	var request = gapi.client.drive.files.list({'q': '\'appfolder\' in parents'});
 	request.execute(function(results) {
 		var data = results.items;
@@ -118,23 +118,106 @@ function loadFromGoogle(){
 					xhr.onload = function() {
 						var storedData = xhr.responseText;
 						var processedStoredData = storedData.split('--=--');
-						console.log(processedStoredData);
 						$('ul.list-procedures').html(processedStoredData[0]);
 						$('#variable-manager-entries').html(processedStoredData[1]);
 						$('#sprite-manager-entries').html(processedStoredData[2]);
-		};
-		xhr.onerror = function() {
-			alert("No record was found!");
-		};
-		xhr.send();
+
+						var i;
+						var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
+						var varTableArray = VisualIDE.VariableManager.varTable;
+						
+						for(i=1; i<spriteTableArray.length; i++){
+							canvas.removeSprite(spriteTableArray[i].name);
+							spriteTableArray.splice(i, 1);
+						}
+
+						for(i=3; i<varTableArray.length; i++){
+							varTableArray.splice(i, 1);
+						}
+						
+						var spriteimg_array = $("#sprite-manager-entries img").map(function() {
+							return $(this).attr("src");
+						});
+
+						var spritename_array = $("#sprite-manager-entries input").map(function() {
+							return $(this).attr("value");
+						});
+
+						var varname_array = $("#variable-manager-entries input").map(function() {
+							return $(this).attr("value");
+						});
+
+						for (i = 3; i < varname_array.length; i++) {
+							VisualIDE.VariableManager.varTable.push({
+								name: varname_array[i],
+								defalut: false,
+							});
+						}
+
+						for (i = 1; i < spriteimg_array.length; i++) {
+							var sprite = new VisualIDE.CanvasSprite(spriteimg_array[i]);
+							
+							VisualIDE.SpriteManager.spriteTable.push({
+								name: spritename_array[i],
+								target: "sprite",
+								url: spriteimg_array[i],
+								defalut: false,
+							});
+
+							canvas.addSprite(spritename_array[i], sprite);
+							initIntepreter(canvas, spritename_array[i]);
+						}
+
+						VisualIDE.VariableManager.refreshView();
+						VisualIDE.VariableManager.refreshSelectVeiws();
+						VisualIDE.SpriteManager.refreshView();
+						VisualIDE.SpriteManager.refreshSelectVeiws();
+
+					};
+					xhr.onerror = function() {
+						alert("No record was found!");
+					};
+					xhr.send();
+				} else {
+					alert("No record was found!");
+				}
+			});
 	} else {
 		alert("No record was found!");
 	}
-});
-		} else {
-			alert("No record was found!");
+	});
+
+	function addVar( that, name ) {
+		var objVar = {};
+		objVar.defalut = false;
+		objVar.name = name;
+		objVar.value = 0;
+		
+		for ( var i=0; i<that.varTable.length; i++ ) {
+			if ( that.varTable[i].name.toLowerCase() == name.toLowerCase() ) {
+				return;
+			}
 		}
-	});	
+		
+		that.varTable.push(objVar);
+	}
+
+	function addSprite( that, name, url, target ) {
+		var objVar = {};
+		objVar.defalut = false;
+		objVar.name = name;
+		objVar.url = url;
+		objVar.target = target;
+
+		for ( var i=0; i<that.spriteTable.length; i++ ) {
+			if ( that.spriteTable[i].name.toLowerCase() == name.toLowerCase() ) {
+				return;
+			}
+		}
+
+		that.spriteTable.push(objVar);
+		refreshManagerView( $('#sprite-manager-entries-container'), { spriteTable: that.spriteTable }, VisualIDE.Templates.spriteManagerEntry );
+	}
 }
 
 function uploadString(fileId, string, metadata, callback) {
