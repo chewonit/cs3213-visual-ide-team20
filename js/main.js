@@ -211,7 +211,7 @@ function initLayout(canvas) {
 function resizeAffix() {
 	$('.col-commands .list-commands-raw').height( $(window).height() - 
 		$('.col-commands .list-commands-raw').offset().top - $('#list-trash').height() - 100 );
-	console.log($('.col-commands .list-commands-raw').height());
+	
 	if ( $(window).width() > 991 ) {
 		$('.affix-container').affix({
 			offset: {

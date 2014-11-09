@@ -106,12 +106,20 @@ var VisualIDE = (function(ide) {
 		$( containers.normal ).sortable("disable");
 		$( containers.commands ).sortable("disable");
 		$( containers.trash ).sortable("disable");
+		$( containers.normal + ' .btn' ).attr('disabled','disabled');
+		$( containers.normal + ' select' ).attr('disabled','disabled');
+		$( containers.normal + ' input' ).attr('disabled','disabled');
+		$( containers.trash + ' button'  ).attr('disabled','disabled');
 	};
 	
 	ide.DragDrop.enableDrag = function(id) {
 		$( containers.normal ).sortable("enable");
 		$( containers.commands ).sortable("enable");
 		$( containers.trash ).sortable("enable");
+		$( containers.normal + ' .btn' ).removeAttr('disabled');
+		$( containers.normal + ' select' ).removeAttr('disabled');
+		$( containers.normal + ' input' ).removeAttr('disabled');
+		$( containers.trash + ' button'  ).removeAttr('disabled');
 	};
 	
 	/*
