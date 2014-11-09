@@ -43,6 +43,22 @@ var VisualIDE = (function(ide) {
 				triggerSelectViewUpdate();
 			});
 			
+			$(document).on('miaRunning', function() {
+				$(parms.addBtn).attr('disabled','disabled');
+				$(parms.delBtn).each( function() {
+					if ( $(this).attr('disabled') != 'disabled' ) {
+						$(this).attr('disabled','disabled');
+						$(this).addClass('disabled-var-delete-run');
+					}
+				});
+			});
+			
+			$(document).on('miaStop', function() {
+				$(parms.addBtn).removeAttr('disabled');
+				$('.disabled-var-delete-run').removeAttr('disabled');
+				$('.disabled-var-delete-run').removeClass('.disabled-var-delete-run');
+			});
+			
 			$(document).on('click', parms.delBtn, function() {
 				var name = $(this).parent().parent().find('input').val();
 				
@@ -60,6 +76,10 @@ var VisualIDE = (function(ide) {
 				if( !$(this).val() ) $(this)[0].selectedIndex = 0;
 			});
 			triggerSelectViewUpdate();
+		},
+		
+		refreshView: function() {
+			refreshManagerView( container, { varTable: this.varTable }, tpl.variableManagerEntry );
 		},
 		
 		refreshSelectVeiws: function() {
@@ -162,6 +182,22 @@ var VisualIDE = (function(ide) {
 				triggerSelectViewUpdate();
 			});
 			
+			$(document).on('miaRunning', function() {
+				$(parms.addBtn).attr('disabled','disabled');
+				$(parms.delBtn).each( function() {
+					if ( $(this).attr('disabled') != 'disabled' ) {
+						$(this).attr('disabled','disabled');
+						$(this).addClass('disabled-sprite-delete-run');
+					}
+				});
+			});
+			
+			$(document).on('miaStop', function() {
+				$(parms.addBtn).removeAttr('disabled');
+				$('.disabled-sprite-delete-run').removeAttr('disabled');
+				$('.disabled-sprite-delete-run').removeClass('.disabled-sprite-delete-run');
+			});
+			
 			refreshManagerView( container, { spriteTable: this.spriteTable }, tpl.spriteManagerEntry );
 			
 			$(document).on( update, selectContainer, function() {
@@ -171,6 +207,10 @@ var VisualIDE = (function(ide) {
 				if( !$(this).val() ) $(this)[0].selectedIndex = 0;
 			});
 			triggerSelectViewUpdate();
+		},
+		
+		refreshView: function() {
+			refreshManagerView( container, { spriteTable: this.spriteTable }, tpl.spriteManagerEntry );
 		},
 		
 		refreshSelectVeiws: function() {

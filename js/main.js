@@ -8,6 +8,7 @@ $('#run-btn').on('click', function (e) {
 	$('#stop-btn').removeAttr('disabled');
 	VisualIDE.DragDrop.disableDrag();
 	VisualIDE.Interpreter.run();
+	$( document ).trigger( "miaRunning" );
 });
 
 $('#stop-btn').attr('disabled','disabled');
@@ -15,7 +16,8 @@ $('#stop-btn').on('click', function (e) {
 	endRun();
 });
 
-function endRun() {
+function endRun() {	
+	$( document ).trigger( "miaStop" );
 	$('#stop-btn').attr('disabled','disabled');
 	$('#run-btn').removeAttr('disabled');
 	VisualIDE.DragDrop.enableDrag();
@@ -47,26 +49,6 @@ $('#howitworks-btn').on('click', function (e) {
 	startTour();
 });
 
-$('#save-btn').on('click', function (e) {
-	if(loggedIntoGoogle()){
-		saveToGoogle();
-	} else if(loggedIntoDropbox()){
-		saveToDropbox();
-	} else {
-		alert("An error has occurred. Please try to refresh this page.");
-	}
-});
-
-$('#load-btn').on('click', function (e) {
-	if(loggedIntoGoogle()){
-		loadFromGoogle();
-	} else if(loggedIntoDropbox()){
-		loadFromDropbox();
-	} else {
-		alert("An error has occurred. Please try to refresh this page.");
-	}
-});
-
 var HomeView = Backbone.View.extend({
 	el: '.page',
 	render: function () {
@@ -95,7 +77,8 @@ jQuery(document).ready(function() {
 	var path = "../img/pikachu.gif";
 	var canvas = initCanvas(spriteName, path);
 
-	var thatCanvas = canvas;
+	// Save and load program
+	saveLoadProgram(canvas);
 
 	// Load demo program
 	loadDemoProgram(canvas);
@@ -262,6 +245,29 @@ function startTour() {
 	tour.start();
 }
 
+function saveLoadProgram(canvas)
+{
+	$('#save-btn').on('click', function (e) {
+		if(loggedIntoGoogle()){
+			saveToGoogle();
+		} else if(loggedIntoDropbox()){
+			saveToDropbox();
+		} else {
+			alert("An error has occurred. Please try to refresh this page.");
+		}
+	});
+
+	$('#load-btn').on('click', function (e) {
+		if(loggedIntoGoogle()){
+			loadFromGoogle(canvas);
+		} else if(loggedIntoDropbox()){
+			loadFromDropbox(canvas);
+		} else {
+			alert("An error has occurred. Please try to refresh this page.");
+		}
+	});
+}
+
 function loadDemoProgram(canvas)
 {
 	$('#demo-manager-programs').on('click', '#load-demo',function () {
@@ -270,9 +276,32 @@ function loadDemoProgram(canvas)
 			if(loadDemoButton.val() == program.panelId){
 				$('ul.list-procedures').html(program.procedures);
 				$('#variable-manager-entries').html(program.variables);
-				$('#sprite-manager-entries').html(program.sprites);
+				
+				var i;
+				var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
+				var varTableArray = VisualIDE.VariableManager.varTable;
+				
+				for(i=1; i<spriteTableArray.length; i++){
+					canvas.removeSprite(spriteTableArray[i].name);
+					spriteTableArray.splice(i, 1);
+				}
+
+				for(i=3; i<varTableArray.length; i++){
+					varTableArray.splice(i, 1);
+				}
 
 				var sprite = new VisualIDE.CanvasSprite(program.spriteImg);
+
+				VisualIDE.SpriteManager.spriteTable.push({
+					name: program.spriteName,
+					target: "sprite",
+					url: program.spriteImg,
+					defalut: false,
+				});
+
+				VisualIDE.SpriteManager.refreshView();
+				VisualIDE.SpriteManager.refreshSelectVeiws();
+
 				canvas.addSprite(program.spriteName, sprite);
 				initIntepreter(canvas, program.spriteName);
 			}

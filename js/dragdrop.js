@@ -120,6 +120,7 @@ var VisualIDE = (function(ide) {
 		$( containers.normal + ' select' ).removeAttr('disabled');
 		$( containers.normal + ' input' ).removeAttr('disabled');
 		$( containers.trash + ' button'  ).removeAttr('disabled');
+		$( document ).trigger( "miaStop" );
 	};
 	
 	/*
