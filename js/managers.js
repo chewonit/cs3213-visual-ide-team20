@@ -62,6 +62,10 @@ var VisualIDE = (function(ide) {
 			triggerSelectViewUpdate();
 		},
 		
+		refreshView: function() {
+			refreshManagerView( container, { varTable: this.varTable }, tpl.variableManagerEntry );
+		},
+		
 		refreshSelectVeiws: function() {
 			triggerSelectViewUpdate();
 		}
@@ -171,6 +175,10 @@ var VisualIDE = (function(ide) {
 				if( !$(this).val() ) $(this)[0].selectedIndex = 0;
 			});
 			triggerSelectViewUpdate();
+		},
+		
+		refreshView: function() {
+			refreshManagerView( container, { spriteTable: this.spriteTable }, tpl.spriteManagerEntry );
 		},
 		
 		refreshSelectVeiws: function() {

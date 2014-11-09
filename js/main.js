@@ -103,6 +103,14 @@ jQuery(document).ready(function() {
 	initIntepreter(canvas, spriteName);
 
 	initLayout(canvas);
+	
+	$('#main-loader').delay(500).fadeOut(400, function(){
+		$('#dashboard').hide();
+		$('#dashboard').removeClass('loading');
+		$('#dashboard').fadeIn(1000);
+		$('#main-loader').remove();
+	});
+		
 });
 
 function initCanvas(spriteName, path) {
@@ -177,11 +185,26 @@ function initLayout(canvas) {
 		resizeAffix();
 	});
 
+	$('.navbar-brand').tooltip('hide');
 	$('.navbar-brand').click(function () {
 		$("html, body").animate({
 			scrollTop: 0
 		}, 600);
 		return false;
+	});
+	
+	var hideToolTip = function() {
+		$('.navbar-brand').tooltip('hide');
+	};
+	
+	var shownToolTip = false;
+	$(window).scroll(function (event) {
+		if ( !shownToolTip ) {
+			var scroll = $(window).scrollTop();
+			$('.navbar-brand').tooltip('show');
+			shownToolTip = true;
+			setTimeout(hideToolTip, 3000);
+		}
 	});
 }
 
