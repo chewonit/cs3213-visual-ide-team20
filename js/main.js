@@ -47,26 +47,6 @@ $('#howitworks-btn').on('click', function (e) {
 	startTour();
 });
 
-$('#save-btn').on('click', function (e) {
-	if(loggedIntoGoogle()){
-		saveToGoogle();
-	} else if(loggedIntoDropbox()){
-		saveToDropbox();
-	} else {
-		alert("An error has occurred. Please try to refresh this page.");
-	}
-});
-
-$('#load-btn').on('click', function (e) {
-	if(loggedIntoGoogle()){
-		loadFromGoogle();
-	} else if(loggedIntoDropbox()){
-		loadFromDropbox();
-	} else {
-		alert("An error has occurred. Please try to refresh this page.");
-	}
-});
-
 var HomeView = Backbone.View.extend({
 	el: '.page',
 	render: function () {
@@ -95,7 +75,8 @@ jQuery(document).ready(function() {
 	var path = "../img/pikachu.gif";
 	var canvas = initCanvas(spriteName, path);
 
-	var thatCanvas = canvas;
+	// Save and load program
+	saveLoadProgram(canvas);
 
 	// Load demo program
 	loadDemoProgram(canvas);
@@ -262,6 +243,29 @@ function startTour() {
 	tour.start();
 }
 
+function saveLoadProgram(canvas)
+{
+	$('#save-btn').on('click', function (e) {
+		if(loggedIntoGoogle()){
+			saveToGoogle(canvas);
+		} else if(loggedIntoDropbox()){
+			saveToDropbox(canvas);
+		} else {
+			alert("An error has occurred. Please try to refresh this page.");
+		}
+	});
+
+	$('#load-btn').on('click', function (e) {
+		if(loggedIntoGoogle()){
+			loadFromGoogle(canvas);
+		} else if(loggedIntoDropbox()){
+			loadFromDropbox(canvas);
+		} else {
+			alert("An error has occurred. Please try to refresh this page.");
+		}
+	});
+}
+
 function loadDemoProgram(canvas)
 {
 	$('#demo-manager-programs').on('click', '#load-demo',function () {
@@ -270,14 +274,44 @@ function loadDemoProgram(canvas)
 			if(loadDemoButton.val() == program.panelId){
 				$('ul.list-procedures').html(program.procedures);
 				$('#variable-manager-entries').html(program.variables);
-				$('#sprite-manager-entries').html(program.sprites);
+				//$('#sprite-manager-entries').html(program.sprites);
+
+				var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
+				for(var i=1; i<spriteTableArray; i++){
+					spriteTableArray.splice(i, 1);
+				}
+
+				console.log(spriteTableArray);
 
 				var sprite = new VisualIDE.CanvasSprite(program.spriteImg);
+
+				addVar(VisualIDE.SpriteManager, program.spriteName, program.spriteImg, sprite);
+
+				console.log(spriteTableArray);
+
 				canvas.addSprite(program.spriteName, sprite);
+				//console.log(canvas);
 				initIntepreter(canvas, program.spriteName);
 			}
 		});
 	});
+
+	function addVar( that, name, url, target ) {
+		var objVar = {};
+		objVar.defalut = false;
+		objVar.name = name;
+		objVar.url = url;
+		objVar.target = target;
+		
+		for ( var i=0; i<that.spriteTable.length; i++ ) {
+			if ( that.spriteTable[i].name.toLowerCase() == name.toLowerCase() ) {
+				return;
+			}
+		}
+		
+		that.spriteTable.push(objVar);
+		refreshManagerView( $('#sprite-manager-entries-container'), { spriteTable: that.spriteTable }, VisualIDE.Templates.spriteManagerEntry );
+	}
 }
 
 Backbone.history.start();

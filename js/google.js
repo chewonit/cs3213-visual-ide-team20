@@ -5,6 +5,27 @@ var SCOPES = [
 'https://www.googleapis.com/auth/userinfo.profile',
 ];
 
+/*
+var m;
+var urls = [];
+var str = $('#sprite-manager-entries').contents();
+console.log(str);
+var regex = /<img[^>]+src="?([^"\s]+)"?\s*\/>/g;
+while ( (m = regex.exec( str )) ) {
+    urls.push( m[1] );
+}
+console.log(urls);
+
+
+var tn_array = $("#sprite-manager-entries img").map(function() {
+  return $(this).attr("src");
+});
+
+//var urls = [];
+//var imgs = $('#sprite-manager-entries img').attr('src');
+console.log(tn_array);
+*/
+
 function loginGoogle() {
 	gapi.auth.authorize(
 		{'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false}, handleAuthResult);
@@ -50,7 +71,7 @@ function handleAuthResult(authResult) {
 	}
 }
 
-function saveToGoogle(){
+function saveToGoogle(canvas){
 	var request = gapi.client.drive.files.list({'q': '\'appfolder\' in parents'});
 	request.execute(function(results) {
 		var data = results.items;
@@ -92,7 +113,7 @@ function saveToGoogle(){
 	});	
 }
 
-function loadFromGoogle(){
+function loadFromGoogle(canvas){
 	$('ul.list-procedures').html('<div id=\'loading-div\'><img src=\'../img/loading.gif\'></div>');
 	var request = gapi.client.drive.files.list({'q': '\'appfolder\' in parents'});
 	request.execute(function(results) {
@@ -118,10 +139,25 @@ function loadFromGoogle(){
 					xhr.onload = function() {
 						var storedData = xhr.responseText;
 						var processedStoredData = storedData.split('--=--');
-						console.log(processedStoredData);
 						$('ul.list-procedures').html(processedStoredData[0]);
 						$('#variable-manager-entries').html(processedStoredData[1]);
 						$('#sprite-manager-entries').html(processedStoredData[2]);
+						
+						var spriteimg_array = $("#sprite-manager-entries img").map(function() {
+						  return $(this).attr("src");
+						});
+
+						var spritename_array = $("#sprite-manager-entries input").map(function() {
+						  return $(this).attr("value");
+						});
+
+						var canvas = new VisualIDE.Canvas(document.getElementById('canvas'));
+						for (var i = 0; i < spriteimg_array.length; i++) {
+						    var sprite = new VisualIDE.CanvasSprite(spriteimg_array[i]);
+							canvas.addSprite(spritename_array[i], sprite);
+							initIntepreter(canvas, spritename_array[i]);
+						}
+
 		};
 		xhr.onerror = function() {
 			alert("No record was found!");
