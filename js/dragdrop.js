@@ -43,7 +43,7 @@ var VisualIDE = (function(ide) {
 			return false;
 		}
 		
-		console.log("VisualIDE.DragDrop: Initialized!");
+		// console.log("VisualIDE.DragDrop: Initialized!");
 	};
 		
 	var pageScrollOptions = {
@@ -173,7 +173,7 @@ var VisualIDE = (function(ide) {
 var VisualIDE = (function(ide) {
 
 	ide.CommandsHtml = function() {
-		console.log("VisualIDE.CommandHtml: Initialized!");
+		// console.log("VisualIDE.CommandHtml: Initialized!");
 	};
 	
 	var cmdHtml = ide.CommandsHtml;
