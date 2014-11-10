@@ -165,7 +165,7 @@ var VisualIDE = (function(my) {
     var rotate = function(degree, sprite) {
         // _commandQueue.stop();
         
-        var radians = (parseInt(degree) / 180) * Math.PI;
+        var radians = (resolveVariable(degree) / 180) * Math.PI;
         
         _canvas.getSprite(sprite).setRotation(radians, {
             interpolator: new VisualIDE.CanvasLinearInterpolator(),
