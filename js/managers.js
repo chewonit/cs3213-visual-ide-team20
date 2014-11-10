@@ -225,7 +225,6 @@ var VisualIDE = (function(ide) {
 			parms.btn.removeAttr('disabled');
 			
 			try {
-				console.log(parms.nameField);
 				var sprite = new VisualIDE.CanvasSprite(parms.url);
 				canvas.addSprite(parms.name, sprite);
 				addVar( parms.that, parms.name, parms.url, sprite );
