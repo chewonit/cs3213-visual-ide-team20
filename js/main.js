@@ -309,10 +309,9 @@ function loadDemoProgram(canvas, commandsHtml)
 		var program = VisualIDE.Demo.getDemoClockProgram(commandsHtml);
 		$('ul.list-procedures').html(program.html);
 		
-		var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
-		for( i=1; i<spriteTableArray.length; i++){
-			canvas.removeSprite(spriteTableArray[i].name);
-			spriteTableArray.splice(i, 1);
+		for( i= VisualIDE.SpriteManager.spriteTable.length-1; i>0; i--){
+			canvas.removeSprite(VisualIDE.SpriteManager.spriteTable[i].name);
+			VisualIDE.SpriteManager.spriteTable.splice(i, 1);
 		}
 		
 		var sprites = program.sprites;
@@ -326,8 +325,6 @@ function loadDemoProgram(canvas, commandsHtml)
 			spriteTemp.target = sprite;
 			VisualIDE.SpriteManager.spriteTable.push( spriteTemp );
 		}
-		
-		console.log( VisualIDE.SpriteManager.spriteTable );
 		
 		VisualIDE.SpriteManager.refreshView();
 		VisualIDE.SpriteManager.refreshSelectVeiws();

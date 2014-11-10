@@ -47,6 +47,7 @@ var VisualIDE = (function(ide) {
 				rotateSpeed = 60,
 				sprites = [];
 				
+				
 			// Initialize BG to blank
 			var changeBg = $( commandsHtml.getCommandHtml(10) );
 			changeBg.find( 'input' ).attr( 'value', '' );
@@ -56,6 +57,26 @@ var VisualIDE = (function(ide) {
 			var hideChar = $( commandsHtml.getCommandHtml(12) );
 			hideChar.find( 'input' ).attr( 'value', '' );
 			html += $('<div>').append(hideChar.clone()).html();
+			
+			// Initialize positions
+			var init = $( commandsHtml.getCommandHtml(0) );
+			init.find( '.parm1-sprite' ).html('<option value="clock">clock</option>');
+			html += $('<div>').append(init.clone()).html();
+			init = $( commandsHtml.getCommandHtml(0) );
+			init.find( '.parm1-sprite' ).html('<option value="hour">hour</option>');
+			html += $('<div>').append(init.clone()).html();
+			init = $( commandsHtml.getCommandHtml(0) );
+			init.find( '.parm1-sprite' ).html('<option value="minute">minute</option>');
+			html += $('<div>').append(init.clone()).html();
+			init = $( commandsHtml.getCommandHtml(1) );
+			init.find( '.parm1-sprite' ).html('<option value="clock">clock</option>');
+			html += $('<div>').append(init.clone()).html();
+			init = $( commandsHtml.getCommandHtml(1) );
+			init.find( '.parm1-sprite' ).html('<option value="hour">hour</option>');
+			html += $('<div>').append(init.clone()).html();
+			init = $( commandsHtml.getCommandHtml(1) );
+			init.find( '.parm1-sprite' ).html('<option value="minute">minute</option>');
+			html += $('<div>').append(init.clone()).html();
 			
 			// Assignment to 'count' variable of 0.
 			var assign = $( commandsHtml.getCommandHtml(3) );
