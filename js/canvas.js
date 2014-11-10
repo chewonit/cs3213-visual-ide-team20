@@ -272,7 +272,7 @@ var VisualIDE = (function(my) {
         requestAnimFrame(animFrame);
       };
     }(this);
-    
+
     this.texture = PIXI.Texture.fromImage(url);
     this.sprite = new PIXI.Sprite(this.texture);
 
@@ -285,8 +285,8 @@ var VisualIDE = (function(my) {
         };
 
         that.sprite.position = {
-          x: that.sprite.position.x + that.texture.height / 2,
-          y: that.sprite.position.y + that.texture.width / 2
+          x: that.sprite.position.x + that.texture.width / 2,
+          y: that.sprite.position.y + that.texture.height / 2
         };
       };
     }(this)));
@@ -451,9 +451,29 @@ var VisualIDE = (function(my) {
     if (url === undefined) {
       throw 'VisualIDE.CanvasSprite: setImage requires url argument';
     }
+
+    // Move the old sprite back to its original location.
+    this.sprite.position = {
+      x: this.sprite.position.x - this.texture.width / 2,
+      y: this.sprite.position.y - this.texture.height / 2
+    };
     
     this.texture = PIXI.Texture.fromImage(url);
     this.sprite.setTexture(this.texture);
+    this.sprite.anchor = {
+      x: 0.5,
+      y: 0.5
+    };
+
+    // Set a more intuitive default for the anchor.
+    this.texture.baseTexture.on('loaded', (function(that) {
+      return function() {
+        that.sprite.position = {
+          x: that.sprite.position.x + that.texture.width / 2,
+          y: that.sprite.position.y + that.texture.height / 2
+        };
+      };
+    }(this)));
   };
 
   /**
