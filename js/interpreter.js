@@ -79,11 +79,11 @@ var VisualIDE = (function(my) {
      * Sets the position of the sprite.
      */
     var setX = function(x, sprite) {
-        _canvas.getSprite(sprite).setX(parseInt(x));
+        _canvas.getSprite(sprite).setX(resolveVariable(x));
     };
 
     var setY = function(y, sprite) {
-        _canvas.getSprite(sprite).setY(parseInt(y));
+        _canvas.getSprite(sprite).setY(resolveVariable(y));
     };
 
     /**
@@ -101,6 +101,8 @@ var VisualIDE = (function(my) {
      * Moves the sprite by the amount specified by steps in the specified direction using the specified interpolator. Each step is one pixel.
      */
     var move = function(direction, steps, interpolator, sprite) {
+        // _commandQueue.stop();
+
         var Interpolators = {
             "normla": VisualIDE.CanvasLinearInterpolator,
             "faster": VisualIDE.CanvasAccelerateInterpolator,
@@ -129,6 +131,11 @@ var VisualIDE = (function(my) {
         }
     };
 
+    // var canvasAnimateCallback = function() {
+    //     looply();
+    //     _commandQueue.run();
+    // };
+
     /**
      * Sets the image of the sprite to that specified by the url. If no 
      * url is provided, sets the sprite to the default sprite.
@@ -156,7 +163,9 @@ var VisualIDE = (function(my) {
      * before calling canvas API.
      */
     var rotate = function(degree, sprite) {
-        var radians = (parseInt(degree) / 180) * Math.PI;
+        // _commandQueue.stop();
+        
+        var radians = (resolveVariable(degree) / 180) * Math.PI;
         
         _canvas.getSprite(sprite).setRotation(radians, {
             interpolator: new VisualIDE.CanvasLinearInterpolator(),
@@ -277,7 +286,7 @@ var VisualIDE = (function(my) {
      */
     var getParams = function(commandObj, commandId) {
         var params = ParamGetters[commandId].apply(this, [commandObj]);
-        console.log(params);
+        // console.log(params);
         return params;
     };
 
@@ -385,9 +394,11 @@ var VisualIDE = (function(my) {
 
     ParamGetters[_USER_CMD_CONSTANTS.SET_X] = function(commandObj) {
         var params = [];
-
-        commandObj.children(".command-input-wrap").find("input").each(function() {
-            params.push($(this).val());
+        
+        commandObj.children(".command-input-wrap").children(".display-in-line").children(":not(:first-child)").each(function() {
+            if (!$(this).hasClass("no-show")) {
+                params.push($(this).val());
+            }
         });
 
         commandObj.find(".select-sprite").each(function() {
@@ -408,25 +419,26 @@ var VisualIDE = (function(my) {
         return [];
     };
 
+    var looply = function() {
+        if (_commandQueue.endOfQueue()) {
+            _commandQueue.stop(restoreUI);
+        }
+        else {
+            var commandObj = _commandQueue.getCommand();
+            if (commandObj) {
+                execute(commandObj);
+                _commandQueue.incrementPointer();
+            }
+            else {
+                _commandQueue.stop(restoreUI);
+            }
+        }
+    }; 
+
     /**
      * Executes commands in order in _commandQueue. Speed of execution is specified by _delay.
      */
     var executeCommands = function() {
-        var looply = function() {
-            if (_commandQueue.endOfQueue()) {
-                _commandQueue.stop(restoreUI);
-            }
-            else {
-                var commandObj = _commandQueue.getCommand();
-                if (commandObj) {
-                    execute(commandObj);
-                    _commandQueue.incrementPointer();
-                }
-                else {
-                    _commandQueue.stop(restoreUI);
-                }
-            }
-        }; 
         _commandQueue.run(looply, _delay);
     };
 
@@ -672,7 +684,10 @@ var VisualIDE = (function(my) {
 
         this.stop = function(callback) {
             clearInterval(this._commandTimer);
-            callback.apply(this);
+            
+            if (callback) {
+                callback.apply(this);
+            }
         };
 
         this.addCommand = function(commandObj) {
