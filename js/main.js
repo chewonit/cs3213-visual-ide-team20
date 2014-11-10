@@ -80,9 +80,6 @@ jQuery(document).ready(function() {
 	// Save and load program
 	saveLoadProgram(canvas);
 
-	// Load demo program
-	loadDemoProgram(canvas);
-	
 	initIntepreter(canvas, spriteName);
 
 	initLayout(canvas);
@@ -161,6 +158,9 @@ function initLayout(canvas) {
 	
 	var demoManager = VisualIDE.Demo;
 	demoManager.populatePrograms( $('#demo-manager-programs') );
+	
+	// Load demo program
+	loadDemoProgram(canvas, commandsHtml);
 	
 	resizeAffix();
 	// Re initialize affix components on browser resize
@@ -268,44 +268,72 @@ function saveLoadProgram(canvas)
 	});
 }
 
-function loadDemoProgram(canvas)
+function loadDemoProgram(canvas, commandsHtml)
 {
-	$('#demo-manager-programs').on('click', '#load-demo',function () {
+	$('#demo-manager-programs').on('click', '#demo-bouncing-ball',function () {
 		var loadDemoButton = $(this);
-		VisualIDE.Demo.programs.forEach(function ( program ) {
-			if(loadDemoButton.val() == program.panelId){
-				$('ul.list-procedures').html(program.procedures);
-				$('#variable-manager-entries').html(program.variables);
-				
-				var i;
-				var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
-				var varTableArray = VisualIDE.VariableManager.varTable;
-				
-				for(i=1; i<spriteTableArray.length; i++){
-					canvas.removeSprite(spriteTableArray[i].name);
-					spriteTableArray.splice(i, 1);
-				}
+		var program = VisualIDE.Demo.programs[0];
+		$('ul.list-procedures').html(program.procedures);
+		$('#variable-manager-entries').html(program.variables);
+		
+		var i;
+		var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
+		var varTableArray = VisualIDE.VariableManager.varTable;
+		
+		for(i=1; i<spriteTableArray.length; i++){
+			canvas.removeSprite(spriteTableArray[i].name);
+			spriteTableArray.splice(i, 1);
+		}
 
-				for(i=3; i<varTableArray.length; i++){
-					varTableArray.splice(i, 1);
-				}
+		for(i=3; i<varTableArray.length; i++){
+			varTableArray.splice(i, 1);
+		}
 
-				var sprite = new VisualIDE.CanvasSprite(program.spriteImg);
+		var sprite = new VisualIDE.CanvasSprite(program.spriteImg);
 
-				VisualIDE.SpriteManager.spriteTable.push({
-					name: program.spriteName,
-					target: "sprite",
-					url: program.spriteImg,
-					defalut: false,
-				});
-
-				VisualIDE.SpriteManager.refreshView();
-				VisualIDE.SpriteManager.refreshSelectVeiws();
-
-				canvas.addSprite(program.spriteName, sprite);
-				initIntepreter(canvas, program.spriteName);
-			}
+		VisualIDE.SpriteManager.spriteTable.push({
+			name: program.spriteName,
+			target: "sprite",
+			url: program.spriteImg,
+			defalut: false,
 		});
+
+		VisualIDE.SpriteManager.refreshView();
+		VisualIDE.SpriteManager.refreshSelectVeiws();
+
+		canvas.addSprite(program.spriteName, sprite);
+		initIntepreter(canvas, program.spriteName);
+	});
+	
+	$('#demo-manager-programs').on('click', '#demo-analog-clock',function () {
+		var program = VisualIDE.Demo.getDemoClockProgram(commandsHtml);
+		$('ul.list-procedures').html(program.html);
+		
+		var spriteTableArray = VisualIDE.SpriteManager.spriteTable;
+		for( i=1; i<spriteTableArray.length; i++){
+			canvas.removeSprite(spriteTableArray[i].name);
+			spriteTableArray.splice(i, 1);
+		}
+		
+		var sprites = program.sprites;
+		var sprite;
+		
+		for( i=0; i<sprites.length; i++){
+			sprite = new VisualIDE.CanvasSprite( sprites[i].url );
+			canvas.addSprite( sprites[i].name, sprite );
+			initIntepreter(canvas, sprites[i].name );
+			var spriteTemp = sprites[i];
+			spriteTemp.target = sprite;
+			VisualIDE.SpriteManager.spriteTable.push( spriteTemp );
+		}
+		
+		console.log( VisualIDE.SpriteManager.spriteTable );
+		
+		VisualIDE.SpriteManager.refreshView();
+		VisualIDE.SpriteManager.refreshSelectVeiws();
+		VisualIDE.VariableManager.refreshView();
+		VisualIDE.VariableManager.refreshSelectVeiws();
+		
 	});
 }
 

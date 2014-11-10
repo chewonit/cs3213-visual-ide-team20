@@ -11,16 +11,13 @@ var VisualIDE = (function(ide) {
 			variables: '<div class="form-group input-group"><input type="text" class="form-control" readonly="" value="count"><span class="input-group-btn"><button class="btn btn-danger btn-variable-manager-delete" type="button" disabled=""><span class="fa fa-times"></span></button></span></div><div class="form-group input-group"><input type="text" class="form-control" readonly="" value="value"><span class="input-group-btn"><button class="btn btn-danger btn-variable-manager-delete" type="button" disabled=""><span class="fa fa-times"></span></button></span></div><div class="form-group input-group"><input type="text" class="form-control" readonly="" value="total"><span class="input-group-btn"><button class="btn btn-danger btn-variable-manager-delete" type="button" disabled=""><span class="fa fa-times"></span></button></span></div>',
 			spriteName: 'Ball',
 			spriteImg: '../img/ball.png'
-		}
-		/*
-		,
+		},
 		{
 			panelId: 'demo-analog-clock',
 			name: 'Analog Clock',
 			description: 'A program that implements an analog clock.',
 			procedure: ''
 		}
-		*/
 		],
 		
 		populatePrograms: function(container) {
@@ -42,6 +39,111 @@ var VisualIDE = (function(ide) {
 				$('.disabled-demo-load-run').removeAttr('disabled');
 				$('.disabled-demo-load-run').removeClass('.disabled-demo-load-run');
 			});
+		},
+		
+		getDemoClockProgram: function(commandsHtml) {
+			var program = {},
+				html='',
+				rotateSpeed = 60,
+				sprites = [];
+				
+			// Initialize BG to blank
+			var changeBg = $( commandsHtml.getCommandHtml(10) );
+			changeBg.find( 'input' ).attr( 'value', '' );
+			html += $('<div>').append(changeBg.clone()).html();
+			
+			// hide default character
+			var hideChar = $( commandsHtml.getCommandHtml(12) );
+			hideChar.find( 'input' ).attr( 'value', '' );
+			html += $('<div>').append(hideChar.clone()).html();
+			
+			// Assignment to 'count' variable of 0.
+			var assign = $( commandsHtml.getCommandHtml(3) );
+			assign.find('.parm1-variable').html('<option value="value">count</option>');
+			assign.find('.parm2-value').attr( 'value', 0 );
+			html += $('<div>').append(assign.clone()).html();
+			
+			// Assignment to 'value' variable of 60.
+			assign = $( commandsHtml.getCommandHtml(3) );
+			assign.find('.parm1-variable').html('<option value="value">value</option>');
+			assign.find('.parm2-value').attr( 'value', rotateSpeed/2 );
+			html += $('<div>').append(assign.clone()).html();
+			
+			// Rotate Hour hand
+			var rotateh = $( commandsHtml.getCommandHtml(4) );
+			rotateh.find('.select-sprite').html('<option value="hour">hour</option>');
+			rotateh.find('.parm1-value').attr( 'value', rotateSpeed/3 );
+			rotateh = $('<div>').append(rotateh.clone()).html();
+			
+			// Reset Count.
+			var resetCount = $( commandsHtml.getCommandHtml(3) );
+			resetCount.find('.parm1-variable').html('<option value="count">count</option>');
+			resetCount.find('.parm2-value').attr( 'value', 0 );
+			resetCount = $('<div>').append(resetCount.clone()).html();
+			
+			// Rotate minute hand
+			var rotatem = $( commandsHtml.getCommandHtml(4) );
+			rotatem.find('.select-sprite').html('<option value="minute">minute</option>');
+			rotatem.find('.parm1-variable').html('<option value="value">value</option>');
+			rotatem.find('.parm1-variable').addClass('active');
+			rotatem.find('.parm1-variable').removeClass('no-show');
+			rotatem.find('.parm1-value').addClass('no-show');
+			rotatem.find('.parm1-value').removeClass('active');
+			rotatem = $('<div>').append(rotatem.clone()).html();
+			
+			// Increment value.
+			var incValue = $( commandsHtml.getCommandHtml(3) );
+			incValue.find('.parm1-variable').html('<option value="count">count</option>');
+			incValue.find('.parm2-variable').html('<option value="value">value</option>');
+			incValue.find('.parm2-variable').addClass('active');
+			incValue.find('.parm2-variable').removeClass('no-show');
+			incValue.find('.parm2-value').addClass('no-show');
+			incValue.find('.parm2-value').removeClass('active');
+			incValue.find('.parm2-variable').first().html('<option value="count">count</option>');
+			incValue = $('<div>').append(incValue.clone()).html();
+			
+			// If command.
+			var ifCmd = $( commandsHtml.getCommandHtml(5) );
+			ifCmd.find('.parm1-variable').html('<option value="count">count</option>');
+			ifCmd.find('.parm1-variable').addClass('active');
+			ifCmd.find('.parm1-variable').removeClass('no-show');
+			ifCmd.find('.parm1-value').addClass('no-show');
+			ifCmd.find('.parm1-value').removeClass('active');
+			ifCmd.find('.dropdown-toggle').html('&gt;');
+			ifCmd.find('.parm2-value').attr('value', 359);
+			ifCmd.find('ul').first().append( rotateh + resetCount );
+			ifCmd = $('<div>').append(ifCmd.clone()).html();
+			
+			var loop = $( commandsHtml.getCommandHtml(8) );
+			loop.find('ul').first().append( ifCmd + rotatem + incValue );
+			html += $('<div>').append(loop.clone()).html();
+			
+			program.html = html;
+			
+			sprites = [
+				{
+					name: 'clock',
+					target: "sprite",
+					url: '../img/clock.png',
+					defalut: false,
+				},
+				{
+					name: 'hour',
+					target: "sprite",
+					url: '../img/hour_hand.png',
+					defalut: false,
+				},
+				{
+					name: 'minute',
+					target: "sprite",
+					url: '../img/minute_hand.png',
+					defalut: false,
+				}
+			];
+			
+			program.sprites = sprites;
+			
+			return program;
 		}
 	};
 	

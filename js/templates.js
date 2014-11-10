@@ -373,7 +373,7 @@ var VisualIDE = (function(ide) {
 				'<div class="panel-body">' +
 					'<%= program.description %>' +
 					'<div>' +
-						'<button id="load-demo" type="button" class="btn btn-default navbar-btn" value="<%= program.panelId %>">' +
+						'<button id="<%= program.panelId %>" type="button" class="btn btn-default navbar-btn" value="<%= program.panelId %>">' +
 							'<span class="fa fa-folder-open"></span> Load Program' +
 						'</button>' +
 					'</div>' +
