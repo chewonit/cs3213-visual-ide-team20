@@ -231,6 +231,13 @@ var VisualIDE = (function(my) {
     this.stage.removeChild(this.sprites[name].sprite);
     delete this.sprites[name];
   };
+
+  /**
+   * Clears the canvas.
+   */
+  my.Canvas.prototype.clear = function() {
+    this.stage.removeChildren();
+  };
   
   /**
    * A Sprite object.
