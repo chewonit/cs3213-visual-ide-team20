@@ -286,7 +286,7 @@ var VisualIDE = (function(my) {
      */
     var getParams = function(commandObj, commandId) {
         var params = ParamGetters[commandId].apply(this, [commandObj]);
-        // console.log(params);
+        console.log(params);
         return params;
     };
 
@@ -407,13 +407,26 @@ var VisualIDE = (function(my) {
 
         return params;
     };
-
-    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
-    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_BG] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.SET_Y] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.SHOW] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.HIDE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.ROTATE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
+
+    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = function(commandObj) {
+        var params = [];
+
+        commandObj.children(".command-input-wrap").find("input").each(function() {
+            params.push($(this).val());
+        });
+
+        commandObj.find(".select-sprite").each(function() {
+            params.push($(this).val());
+        });
+
+        return params;
+    };
+    
+    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_BG] = ParamGetters[_USER_CMD_CONSTANTS.CHANGE_COSTUME];
 
     ParamGetters[_USER_CMD_CONSTANTS.LOOP] = function(commandObj) {
         return [];
