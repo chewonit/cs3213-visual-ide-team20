@@ -114,14 +114,14 @@ var VisualIDE = (function(my) {
         steps = resolveVariable(steps);
 
         if (direction == "h") {
-            curr = _canvas.getSprite(sprite).sprite.position.x;
+            curr = _canvas.getSprite(sprite).getX();
             _canvas.getSprite(sprite).setX(curr + steps, {
                 interpolator: new Interpolators[interpolator](3.0),
                 duration: _delay * 0.98
             });
         }
         else {
-            curr = _canvas.getSprite(sprite).sprite.position.y;
+            curr = _canvas.getSprite(sprite).getY();
             _canvas.getSprite(sprite).setY(curr + steps, {
                 interpolator: new Interpolators[interpolator](3.0),
                 duration: _delay * 0.98
