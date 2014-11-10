@@ -54,6 +54,7 @@ var VisualIDE = (function(my) {
     my.Interpreter.run = function() {
         initVarTable();
         initSpriteTable();
+        resetCanvasBg();
         
         parse($('#list-procedures > li'));
         // console.log(_commandQueue);
@@ -72,7 +73,19 @@ var VisualIDE = (function(my) {
         spriteTable = VisualIDE.SpriteManager.spriteTable;
         for (var s in spriteTable) {
             changeCostume(spriteTable[s].url, spriteTable[s].name);
+            resetSprite(spriteTable[s].name);
         }
+    };
+
+    var resetSprite = function(sprite) {
+        _canvas.getSprite(sprite).show();
+        _canvas.getSprite(sprite).setRotation(0);
+        _canvas.getSprite(sprite).setX(0);
+        _canvas.getSprite(sprite).setY(0);
+    };
+
+    var resetCanvasBg = function() {
+        changeBg();
     };
 
     /**
@@ -164,8 +177,9 @@ var VisualIDE = (function(my) {
      */
     var rotate = function(degree, sprite) {
         // _commandQueue.stop();
-        
-        var radians = (resolveVariable(degree) / 180) * Math.PI;
+        degree = resolveVariable(degree);
+
+        var radians = (degree / 180) * Math.PI + _canvas.getSprite(sprite).getRotation();
         
         _canvas.getSprite(sprite).setRotation(radians, {
             interpolator: new VisualIDE.CanvasLinearInterpolator(),
@@ -407,13 +421,26 @@ var VisualIDE = (function(my) {
 
         return params;
     };
-
-    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
-    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_BG] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.SET_Y] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.SHOW] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.HIDE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
     ParamGetters[_USER_CMD_CONSTANTS.ROTATE] = ParamGetters[_USER_CMD_CONSTANTS.SET_X];
+
+    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_COSTUME] = function(commandObj) {
+        var params = [];
+
+        commandObj.children(".command-input-wrap").find("input").each(function() {
+            params.push($(this).val());
+        });
+
+        commandObj.find(".select-sprite").each(function() {
+            params.push($(this).val());
+        });
+
+        return params;
+    };
+
+    ParamGetters[_USER_CMD_CONSTANTS.CHANGE_BG] = ParamGetters[_USER_CMD_CONSTANTS.CHANGE_COSTUME];
 
     ParamGetters[_USER_CMD_CONSTANTS.LOOP] = function(commandObj) {
         return [];
