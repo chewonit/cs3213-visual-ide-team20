@@ -303,12 +303,20 @@ var VisualIDE = (function(my) {
     }
   };
 
+  my.CanvasSprite.prototype.getRawX = function() {
+    return this.sprite.position.x;
+  };
+
   my.CanvasSprite.prototype.getY = function() {
     if (!this.texture.baseTexture.hasLoaded) {
       return this.sprite.position.y;
     } else {
       return this.sprite.position.y - this.texture.height / 2;
     }
+  };
+
+  my.CanvasSprite.prototype.getRawY = function() {
+    return this.sprite.position.y;
   };
   
   /**
@@ -335,11 +343,15 @@ var VisualIDE = (function(my) {
 
     if (options.interpolator !== undefined &&
         options.interpolator.getInterpolation) {
-      this.animateProperty(this.setX, this.getX, x, options.interpolator,
+      this.animateProperty(this.setRawX, this.getRawX, x, options.interpolator,
           options.duration, options.callback);
     } else {
       this.sprite.position.x = x;
     }
+  };
+
+  my.CanvasSprite.prototype.setRawX = function(x) {
+    this.sprite.position.x = x;
   };
 
   my.CanvasSprite.prototype.setY = function(y, options) {
@@ -363,11 +375,15 @@ var VisualIDE = (function(my) {
 
     if (options.interpolator !== undefined &&
         options.interpolator.getInterpolation) {
-      this.animateProperty(this.setY, this.getY, y, options.interpolator,
+      this.animateProperty(this.setRawY, this.getRawY, y, options.interpolator,
           options.duration, options.callback);
     } else {
       this.sprite.position.y = y;
     }
+  };
+
+  my.CanvasSprite.prototype.setRawY = function(y) {
+    this.sprite.position.y = y;
   };
   
   my.CanvasSprite.prototype.setPosition = function(x, y, options) {
