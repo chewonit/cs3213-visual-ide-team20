@@ -78,6 +78,7 @@ var VisualIDE = (function(my) {
     };
 
     var resetSprite = function(sprite) {
+        _canvas.getSprite(sprite).show();
         _canvas.getSprite(sprite).setRotation(0);
         _canvas.getSprite(sprite).setX(0);
         _canvas.getSprite(sprite).setY(0);
