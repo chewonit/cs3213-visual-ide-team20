@@ -41,7 +41,6 @@ var VisualIDE = (function(my) {
     this.backgroundTexture = PIXI.Texture.fromImage(this.backgroundUrl);
     this.backgroundSprite = new PIXI.TilingSprite(this.backgroundTexture, elemWidth, elemHeight);
     this.stage.addChild(this.backgroundSprite);
-
     
     // Define the animation function and begin rendering.
     var animate = function(that) {
@@ -232,6 +231,13 @@ var VisualIDE = (function(my) {
     this.stage.removeChild(this.sprites[name].sprite);
     delete this.sprites[name];
   };
+
+  /**
+   * Clears the canvas.
+   */
+  my.Canvas.prototype.clear = function() {
+    this.stage.removeChildren();
+  };
   
   /**
    * A Sprite object.
@@ -269,17 +275,40 @@ var VisualIDE = (function(my) {
     
     this.texture = PIXI.Texture.fromImage(url);
     this.sprite = new PIXI.Sprite(this.texture);
+
+    // Set a more intuitive default for the anchor.
+    this.texture.baseTexture.on('loaded', (function(that) {
+      return function() {
+        that.sprite.anchor = {
+          x: 0.5,
+          y: 0.5
+        };
+
+        that.sprite.position = {
+          x: that.sprite.position.x + that.texture.height / 2,
+          y: that.sprite.position.y + that.texture.width / 2
+        };
+      };
+    }(this)));
   };
 
   /**
    * Gets the position of the sprite.
    */
   my.CanvasSprite.prototype.getX = function() {
-    return this.sprite.position.x;
+    if (!this.texture.baseTexture.hasLoaded) {
+      return this.sprite.position.x;
+    } else {
+      return this.sprite.position.x - this.texture.width / 2;
+    }
   };
 
   my.CanvasSprite.prototype.getY = function() {
-    return this.sprite.position.y;
+    if (!this.texture.baseTexture.hasLoaded) {
+      return this.sprite.position.y;
+    } else {
+      return this.sprite.position.y - this.texture.height / 2;
+    }
   };
   
   /**
@@ -298,6 +327,11 @@ var VisualIDE = (function(my) {
     options.interpolator = options.interpolator || undefined;
     options.duration = options.duration || 1000;
     options.callback = options.callback || function() { };
+
+    // When the anchor is at the center, the x position is offset.
+    if (this.texture.baseTexture.hasLoaded) {
+      x += this.texture.width / 2;
+    }
 
     if (options.interpolator !== undefined &&
         options.interpolator.getInterpolation) {
@@ -321,6 +355,11 @@ var VisualIDE = (function(my) {
     options.interpolator = options.interpolator || undefined;
     options.duration = options.duration || 1000;
     options.callback = options.callback || function() { };
+    
+    // When the anchor is at the center, the x position is offset.
+    if (this.texture.baseTexture.hasLoaded) {
+      y += this.texture.height / 2;
+    }
 
     if (options.interpolator !== undefined &&
         options.interpolator.getInterpolation) {
