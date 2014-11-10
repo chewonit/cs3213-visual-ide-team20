@@ -277,7 +277,7 @@ var VisualIDE = (function(my) {
      */
     var getParams = function(commandObj, commandId) {
         var params = ParamGetters[commandId].apply(this, [commandObj]);
-        console.log(params);
+        // console.log(params);
         return params;
     };
 
