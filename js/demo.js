@@ -80,7 +80,7 @@ var VisualIDE = (function(ide) {
 			
 			// Assignment to 'count' variable of 0.
 			var assign = $( commandsHtml.getCommandHtml(3) );
-			assign.find('.parm1-variable').html('<option value="value">count</option>');
+			assign.find('.parm1-variable').html('<option value="count">count</option>');
 			assign.find('.parm2-value').attr( 'value', 0 );
 			html += $('<div>').append(assign.clone()).html();
 			
